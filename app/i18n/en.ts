@@ -20,9 +20,9 @@ const en = {
     signIn: "Sign In",
     enterDetails:
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
-    emailFieldLabel: "Email",
+    userNameFieldLabel: "Username",
     passwordFieldLabel: "Password",
-    emailFieldPlaceholder: "Enter your email address",
+    userNameFieldPlaceholder: "Enter your username address",
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",

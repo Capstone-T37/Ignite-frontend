@@ -4,55 +4,65 @@ import { TextInput, TextStyle, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "app/components"
 import { spacing, colors } from "app/theme"
+import { useStores } from "app/models"
+import { useNavigation } from "@react-navigation/native"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
 interface SignInScreenProps extends AppStackScreenProps<"SignIn"> { }
 
-export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScreen() {
+export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScreen(
+  _props,
+) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const { navigation } = _props
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
-  const [authEmail, setAuthEmail] = useState("")
-  const [authToken, setAuthToken] = useState("")
+  const {
+    authenticationStore: { userName, setUserName, setAuthToken, validationError },
+  } = useStores()
 
   useEffect(() => {
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
+    setUserName("user")
+    setAuthPassword("user")
 
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
-      setAuthEmail("")
+      setUserName("")
     }
   }, [])
 
-  const error = isSubmitted ? "validationError" : ""
+  const error = isSubmitted ? validationError : ""
 
-  function login() {
+  function goNext() {
+    navigation.navigate("Welcome")
+    setIsSubmitted(false)
+    setAuthPassword("")
+    setUserName("")
+  }
+
+  async function login() {
     setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
 
     if (false) return
 
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
 
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+    setAuthToken({
+      username: userName,
+      password: authPassword,
+      rememberMe: true
+    }).then(goNext)
+
+
   }
 
   const PasswordRightAccessory = useMemo(
@@ -79,18 +89,17 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
     >
       <Text testID="login-heading" tx="signInScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="signInScreen.enterDetails" preset="subheading" style={$enterDetails} />
-      {attemptsCount > 2 && <Text tx="signInScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userName}
+        onChangeText={setUserName}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
         autoCorrect={false}
         keyboardType="email-address"
-        labelTx="signInScreen.emailFieldLabel"
-        placeholderTx="signInScreen.emailFieldPlaceholder"
+        labelTx="signInScreen.userNameFieldLabel"
+        placeholderTx="signInScreen.userNameFieldPlaceholder"
         helper={error}
         status={error ? "error" : undefined}
         onSubmitEditing={() => authPasswordInput.current?.focus()}
