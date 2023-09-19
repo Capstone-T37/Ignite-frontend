@@ -44,7 +44,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
   const error = isSubmitted ? validationError : ""
 
   function goNext() {
-    navigation.navigate("Welcome")
+    navigation.navigate("Home")
     setIsSubmitted(false)
     setAuthPassword("")
     setUserName("")

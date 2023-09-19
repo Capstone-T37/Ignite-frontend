@@ -27,6 +27,9 @@ const en = {
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
+  homeNavigatorTab: {
+    homeTab: "Home",
+  },
   emptyStateComponent: {
     generic: {
       heading: "So empty... so sad",

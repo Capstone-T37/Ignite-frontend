@@ -17,6 +17,7 @@ import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
+import { HomeNavigator } from "./HomeNavigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -32,7 +33,7 @@ import { colors } from "app/theme"
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type AppStackParamList = {
-  Welcome: undefined
+  Home: undefined
   // 🔥 Your screens go here
   SignIn: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
@@ -59,7 +60,7 @@ const AppStack = observer(function AppStack() {
     >
       {/** 🔥 Your screens go here */}
       <Stack.Screen name="SignIn" component={Screens.SignInScreen} />
-      <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
+      <Stack.Screen name="Home" component={HomeNavigator} />
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
