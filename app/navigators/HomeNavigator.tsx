@@ -1,5 +1,6 @@
 import React from "react"
 import {
+  ActivityScreen,
   WelcomeScreen
 } from "app/screens"
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -11,8 +12,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "app/components"
 import { translate } from "app/i18n"
 
-export type DemoTabParamList = {
+export type HomeTabParamList = {
   Welcome: undefined
+  Activity: undefined
 
 }
 
@@ -21,12 +23,12 @@ export type DemoTabParamList = {
  *
  * More info: https://reactnavigation.org/docs/typescript/#organizing-types
  */
-export type DemoTabScreenProps<T extends keyof DemoTabParamList> = CompositeScreenProps<
-  BottomTabScreenProps<DemoTabParamList, T>,
+export type HomeTabScreenProps<T extends keyof HomeTabParamList> = CompositeScreenProps<
+  BottomTabScreenProps<HomeTabParamList, T>,
   AppStackScreenProps<keyof AppStackParamList>
 >
 
-const Tab = createBottomTabNavigator<DemoTabParamList>()
+const Tab = createBottomTabNavigator<HomeTabParamList>()
 
 export const HomeNavigator = () => {
   const { bottom } = useSafeAreaInsets()
@@ -44,6 +46,13 @@ export const HomeNavigator = () => {
       <Tab.Screen name="Welcome" component={WelcomeScreen}
         options={{
           tabBarLabel: translate("homeNavigatorTab.homeTab"),
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="components" color={focused && colors.tint} size={30} />
+          ),
+        }} />
+      <Tab.Screen name="Activity" component={ActivityScreen}
+        options={{
+          tabBarLabel: translate("homeNavigatorTab.activityTab"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),

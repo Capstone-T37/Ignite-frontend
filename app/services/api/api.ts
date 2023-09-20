@@ -10,9 +10,10 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { JwtTokenSnapshotIn, UserCred } from "app/models"
+import { ActivitySnapshotIn, JwtTokenSnapshotIn, UserCred } from "app/models"
 import Config from "../../config"
 import type {
+  ActivityItem,
   ApiConfig, JwtResponse,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
@@ -63,8 +64,41 @@ export class Api {
     // transform the data into the format we are expecting
     try {
       const rawData = response.data
-
+      console.debug(this.apisauce.headers)
+      this.apisauce.setHeader('Authorization', `Bearer ${rawData.id_token}`)
+      console.debug(this.apisauce.headers)
       return { kind: "ok", jwtToken: rawData }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Get list of activities
+   */
+   async getActivities(): Promise<{ kind: "ok"; activities: ActivitySnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ActivityItem[]> = await this.apisauce.get(`activities`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      const activities: ActivitySnapshotIn[] = rawData.map((raw) => ({
+        ...raw,
+      }))
+
+      return { kind: "ok", activities }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)

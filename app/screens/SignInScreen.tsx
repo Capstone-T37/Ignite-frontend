@@ -22,6 +22,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
   const authPasswordInput = useRef<TextInput>()
 
   const [authPassword, setAuthPassword] = useState("")
+  const [userId, setUserId] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const {
@@ -31,36 +32,27 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
   useEffect(() => {
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
-    setUserName("user")
-    setAuthPassword("user")
 
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
-      setUserName("")
     }
   }, [])
 
   const error = isSubmitted ? validationError : ""
 
-  function goNext() {
-    navigation.navigate("Home")
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setUserName("")
-  }
-
   async function login() {
+    setUserName(userId)
     setIsSubmitted(true)
 
-    if (false) return
+    if (validationError) return
 
-
+    setIsSubmitted(false)
     setAuthToken({
-      username: userName,
+      username: userId,
       password: authPassword,
       rememberMe: true
-    }).then(goNext)
+    })
 
 
   }
@@ -91,8 +83,8 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
       <Text tx="signInScreen.enterDetails" preset="subheading" style={$enterDetails} />
 
       <TextField
-        value={userName}
-        onChangeText={setUserName}
+        value={userId}
+        onChangeText={setUserId}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"

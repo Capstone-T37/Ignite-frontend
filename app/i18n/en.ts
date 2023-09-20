@@ -29,6 +29,7 @@ const en = {
   },
   homeNavigatorTab: {
     homeTab: "Home",
+    activityTab: "Activities"
   },
   emptyStateComponent: {
     generic: {
@@ -36,6 +37,13 @@ const en = {
       content: "No data found yet. Try clicking the button to refresh or reload the app.",
       button: "Let's try this again",
     },
+  },
+  ActivityScreen: {
+    title: "Connect with the community",
+    tagLine: "Explore diverse activities, connect with others, and create memorable moments!",
+    joinButtonContent: "Join!",
+    emptyStateHeading: "Dang!",
+    emptyStateContent: "No activities are found at the moment. Try clicking on the button to refresh",
   },
 }
 

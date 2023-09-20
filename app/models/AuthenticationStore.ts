@@ -40,7 +40,7 @@ export const AuthenticationStoreModel = types
   })
   .views((store) => ({
     get isAuthenticated() {
-      return !!store.authToken
+      return !!store.authToken && store.userName != ""
     },
     get validationError() {
       if (store.userName.length === 0) return "can't be blank"
@@ -59,7 +59,7 @@ export const AuthenticationStoreModel = types
       }
     },
     setUserName(value: string) {
-      store.userName = value.replace(/ /g, "")
+      store.userName = value
     },
     logout() {
       store.authToken = undefined

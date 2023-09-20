@@ -5,6 +5,15 @@
 export interface JwtResponse {
   id_token: string
 }
+export interface ActivityItem {
+  id: number,
+  firstName: string,
+  title: string,
+  description: string,
+  address: string,
+  date: string,
+  maximum: number,
+}
 
 /**
  * The options used to configure apisauce.
