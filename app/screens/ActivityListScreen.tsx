@@ -10,9 +10,9 @@ import { delay } from "app/utils/delay"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-interface ActivityScreenProps extends HomeTabScreenProps<"Activity"> { }
+interface ActivityScreenProps extends HomeTabScreenProps<"ActivityNavigator"> { }
 
-export const ActivityScreen: FC<ActivityScreenProps> = observer(function ActivityScreen() {
+export const ActivityListScreen: FC<ActivityScreenProps> = observer(function ActivityListScreen() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const { activityStore } = useStores()

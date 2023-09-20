@@ -37,7 +37,7 @@ export type AppStackParamList = {
   Home: undefined
   // 🔥 Your screens go here
   SignIn: undefined
-  // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
+// IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
 /**
