@@ -45,6 +45,12 @@ const en = {
     emptyStateHeading: "Dang!",
     emptyStateContent: "No activities are found at the moment. Try clicking on the button to refresh",
   },
+  ActivityDetailsScreen: {
+    joinButton: "Join Activity!",
+    emptyStateHeading: "Dang!",
+    emptyStateContent: "Something wrong happened to the activity",
+    emptyStateButton: "Go back!"
+  }
 }
 
 export default en

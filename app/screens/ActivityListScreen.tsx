@@ -1,24 +1,29 @@
 import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { HomeTabScreenProps } from "app/navigators"
+import { ActivityNavigatorParamList, ActivityNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
 import { Button, Card, EmptyState, ListItem, Screen, Text } from "app/components"
 import { isRTL, translate } from "app/i18n"
 import { Activity, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
 import { delay } from "app/utils/delay"
-// import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-interface ActivityScreenProps extends HomeTabScreenProps<"Activity"> { }
+interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
 
-export const ActivityScreen: FC<ActivityScreenProps> = observer(function ActivityScreen() {
+export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function ActivityListScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const { activityStore } = useStores()
   const [refreshing, setRefreshing] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+  const { navigation } = _props
 
+  function viewDetails(activity: Activity) {
+
+    navigation.navigate("ActivityDetails", activity)
+
+  }
   useEffect(() => {
     ; (async function load() {
       setIsLoading(true)
@@ -70,6 +75,7 @@ export const ActivityScreen: FC<ActivityScreenProps> = observer(function Activit
           <ActivityCard
             key={item.id}
             activity={item}
+            viewDetails={(item) => viewDetails(item)}
           />
         )}
       />
@@ -79,17 +85,19 @@ export const ActivityScreen: FC<ActivityScreenProps> = observer(function Activit
 
 const ActivityCard = observer(function ActivityCard({
   activity,
+  viewDetails
 }: {
   activity: Activity
+  viewDetails: (activity: Activity) => void
 }) {
 
-  const handlePressCard = () => { }
+
 
   return (
     <Card
       style={$item}
       verticalAlignment="force-footer-bottom"
-      onPress={handlePressCard}
+      onPress={() => viewDetails(activity)}
       onLongPress={() => { }}
       HeadingComponent={
         <View style={$metadata}>
@@ -143,14 +151,6 @@ const $title: TextStyle = {
 
 const $tagline: TextStyle = {
   marginBottom: spacing.xxl,
-}
-
-const $description: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $sectionTitle: TextStyle = {
-  marginTop: spacing.xxl,
 }
 
 const $favoriteButton: ViewStyle = {

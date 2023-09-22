@@ -1,6 +1,5 @@
 import React from "react"
 import {
-  ActivityScreen,
   WelcomeScreen
 } from "app/screens"
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -11,10 +10,11 @@ import { colors, spacing, typography } from "app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "app/components"
 import { translate } from "app/i18n"
+import { ActivityNavigator } from "./ActivityNavigator"
 
 export type HomeTabParamList = {
   Welcome: undefined
-  Activity: undefined
+  ActivityNavigator: undefined
 
 }
 
@@ -50,7 +50,7 @@ export const HomeNavigator = () => {
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),
         }} />
-      <Tab.Screen name="Activity" component={ActivityScreen}
+      <Tab.Screen name="ActivityNavigator" component={ActivityNavigator}
         options={{
           tabBarLabel: translate("homeNavigatorTab.activityTab"),
           tabBarIcon: ({ focused }) => (
