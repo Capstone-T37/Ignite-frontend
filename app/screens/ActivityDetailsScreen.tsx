@@ -114,9 +114,8 @@ const $descriptionContainer: ViewStyle = {
 }
 
 const $joinButton: ViewStyle = {
-  borderRadius: 17,
   marginTop: spacing.md,
-  backgroundColor: colors.palette.secondary300,
+  marginHorizontal:spacing.xl,
   paddingHorizontal: spacing.md,
   minHeight: 32,
 }
