@@ -1,5 +1,6 @@
 import React from "react"
 import {
+  ConnectedScreen,
   WelcomeScreen
 } from "app/screens"
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -15,6 +16,7 @@ import { ActivityNavigator } from "./ActivityNavigator"
 export type HomeTabParamList = {
   Welcome: undefined
   ActivityNavigator: undefined
+  Connected: undefined
 
 }
 
@@ -34,7 +36,7 @@ export const HomeNavigator = () => {
   const { bottom } = useSafeAreaInsets()
 
   return (
-    <Tab.Navigator screenOptions={{
+    <Tab.Navigator initialRouteName="Welcome" screenOptions={{
       headerShown: false,
       tabBarHideOnKeyboard: true,
       tabBarStyle: [$tabBar, { height: bottom + 70 }],
@@ -43,6 +45,13 @@ export const HomeNavigator = () => {
       tabBarLabelStyle: $tabBarLabel,
       tabBarItemStyle: $tabBarItem,
     }}>
+      <Tab.Screen name="ActivityNavigator" component={ActivityNavigator}
+        options={{
+          tabBarLabel: translate("homeNavigatorTab.activityTab"),
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="components" color={focused && colors.tint} size={30} />
+          ),
+        }} />
       <Tab.Screen name="Welcome" component={WelcomeScreen}
         options={{
           tabBarLabel: translate("homeNavigatorTab.homeTab"),
@@ -50,9 +59,9 @@ export const HomeNavigator = () => {
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),
         }} />
-      <Tab.Screen name="ActivityNavigator" component={ActivityNavigator}
+      <Tab.Screen name="Connected" component={ConnectedScreen}
         options={{
-          tabBarLabel: translate("homeNavigatorTab.activityTab"),
+          tabBarLabel: translate("homeNavigatorTab.connectedTab"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),
