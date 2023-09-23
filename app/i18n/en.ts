@@ -29,7 +29,9 @@ const en = {
   },
   homeNavigatorTab: {
     homeTab: "Home",
-    activityTab: "Activities"
+    activityTab: "Activities",
+    connectedTab: "Connected"
+
   },
   emptyStateComponent: {
     generic: {
@@ -50,6 +52,13 @@ const en = {
     emptyStateHeading: "Dang!",
     emptyStateContent: "Something wrong happened to the activity",
     emptyStateButton: "Go back!"
+  },
+  ConnectedScreen: {
+    title: "Connecting Now",
+    tagLine: "Discover Users Eager to Meet Instantly!",
+    meetButtonText:"Meet!",
+    emptyStateHeading: "Dang!",
+    emptyStateContent: "No one is connected at the moment.",
   }
 }
 

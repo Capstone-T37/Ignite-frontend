@@ -64,9 +64,7 @@ export class Api {
     // transform the data into the format we are expecting
     try {
       const rawData = response.data
-      console.debug(this.apisauce.headers)
       this.apisauce.setHeader('Authorization', `Bearer ${rawData.id_token}`)
-      console.debug(this.apisauce.headers)
       return { kind: "ok", jwtToken: rawData }
     } catch (e) {
       if (__DEV__) {
