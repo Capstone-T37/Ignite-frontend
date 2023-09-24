@@ -10,11 +10,11 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivitySnapshotIn, JwtTokenSnapshotIn, UserCred } from "app/models"
+import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, UserCred } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, JwtResponse,
+  ApiConfig, JwtResponse, MeetItem,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 
@@ -97,6 +97,37 @@ export class Api {
       }))
 
       return { kind: "ok", activities }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Get list of Meets
+   */
+   async getMeets(): Promise<{ kind: "ok"; meets: MeetSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<MeetItem[]> = await this.apisauce.get(`meets`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      const meets: MeetSnapshotIn[] = rawData.map((raw) => ({
+        ...raw,
+      }))
+
+      return { kind: "ok", meets }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)

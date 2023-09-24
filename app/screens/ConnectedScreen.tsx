@@ -1,10 +1,12 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { ActivityNavigatorScreenProps } from "app/navigators"
 import { Button, EmptyState, ListItem, Screen, Text } from "app/components"
+import { Meet, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
 import { isRTL, translate } from "app/i18n"
+import { delay } from "app/utils/delay"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -14,19 +16,38 @@ interface ConnectedScreenProps extends ActivityNavigatorScreenProps<"ActivityLis
 export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function ConnectedScreen() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
+  const { meetStore } = useStores()
+  const [isLoading, setIsLoading] = React.useState(false)
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
+
+  async function manualRefresh() {
+    setIsLoading(true)
+    await Promise.all([meetStore.fetchMeets(), delay(750)])
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    ; (async function load() {
+      setIsLoading(true)
+      await meetStore.fetchMeets()
+      setIsLoading(false)
+    })()
+  }, [meetStore])
+
   return (
     <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
-      <FlatList<any>
-        data={["test", "test", "test"]}
+      <FlatList<Meet>
+        data={meetStore.meetsForList}
+        refreshing={isLoading}
+        onRefresh={manualRefresh}
         //extraData={}
         contentContainerStyle={$flatListContentContainer}
         //refreshing={refreshing}
         //onRefresh={()=>}
         ListEmptyComponent={
-          false ? (
+          isLoading ? (
             <ActivityIndicator />
           ) : (
             <EmptyState
@@ -46,10 +67,10 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
             <Text tx="ConnectedScreen.tagLine" style={$tagline} />
           </View>
         }
-        renderItem={() => (
-          <ListItem text={"Lets Hangout!"} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true}
+        renderItem={({item}) => (
+          <ListItem text={item.description} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true}
             LeftComponent={
-              <View style={$leftComponent} ><Text text="A" size="xl" preset="heading" /></View>
+              <View style={$leftComponent} ><Text text={item.userName} size="xs" preset="heading" /></View>
             }
             RightComponent={
               <Button
