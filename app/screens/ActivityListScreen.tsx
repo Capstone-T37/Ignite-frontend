@@ -15,7 +15,6 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const { activityStore } = useStores()
-  const [refreshing, setRefreshing] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
   const { navigation } = _props
 
@@ -33,10 +32,8 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   }, [activityStore])
 
   async function manualRefresh() {
-    setRefreshing(true)
     setIsLoading(true)
     await Promise.all([activityStore.fetchActivities(), delay(750)])
-    setRefreshing(false)
     setIsLoading(false)
   }
   // Pull in navigation via hook
@@ -48,7 +45,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
         data={activityStore.activitiesForList}
         extraData={activityStore.activities.length}
         contentContainerStyle={$flatListContentContainer}
-        refreshing={refreshing}
+        refreshing={isLoading}
         onRefresh={manualRefresh}
         ListEmptyComponent={
           isLoading ? (
