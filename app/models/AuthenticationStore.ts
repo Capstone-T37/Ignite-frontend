@@ -1,7 +1,7 @@
 import { api } from "app/services/api"
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
-
+import jwt_decode, {JwtPayload} from "jwt-decode";
 
 
 
@@ -40,11 +40,12 @@ export const AuthenticationStoreModel = types
   })
   .views((store) => ({
     get isAuthenticated() {
-      return !!store.authToken && store.userName != ""
-    },
-    get validationError() {
-      if (store.userName.length === 0) return "can't be blank"
-      return ""
+      if(!!store.authToken == false){
+        return false
+      }  
+      const decodedToken = jwt_decode<JwtPayload>(store.authToken.getToken)
+      if(decodedToken.exp * 1000 < new Date().getTime())return false
+      return true
     },
   }))
   .actions(withSetPropAction)

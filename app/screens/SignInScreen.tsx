@@ -24,9 +24,8 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
   const [authPassword, setAuthPassword] = useState("")
   const [userId, setUserId] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const {
-    authenticationStore: { userName, setUserName, setAuthToken, validationError },
+    authenticationStore: { setAuthToken },
   } = useStores()
 
   useEffect(() => {
@@ -39,22 +38,12 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
     }
   }, [])
 
-  const error = isSubmitted ? validationError : ""
-
   async function login() {
-    setUserName(userId)
-    setIsSubmitted(true)
-
-    if (validationError) return
-
-    setIsSubmitted(false)
     setAuthToken({
       username: userId,
       password: authPassword,
       rememberMe: true
     })
-
-
   }
 
   const PasswordRightAccessory = useMemo(
@@ -92,8 +81,6 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
         keyboardType="email-address"
         labelTx="signInScreen.userNameFieldLabel"
         placeholderTx="signInScreen.userNameFieldPlaceholder"
-        helper={error}
-        status={error ? "error" : undefined}
         onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
 
