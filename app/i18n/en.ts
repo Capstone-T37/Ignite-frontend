@@ -59,6 +59,11 @@ const en = {
     meetButtonText:"Meet!",
     emptyStateHeading: "Dang!",
     emptyStateContent: "No one is connected at the moment.",
+  },
+  ActivityForm:{
+    Title: "Create your Activity",
+    Submit: "Submit",
+    SnackBarText: "Activity created successfully !"
   }
 }
 
