@@ -110,7 +110,7 @@ export class Api {
    */
    async getMeets(): Promise<{ kind: "ok"; meets: MeetSnapshotIn[] } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<MeetItem[]> = await this.apisauce.get(`meets`,)
+    const response: ApiResponse<MeetItem[]> = await this.apisauce.get(`meets/exclude-user-meets`,)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
