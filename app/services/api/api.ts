@@ -14,7 +14,7 @@ import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, UserCred } from
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, JwtResponse, MeetItem,
+  ApiConfig, CreateActivity, JwtResponse, MeetItem,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 
@@ -108,7 +108,7 @@ export class Api {
   /**
    * Get list of Meets
    */
-   async getMeets(): Promise<{ kind: "ok"; meets: MeetSnapshotIn[] } | GeneralApiProblem> {
+  async getMeets(): Promise<{ kind: "ok"; meets: MeetSnapshotIn[] } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<MeetItem[]> = await this.apisauce.get(`meets/exclude-user-meets`,)
 
@@ -128,6 +128,29 @@ export class Api {
       }))
 
       return { kind: "ok", meets }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Post an activity
+   */
+  async postActivity(body: CreateActivity): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ResponseType> = await this.apisauce.post(`activities`, body)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    try {
+      return { kind: "ok" }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)

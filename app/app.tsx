@@ -28,6 +28,7 @@ import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -96,11 +97,13 @@ function App(props: AppProps) {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <ErrorBoundary catchErrors={Config.catchErrors}>
-        <AppNavigator
-          linking={linking}
-          initialState={initialNavigationState}
-          onStateChange={onNavigationStateChange}
-        />
+        <BottomSheetModalProvider>
+          <AppNavigator
+            linking={linking}
+            initialState={initialNavigationState}
+            onStateChange={onNavigationStateChange}
+          />
+        </BottomSheetModalProvider>
       </ErrorBoundary>
     </SafeAreaProvider>
   )

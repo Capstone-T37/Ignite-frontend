@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react"
+import React, { FC, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { ActivityNavigatorParamList, ActivityNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
@@ -7,6 +7,10 @@ import { isRTL, translate } from "app/i18n"
 import { Activity, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
 import { delay } from "app/utils/delay"
+import BottomSheet from "@gorhom/bottom-sheet"
+import { useNavigationContext } from "app/utils/NavigationContext"
+import { ActivityForm } from "app/components/ActivityForm"
+import { Snackbar } from "react-native-paper"
 // import { useStores } from "app/models"
 
 interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
@@ -14,9 +18,10 @@ interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"Activity
 export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function ActivityListScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
-  const { activityStore } = useStores()
+  const { activityStore, snackBarStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const { navigation } = _props
+  const { sheetRef } = useNavigationContext()
 
   function viewDetails(activity: Activity) {
 
@@ -39,44 +44,64 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   // Pull in navigation via hook
   // const navigation = useNavigation()
   return (
-    <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
-
-      <FlatList<Activity>
-        data={activityStore.activitiesForList}
-        extraData={activityStore.activities.length}
-        contentContainerStyle={$flatListContentContainer}
-        refreshing={isLoading}
-        onRefresh={manualRefresh}
-        ListEmptyComponent={
-          isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <EmptyState
-              preset="generic"
-              style={$emptyState}
-              headingTx="ActivityScreen.emptyStateHeading"
-              contentTx="ActivityScreen.emptyStateContent"
-              buttonOnPress={manualRefresh}
-              imageStyle={$emptyStateImage}
-              ImageProps={{ resizeMode: "contain" }}
+    <>
+      <Screen preset="fixed" contentContainerStyle={$container} >
+        <FlatList<Activity>
+          data={activityStore.activitiesForList}
+          extraData={activityStore.activities.length}
+          contentContainerStyle={$flatListContentContainer}
+          refreshing={isLoading}
+          onRefresh={manualRefresh}
+          ListEmptyComponent={
+            isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <EmptyState
+                preset="generic"
+                style={$emptyState}
+                headingTx="ActivityScreen.emptyStateHeading"
+                contentTx="ActivityScreen.emptyStateContent"
+                buttonOnPress={manualRefresh}
+                imageStyle={$emptyStateImage}
+                ImageProps={{ resizeMode: "contain" }}
+              />
+            )
+          }
+          ListHeaderComponent={
+            <View style={$heading}>
+              <Text preset="heading" tx="ActivityScreen.title" style={$title} />
+              <Text tx="ActivityScreen.tagLine" style={$tagline} />
+            </View>
+          }
+          renderItem={({ item }) => (
+            <ActivityCard
+              key={item.id}
+              activity={item}
+              viewDetails={(item) => viewDetails(item)}
             />
-          )
+          )}
+        />
+        <Snackbar
+          visible={snackBarStore.createActivity}
+          onDismiss={() => { snackBarStore.setProp("createActivity", false) }}
+          style={$snackBar}
+          duration={2000}
+        >
+          <Text preset='formHelper' tx="ActivityForm.SnackBarText" style={$snackBarText} />
+        </Snackbar>
+        {// @ts-ignore}
+          <BottomSheet
+            ref={sheetRef}
+            index={-1}
+            snapPoints={["100%"]}
+            enablePanDownToClose={true}
+            onChange={() => { }}
+          >
+            <ActivityForm />
+          </BottomSheet>
         }
-        ListHeaderComponent={
-          <View style={$heading}>
-            <Text preset="heading" tx="ActivityScreen.title" style={$title} />
-            <Text tx="ActivityScreen.tagLine" style={$tagline} />
-          </View>
-        }
-        renderItem={({ item }) => (
-          <ActivityCard
-            key={item.id}
-            activity={item}
-            viewDetails={(item) => viewDetails(item)}
-          />
-        )}
-      />
-    </Screen>
+      </Screen>
+    </>
   )
 })
 
@@ -191,4 +216,18 @@ const $heading: ViewStyle = {
 
 const $emptyState: ViewStyle = {
   marginTop: spacing.xxl,
+}
+
+
+
+const $snackBar: ViewStyle = {
+  backgroundColor: colors.palette.success100,
+  marginLeft: spacing.xl,
+  zIndex: 1
+
+}
+const $snackBarText: TextStyle = {
+  color: colors.text,
+  textAlign: 'center',
+  alignSelf: 'center'
 }
