@@ -21,6 +21,9 @@ export interface CreateActivity {
   date: Date,
   maximum: number,
 }
+export interface CreateMeet {
+  description: string
+}
 export interface MeetItem {
   id: number,
   userName: string,

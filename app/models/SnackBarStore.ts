@@ -7,7 +7,8 @@ import { withSetPropAction } from "./helpers/withSetPropAction"
 export const SnackBarStoreModel = types
   .model("SnackBarStore")
   .props({
-    createActivity: false
+    createActivity: false,
+    createMeet: false
   })
   .actions(withSetPropAction)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

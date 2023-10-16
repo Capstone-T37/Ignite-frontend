@@ -56,14 +56,20 @@ const en = {
   ConnectedScreen: {
     title: "Connecting Now",
     tagLine: "Discover Users Eager to Meet Instantly!",
-    meetButtonText:"Meet!",
+    meetButtonText: "Meet!",
+    goLiveButtonText: "Go live?",
+    stopButtonText: "Stop?",
     emptyStateHeading: "Dang!",
     emptyStateContent: "No one is connected at the moment.",
   },
-  ActivityForm:{
+  ActivityForm: {
     Title: "Create your Activity",
     Submit: "Submit",
     SnackBarText: "Activity created successfully !"
+  },
+  MeetForm: {
+    Title: "Go Live!",
+    SnackBarTextSuccess: "Meet created successfully !"
   }
 }
 

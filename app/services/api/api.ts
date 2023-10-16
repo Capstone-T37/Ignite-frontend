@@ -14,7 +14,7 @@ import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, UserCred } from
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, CreateActivity, JwtResponse, MeetItem,
+  ApiConfig, CreateActivity, CreateMeet, JwtResponse, MeetItem,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 
@@ -77,7 +77,7 @@ export class Api {
   /**
    * Get list of activities
    */
-   async getActivities(): Promise<{ kind: "ok"; activities: ActivitySnapshotIn[] } | GeneralApiProblem> {
+  async getActivities(): Promise<{ kind: "ok"; activities: ActivitySnapshotIn[] } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<ActivityItem[]> = await this.apisauce.get(`activities`,)
 
@@ -149,6 +149,75 @@ export class Api {
       if (problem) return problem
     }
 
+    try {
+      return { kind: "ok" }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Post a Meet
+   */
+  async postMeet(body: CreateMeet): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ResponseType> = await this.apisauce.post(`meets`, body)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    try {
+      return { kind: "ok" }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Get if user has an enabled Meet
+   */
+  async getIsEnabledMeet(): Promise<{ kind: "ok"; meetEnabled: boolean } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<boolean> = await this.apisauce.get(`meets/isEnabled`,)
+    // the typical ways to die when calling an api
+    if (!response.ok && !(response.status === 404)) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      return { kind: "ok", meetEnabled: response.status === 404 ? false : true }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Get if user has an enabled Meet
+   */
+  async disableMeet(): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<boolean> = await this.apisauce.get(`meets/disable`,)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
     try {
       return { kind: "ok" }
     } catch (e) {
