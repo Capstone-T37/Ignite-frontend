@@ -1,7 +1,7 @@
 import { api } from "app/services/api"
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
-import jwt_decode, {JwtPayload} from "jwt-decode";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 
 
 
@@ -38,16 +38,6 @@ export const AuthenticationStoreModel = types
     authToken: types.maybe(JwtTokenModel),
     userName: "",
   })
-  .views((store) => ({
-    get isAuthenticated() {
-      if(!!store.authToken == false){
-        return false
-      }  
-      const decodedToken = jwt_decode<JwtPayload>(store.authToken.getToken)
-      if(decodedToken.exp * 1000 < new Date().getTime())return false
-      return true
-    },
-  }))
   .actions(withSetPropAction)
   .actions((store) => ({
     async setAuthToken(userCred: UserCred) {
@@ -57,6 +47,15 @@ export const AuthenticationStoreModel = types
         console.info(response.jwtToken)
       } else {
         console.tron.error(`Error fetching jwtToken: ${JSON.stringify(response)}`, [])
+      }
+    },
+    async isAuthenticated() {
+      const response = await api.isAuthenticated()
+      if (response.kind !== "ok") {
+        store.setProp("authToken", undefined)
+        return false
+      } else {
+        return true
       }
     },
     setUserName(value: string) {
