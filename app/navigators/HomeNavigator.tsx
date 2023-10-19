@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "app/components"
 import { translate } from "app/i18n"
 import { ActivityNavigator } from "./ActivityNavigator"
+import { useStores } from "app/models"
 
 export type HomeTabParamList = {
   Welcome: undefined
@@ -34,6 +35,14 @@ const Tab = createBottomTabNavigator<HomeTabParamList>()
 
 export const HomeNavigator = () => {
   const { bottom } = useSafeAreaInsets()
+
+  const {
+    authenticationStore: { isAuthenticated },
+  } = useStores()
+
+  React.useEffect(() => {
+    isAuthenticated()
+  }, [])
 
   return (
     <Tab.Navigator initialRouteName="Welcome" screenOptions={{
