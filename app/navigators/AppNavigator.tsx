@@ -56,14 +56,14 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { authToken},
+    authenticationStore: { authToken },
   } = useStores()
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={authToken ? "Home" : "SignIn"}
+      initialRouteName={authToken != undefined ? "Home" : "SignIn"}
     >
-      {authToken ? (
+      {authToken != undefined ? (
         <>
           <Stack.Screen name="Home" component={HomeNavigator} />
         </>
