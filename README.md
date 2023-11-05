@@ -14,6 +14,17 @@ Currently includes:
 - TypeScript
 - And more!
 
+
+## Setup instructions
+
+Run these two commands in order to setup the front-end:
+
+```
+> yarn install
+> yarn start
+
+```
+
 ## Quick Start
 
 The Ignite boilerplate project's structure will look similar to this:
