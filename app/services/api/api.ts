@@ -136,7 +136,7 @@ export class Api {
    */
   async getUsers(): Promise<{ kind: "ok"; users: UserSnapshotIn[] } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<UserSnapshotIn[]> = await this.apisauce.get(`users`,)
+    const response: ApiResponse<UserSnapshotIn[]> = await this.apisauce.get(`users/others`,)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
