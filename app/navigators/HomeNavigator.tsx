@@ -13,11 +13,15 @@ import { Icon } from "app/components"
 import { translate } from "app/i18n"
 import { ActivityNavigator } from "./ActivityNavigator"
 import { useStores } from "app/models"
+import { ChatScreen } from "app/screens/ChatScreen"
+import { UsersListScreen } from "app/screens/UsersListScreen"
+import { ChattingNavigator } from "./ChattingNavigator"
 
 export type HomeTabParamList = {
   Welcome: undefined
   ActivityNavigator: undefined
   Connected: undefined
+  ChattingNavigator: undefined
 
 }
 
@@ -56,6 +60,7 @@ export const HomeNavigator = () => {
     }}>
       <Tab.Screen name="ActivityNavigator" component={ActivityNavigator}
         options={{
+          //tabBarStyle: { display: "none" },
           tabBarLabel: translate("homeNavigatorTab.activityTab"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="components" color={focused && colors.tint} size={30} />
@@ -75,11 +80,18 @@ export const HomeNavigator = () => {
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),
         }} />
+      <Tab.Screen name="ChattingNavigator" component={ChattingNavigator}
+        options={{
+          tabBarLabel: translate("homeNavigatorTab.chatTab"),
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="components" color={focused && colors.tint} size={30} />
+          ),
+        }} />
     </Tab.Navigator>
   )
 }
 
-const $tabBar: ViewStyle = {
+export const $tabBar: ViewStyle = {
   backgroundColor: colors.background,
   borderTopColor: colors.transparent,
 }

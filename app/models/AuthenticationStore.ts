@@ -1,9 +1,6 @@
 import { api } from "app/services/api"
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { withSetPropAction } from "./helpers/withSetPropAction"
-import jwt_decode, { JwtPayload } from "jwt-decode";
-
-
 
 export const JwtTokenModel = types
   .model("JwtToken")
