@@ -11,7 +11,6 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigationContext } from "app/utils/NavigationContext"
 import { ActivityForm } from "app/components/ActivityForm"
 import { Snackbar } from "react-native-paper"
-// import { useStores } from "app/models"
 
 interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
 
