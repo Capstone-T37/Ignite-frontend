@@ -30,7 +30,8 @@ const en = {
   homeNavigatorTab: {
     homeTab: "Home",
     activityTab: "Activities",
-    connectedTab: "Connected"
+    connectedTab: "Connected",
+    chatTab:"Chat"
 
   },
   emptyStateComponent: {
@@ -70,6 +71,18 @@ const en = {
   MeetForm: {
     Title: "Go Live!",
     SnackBarTextSuccess: "Meet created successfully !"
+  },
+  UsersListScreen: {
+    title: "Proximity chats",
+    tagLine: "Chat with people nearby!",
+    meetButtonText: "Meet!",
+    goLiveButtonText: "Go live?",
+    stopButtonText: "Stop?",
+    emptyStateHeading: "Dang!",
+    emptyStateContent: "No one is connected at the moment.",
+  },
+  DefaultModalContent:{
+    buttonText: "Send Request!"
   }
 }
 
