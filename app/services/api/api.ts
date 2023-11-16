@@ -10,7 +10,7 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, RequestSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
@@ -185,6 +185,66 @@ export class Api {
       }))
 
       return { kind: "ok", meets }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Get list of Requests
+   */
+  async getRequests(): Promise<{ kind: "ok"; requests: RequestSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<RequestSnapshotIn[]> = await this.apisauce.get(`requests/received`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      const requests: RequestSnapshotIn[] = rawData.map((raw) => ({
+        ...raw,
+      }))
+
+      return { kind: "ok", requests }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * Get count for requests
+   */
+   async getRequestCount(): Promise<{ kind: "ok"; count: number } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<number> = await this.apisauce.get(`requests/received/count`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      const count: number = rawData
+
+      return { kind: "ok", count }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)

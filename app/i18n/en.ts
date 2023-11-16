@@ -81,6 +81,9 @@ const en = {
     emptyStateHeading: "Dang!",
     emptyStateContent: "No one is connected at the moment.",
   },
+  DefaultModalContent:{
+    buttonText: "Send Request!"
+  }
 }
 
 export default en
