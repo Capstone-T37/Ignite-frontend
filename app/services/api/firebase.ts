@@ -11,9 +11,9 @@ export const DEFAULT_FIREBASE_CONFIG: FirebaseOptions = {
     projectId: "social-app-64380",
     storageBucket: "social-app-64380.appspot.com",
     messagingSenderId: "714375950645",
-    appId: "1:714375950645:web:345ce8434e59519f675c7c",
-    measurementId: "G-D8FE0SDFHC"
-};
+    appId: "1:714375950645:web:5148f6f25ab8462f675c7c",
+    measurementId: "G-KXWX1WBNKM"
+  }
 
 
 export class Firebase {

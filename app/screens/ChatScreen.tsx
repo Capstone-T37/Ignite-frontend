@@ -132,19 +132,26 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
       const conversationDoc = querySnapshot.docs.find(doc =>
         doc.data().userIDs.includes(userId) && doc.data().userIDs.includes(receiverId)
       );
-
+      const newConversationRef = conversationDoc?.ref ?? doc(conversationsRef);
       if (!conversationDoc) {
-        console.error("Conversation not found!");
-        return;
+        setDoc(newConversationRef, {
+          userIDs: [userId, receiverId],
+          lastMessage: "",
+          lastMessageTimestamp: serverTimestamp(),
+          unreadCount: { [userId]: 0, [receiverId]: 0 }
+        });
       }
 
-      const conversationRef: DocumentReference = conversationDoc.ref;
+      const conversationRef: DocumentReference = newConversationRef;
 
       // Fetching messages with real-time updates
       const messagesRef = collection(conversationRef, 'messages');
       const messagesQuery = query(messagesRef, orderBy('timestamp', 'desc'));
-
       onSnapshot(messagesQuery, (snapshot) => {
+        if (snapshot.empty) {
+          setMessages([])
+          return;
+        }
         const messages: RenderedMessages[] = snapshot.docs.map(doc => ({
           _id: doc.id,
           text: doc.data()?.text?.text,

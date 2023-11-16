@@ -227,7 +227,7 @@ export class Api {
   /**
    * Get count for requests
    */
-   async getRequestCount(): Promise<{ kind: "ok"; count: number } | GeneralApiProblem> {
+  async getRequestCount(): Promise<{ kind: "ok"; count: number } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<number> = await this.apisauce.get(`requests/received/count`,)
 
