@@ -106,7 +106,6 @@ export class Api {
   async getActivities(): Promise<{ kind: "ok"; activities: ActivitySnapshotIn[] } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<ActivityItem[]> = await this.apisauce.get(`activities`,)
-
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
