@@ -72,6 +72,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
       <Text tx="signInScreen.enterDetails" preset="subheading" style={$enterDetails} />
 
       <TextField
+        style={{ color: colors.textDark }}
         value={userId}
         onChangeText={setUserId}
         containerStyle={$textField}
@@ -85,6 +86,8 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
       />
 
       <TextField
+        style={{ color: colors.textDark }}
+
         ref={authPasswordInput}
         value={authPassword}
         onChangeText={setAuthPassword}
