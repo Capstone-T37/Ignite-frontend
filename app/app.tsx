@@ -29,7 +29,7 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-
+import { PaperProvider } from "react-native-paper"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 // Web linking configuration
@@ -95,17 +95,21 @@ function App(props: AppProps) {
 
   // otherwise, we're ready to render the app
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <ErrorBoundary catchErrors={Config.catchErrors}>
-        <BottomSheetModalProvider>
-          <AppNavigator
-            linking={linking}
-            initialState={initialNavigationState}
-            onStateChange={onNavigationStateChange}
-          />
-        </BottomSheetModalProvider>
-      </ErrorBoundary>
-    </SafeAreaProvider>
+    <PaperProvider>
+
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <ErrorBoundary catchErrors={Config.catchErrors}>
+          <BottomSheetModalProvider>
+            <AppNavigator
+              linking={linking}
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
+          </BottomSheetModalProvider>
+        </ErrorBoundary>
+      </SafeAreaProvider>
+    </PaperProvider>
+
   )
 }
 

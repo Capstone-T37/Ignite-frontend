@@ -24,10 +24,14 @@ export interface CreateActivity {
 export interface CreateMeet {
   description: string
 }
+export interface CreateRequest {
+  meetId: number
+}
 export interface MeetItem {
   id: number,
   userName: string,
   description: string,
+  isRequestSent: boolean
 }
 
 /**

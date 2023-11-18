@@ -48,7 +48,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
       reset()
       snackBarStore.setProp("createActivity", true)
     } catch (error) {
-
+      console.error(error)
     }
 
   }
