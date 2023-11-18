@@ -5,6 +5,7 @@ import {
   ConnectedScreen,
   WelcomeScreen
 } from "app/screens"
+import { colors } from "app/theme"
 
 export type RequestNavigatorParamList = {
   Connected: undefined
@@ -19,7 +20,7 @@ export const RequestNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, }}>
       <Stack.Screen name="Connected" component={ConnectedScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true,headerStyle:{backgroundColor:colors.backgroundAccent},headerTitleStyle:{color:colors.text} }} />
     </Stack.Navigator>
   )
 }

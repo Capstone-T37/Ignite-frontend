@@ -78,7 +78,6 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
             key={item.id}
             textStyle={$listItemDescription}
             text={item.login}
-            bottomSeparator={true}
             onPress={() => openChat(item?.login)}
             LeftComponent={
               <View style={$leftComponent} >
@@ -145,6 +144,9 @@ const $userName: TextStyle = {
 const $listItemContainer: ViewStyle = {
   height: spacing.xxxl + spacing.lg,
   justifyContent: 'center',
+  backgroundColor:colors.backgroundAccent,
+  borderRadius:spacing.md,
+  paddingHorizontal:spacing.sm
 }
 
 

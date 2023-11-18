@@ -18,17 +18,19 @@ const palette = {
   primary500: "#C76542",
   primary600: "#A54F31",
 
-  secondary100: "#DCDDE9",
+  secondary100: "#7968DA",
   secondary200: "#BCC0D6",
   secondary300: "#9196B9",
   secondary400: "#626894",
   secondary500: "#41476E",
 
-  accent100: "#FFEED4",
+  accent100: "#8AC187",
   accent200: "#FFE1B2",
   accent300: "#FDD495",
   accent400: "#FBC878",
   accent500: "#FFBB50",
+
+  yellow: "#FFD380",
 
   angry100: "#F2D6CD",
   angry500: "#C03403",
@@ -40,6 +42,12 @@ const palette = {
 } as const
 
 export const colors = {
+  shadow: {
+    shadowColor: '#171717',
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
   /**
    * The palette is available to use, but prefer using the name.
    * This is only included for rare, one-off cases. Try to use
@@ -53,7 +61,8 @@ export const colors = {
   /**
    * The default text color in many components.
    */
-  text: palette.neutral800,
+  text: "white",
+  textDark: "black",
   /**
    * Secondary text information.
    */
@@ -61,7 +70,8 @@ export const colors = {
   /**
    * The default color of the screen background.
    */
-  background: palette.neutral200,
+  background: "#23232D",
+  backgroundAccent: "#2C2C38",
   /**
    * The default border color.
    */

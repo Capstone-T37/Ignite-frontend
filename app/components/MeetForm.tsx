@@ -26,7 +26,7 @@ export const MeetForm = observer(function MeetForm(props: MeetFormProps) {
   const $styles = [$container, style]
   const { snackBarStore, profileStore } = useStores()
 
-  
+
 
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -37,14 +37,14 @@ export const MeetForm = observer(function MeetForm(props: MeetFormProps) {
   async function onSubmit(meet: CreateMeet) {
     try {
       const response = await api.postMeet(meet)
-      if(response.kind!=="ok"){
+      if (response.kind !== "ok") {
         Alert.alert("Something bad happened. Try again later!")
         return
       }
       meetSheet.current.close()
       reset()
       snackBarStore.setProp("createMeet", true)
-      profileStore.setProp("meetEnabled",true)
+      profileStore.setProp("meetEnabled", true)
     } catch (error) {
 
     }
@@ -67,12 +67,15 @@ export const MeetForm = observer(function MeetForm(props: MeetFormProps) {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            style={{
+              backgroundColor:'white'
+            }}
           />
         )}
 
         name="description"
       />
-      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit"  >
+      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.textDark }} >
       </Button>
 
     </View>

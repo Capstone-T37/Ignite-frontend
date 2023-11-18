@@ -47,22 +47,25 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
           text={activity.title}
           preset="heading"
         />
-        <View style={$addressContainer}>
-          <Image source={pinIcon} resizeMode="contain" />
-          <Text
-            testID="welcome-subheading"
-            style={$welcomeSubHeading}
-            text={activity.address}
-            preset="subheading"
-          />
-        </View>
       </View>
+
       <View style={$descriptionContainer}>
         <Text text={activity.description} size="md" />
       </View>
+
+      <View style={$addressContainer}>
+        <Image source={pinIcon} resizeMode="contain" />
+        <Text
+          testID="welcome-subheading"
+          style={$welcomeSubHeading}
+          text={activity.address}
+          preset="subheading"
+        />
+      </View>
       <Button
-      style={$joinButton}
+        style={$joinButton}
         tx="ActivityDetailsScreen.joinButton"
+        textStyle={$textStyle}
         onPress={() => { }}
       //style={}
       />
@@ -85,37 +88,35 @@ const $welcomeHeading: TextStyle = {
   marginBottom: spacing.md,
   alignSelf: 'center',
 }
+const $textStyle: TextStyle = {
+  color: colors.textDark
+}
 
 const $welcomeSubHeading: TextStyle = {
   marginBottom: spacing.md,
   paddingHorizontal: spacing.xs,
   alignSelf: 'center',
   fontFamily: typography.secondary.thin,
-  color: colors.textDim
 }
 const $addressContainer: TextStyle = {
   flexDirection: 'row',
   justifyContent: 'center',
   alignContent: 'center',
-
+  paddingVertical: spacing.sm
 }
 
 const $descriptionContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 0,
-  flexBasis: "43%",
   backgroundColor: colors.palette.secondary100,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
   paddingHorizontal: spacing.lg,
   paddingVertical: spacing.lg,
-  justifyContent: "space-around",
-  marginVertical: spacing.xxxl
+  marginTop: spacing.xxxl,
+  minHeight: 200
 }
 
 const $joinButton: ViewStyle = {
   marginTop: spacing.md,
-  marginHorizontal:spacing.xl,
+  marginHorizontal: spacing.xl,
   paddingHorizontal: spacing.md,
   minHeight: 32,
+  backgroundColor: colors.palette.accent100
 }

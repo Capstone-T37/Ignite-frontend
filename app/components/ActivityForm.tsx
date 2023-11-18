@@ -63,6 +63,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            style={$input}
             error={errors.title ? true : false}
             label="Title"
             placeholder="Activity title"
@@ -82,6 +83,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            style={$input}
             error={errors.description ? true : false}
             label="Description"
             placeholder="Activity description"
@@ -101,6 +103,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            style={$input}
             error={errors.address ? true : false}
             label="Address"
             placeholder="Activity address"
@@ -120,6 +123,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            style={$input}
             error={errors.maximum ? true : false}
             keyboardType="number-pad"
             label="Max"
@@ -148,7 +152,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
               }}
             />
             <Button style={{ borderColor: colors.border }} onPress={() => setOpen(true)}>
-              <Text>{value.toLocaleString()}</Text></Button>
+              <Text style={{ color: colors.textDark }}>{value.toLocaleString()}</Text></Button>
           </>
 
         )}
@@ -157,7 +161,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
 
 
 
-      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit"  >
+      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.text }} style={{backgroundColor:colors.backgroundAccent}} >
       </Button>
 
     </View>
@@ -168,6 +172,10 @@ const $container: ViewStyle = {
   flex: 1,
   padding: spacing.sm,
   justifyContent: 'space-around',
+  backgroundColor: colors.background
+}
+const $input: ViewStyle = {
+  backgroundColor: 'white'
 }
 
 

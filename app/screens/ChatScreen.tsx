@@ -8,7 +8,7 @@ import { Screen, Text } from "app/components"
 import { GiftedChat } from "react-native-gifted-chat"
 import { useNavigation } from "@react-navigation/native"
 import { firebase } from "app/services/api"
-import { spacing } from "app/theme"
+import { colors, spacing } from "app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { addDoc, collection, CollectionReference, doc, DocumentReference, FieldValue, Firestore, getDoc, getDocs, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore"
 import { ChattingNavigatorScreenProps } from "app/navigators/ChattingNavigator"
@@ -231,8 +231,9 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
 
   return (
 
-    <View style={{ height: '100%', paddingBottom: spacing.md }}>
+    <View style={{ height: '100%', paddingBottom: spacing.md, backgroundColor: colors.background }}>
       <GiftedChat
+        messagesContainerStyle={{ backgroundColor: colors.background }}
         messages={messages}
         onSend={(messages) => onSend(messages, userId, headerTitle.toString())}
         user={{

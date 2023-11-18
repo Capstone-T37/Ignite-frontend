@@ -34,7 +34,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
       </View>
 
       <View style={[$bottomContainer, $bottomContainerInsets]}>
-        <Text tx="welcomeScreen.postscript" size="md" />
+        <Text tx="welcomeScreen.postscript" size="md" style={{color:colors.textDark}}/>
       </View>
     </View>
   )
