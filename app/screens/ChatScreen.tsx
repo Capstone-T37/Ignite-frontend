@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle } from "react-native"
-import { $tabBar, AppStackScreenProps, ChattingNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
+
 import { Screen, Text } from "app/components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
@@ -11,6 +11,8 @@ import { firebase } from "app/services/api"
 import { spacing } from "app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { addDoc, collection, CollectionReference, doc, DocumentReference, FieldValue, Firestore, getDoc, getDocs, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore"
+import { ChattingNavigatorScreenProps } from "app/navigators/ChattingNavigator"
+import { $tabBar } from "app/navigators/HomeNavigator"
 interface ChatScreenProps extends ChattingNavigatorScreenProps<"Chat"> { }
 
 export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_props) {
@@ -93,10 +95,8 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
           read: false
         };
 
-        console.log("Setting new message in transaction");
         transaction.set(newMessageRef, messageData);
 
-        console.log("Updating conversation document in transaction");
         const updatedConversationData: Partial<ConversationData> = {
           lastMessage: messageText,
           lastMessageTimestamp: timestamp,
@@ -106,7 +106,6 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
         transaction.update(conversationRef, updatedConversationData);
       });
 
-      console.log("Message successfully created.");
     } catch (error) {
       console.error("Transaction failed: ", error);
     }
@@ -212,10 +211,10 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
   }
   React.useLayoutEffect(() => {
     navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
-    navigation.setOptions({ headerTitle: headerTitle.toString() })
+    navigation.setOptions({ headerTitle: headerTitle?.toString() })
 
       ; (async function load() {
-        await Promise.all([getConversation(userId, headerTitle.toString())])
+        await Promise.all([getConversation(userId, headerTitle?.toString())])
       })()
     return () => {
       navigation.getParent()?.setOptions({ tabBarStyle: [$tabBar, { display: "flex", height: bottom + 70, }] });
