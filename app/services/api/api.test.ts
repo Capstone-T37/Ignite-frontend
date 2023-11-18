@@ -1,12 +1,10 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
 import { Api } from './api'; // Adjust with actual path and class name
 import { UserCred } from '../../models/AuthenticationStore'
 
 
 
-describe('isAuthenticated method', () => {
-  let service: Api;
+describe('api apiService test suite', () => {
+  let apiService: Api;
 
   let Testcreds : UserCred = {
     username: 'admin',
@@ -15,19 +13,27 @@ describe('isAuthenticated method', () => {
   }
   
   beforeAll(async () => {
-      service = new Api();
+      apiService = new Api();
+  });
+
+  it('should return { kind: "ok" } after a successful authentication', async () => {
+
+    const result = apiService.apisauce.getBaseURL();
+    let expectedBaseUrl = 'http://localhost:8080/api/'
+    expect(result).toEqual(expectedBaseUrl);
+
   });
 
   it('should return false if user is not authenticated', async () => {
 
-    const result = await service.isAuthenticated();
+    const result = await apiService.isAuthenticated();
     expect(result.kind).toEqual("unauthorized");
     
   });
 
   it('should return { kind: "ok" } and a definedtoken for a successful authentication', async () => {
 
-    const result = await service.authenticate(Testcreds);
+    const result = await apiService.authenticate(Testcreds);
     expect(result.kind).toEqual("ok");
     //token should be returned
     expect(result['jwtToken']).toBeTruthy();
@@ -36,49 +42,49 @@ describe('isAuthenticated method', () => {
 
   it('should return true after a successful authentication', async () => {
 
-    const result = await service.isAuthenticated();
+    const result = await apiService.isAuthenticated();
     expect(result.kind).toBeTruthy();
 
   });
 
   it('should return { kind: "ok" } after a successful authentication', async () => {
 
-    const result = await service.getActivities();
+    const result = await apiService.getActivities();
     expect(result.kind).toBeTruthy();
 
   });
 
   it('should return { kind: "ok" } after a successful authentication', async () => {
 
-    const result = await service.getIsEnabledMeet();
+    const result = await apiService.getIsEnabledMeet();
     expect(result.kind).toBeTruthy();
 
   });
 
   it('should return { kind: "ok" } after a successful authentication', async () => {
 
-    const result = await service.getMeets();
+    const result = await apiService.getMeets();
     expect(result.kind).toBeTruthy();
 
   });
 
   it('should return { kind: "ok" } after a successful authentication', async () => {
 
-    const result = await service.getRequestCount();
+    const result = await apiService.getRequestCount();
     expect(result.kind).toBeTruthy();
 
   });
 
   it('should return { kind: "ok" } after a successful authentication', async () => {
 
-    const result = await service.getRequests();
+    const result = await apiService.getRequests();
     expect(result.kind).toBeTruthy();
 
   });
 
   it('should return { kind: "ok" } after a successful authentication', async () => {
 
-    const result = await service.getUsers();
+    const result = await apiService.getUsers();
     expect(result.kind).toBeTruthy();
 
   });
