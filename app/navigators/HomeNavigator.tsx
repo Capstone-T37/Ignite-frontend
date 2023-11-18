@@ -1,6 +1,5 @@
 import React from "react"
 import {
-  ConnectedScreen,
   WelcomeScreen
 } from "app/screens"
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -13,14 +12,13 @@ import { Icon } from "app/components"
 import { translate } from "app/i18n"
 import { ActivityNavigator } from "./ActivityNavigator"
 import { useStores } from "app/models"
-import { ChatScreen } from "app/screens/ChatScreen"
-import { UsersListScreen } from "app/screens/UsersListScreen"
 import { ChattingNavigator } from "./ChattingNavigator"
+import { RequestNavigator } from "./RequestNavigator"
 
 export type HomeTabParamList = {
   Welcome: undefined
   ActivityNavigator: undefined
-  Connected: undefined
+  RequestNavigator: undefined
   ChattingNavigator: undefined
 
 }
@@ -73,7 +71,7 @@ export const HomeNavigator = () => {
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),
         }} />
-      <Tab.Screen name="Connected" component={ConnectedScreen}
+      <Tab.Screen name="RequestNavigator" component={RequestNavigator}
         options={{
           tabBarLabel: translate("homeNavigatorTab.connectedTab"),
           tabBarIcon: ({ focused }) => (

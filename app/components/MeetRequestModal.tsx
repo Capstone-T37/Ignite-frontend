@@ -5,7 +5,7 @@ import { colors, typography } from "app/theme"
 import { Text } from "app/components/Text"
 import Modal from "react-native-modal";
 import DefaultModalContent from "./DefaultModalContent"
-
+import { Dialog, Portal } from 'react-native-paper';
 export interface MeetRequestModalProps {
   /**
    * An optional style override useful for padding & margin.
@@ -34,15 +34,17 @@ export const MeetRequestModal = observer(function MeetRequestModal(props: MeetRe
 
 
   return (
-    <Modal
-      testID={'modal'}
-      isVisible={isVisible}
-      onBackdropPress={() => { setIsVisible(false) }}
-      onSwipeComplete={() => { setIsVisible(false) }}
-      swipeDirection={['left', 'right']}
-      style={$styles}>
-      {children}
-    </Modal>
+    <Portal>
+
+      <Dialog style={$styles} visible={isVisible} onDismiss={() => setIsVisible(false)} dismissableBackButton={true}>
+
+        <Dialog.ScrollArea>
+
+          {children}
+        </Dialog.ScrollArea>
+      </Dialog>
+    </Portal>
+
   )
 })
 

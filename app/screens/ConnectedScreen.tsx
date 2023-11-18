@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { ActivityNavigatorScreenProps } from "app/navigators"
+import { ActivityNavigatorScreenProps, HomeTabScreenProps, RequestNavigatorScreenProps } from "app/navigators"
 import { Button, EmptyState, ListItem, MeetForm, Screen, Text } from "app/components"
 import { Meet, Request, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
@@ -12,17 +12,21 @@ import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { MeetRequestModal } from "app/components/MeetRequestModal"
 import DefaultModalContent from "app/components/DefaultModalContent"
 import { Divider } from 'react-native-paper';
+import { api } from "app/services/api"
+import { AntDesign } from '@expo/vector-icons';
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-interface ConnectedScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
+interface ConnectedScreenProps extends RequestNavigatorScreenProps<"Connected"> { }
 
 
-export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function ConnectedScreen() {
+export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function ConnectedScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
+  const { navigation } = _props
   const { meetStore, snackBarStore, profileStore, requestStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [selectedMeet, setSelectedMeet] = React.useState<number>(null)
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [isRequestVisible, setisRequestVisible] = React.useState(false);
   const [iListVisible, setisListVisible] = React.useState(false);
@@ -47,7 +51,6 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
   useEffect(() => {
     ; (async function load() {
       await Promise.all([requestStore.fetchRequestCount(), requestStore.fetchRequests()])
-      console.log("requestscount: ", requestStore.requestCount)
     })()
   }, [requestStore])
 
@@ -55,12 +58,22 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
     ; (async function load() {
       await profileStore.fetchStatus()
     })()
-  }, [])
+  }, [profileStore])
 
   return (
     <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
       <MeetRequestModal style={$sendModal} isVisible={isRequestVisible} setIsVisible={setisRequestVisible}>
-        <DefaultModalContent onPress={() => { setisRequestVisible(false) }} />
+        <DefaultModalContent onPress={async () => {
+          try {
+            setisRequestVisible(false)
+            await api.postRequest({ meetId: selectedMeet })
+            await meetStore.fetchMeets()
+            setSelectedMeet(undefined)
+          } catch (error) {
+            console.error(error)
+          }
+
+        }} />
       </MeetRequestModal>
 
       <MeetRequestModal style={$listModal} isVisible={iListVisible} setIsVisible={setisListVisible}>
@@ -76,20 +89,16 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
             isLoading ? (
               <ActivityIndicator />
             ) : (
-              <EmptyState
-                preset="generic"
-                style={$emptyState}
-                headingTx="ConnectedScreen.emptyStateHeading"
-                contentTx="ConnectedScreen.emptyStateContent"
-                //buttonOnPress={manualRefresh}
-                imageStyle={$emptyStateImage}
-                ImageProps={{ resizeMode: "contain" }}
-              />
+              <></>
             )
           }
 
           renderItem={({ item }) => (
             <ListItem text={item.userName} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true}
+              onPress={() => {
+                setisListVisible(false)
+                navigation.navigate("Chat", item.userName)
+              }}
             />
           )}
         />
@@ -125,8 +134,10 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
             {
               profileStore.isMeetEnabled ?
                 <Button
-                  onPress={() => {
-                    profileStore.disableStatus()
+                  onPress={async () => {
+                    profileStore.disableStatus().then(async () => {
+                      await Promise.all([requestStore.fetchRequestCount(), requestStore.fetchRequests()])
+                    })
                   }}
                   onLongPress={() => { }}
                   style={[$stopButton]}
@@ -155,27 +166,35 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                 <View style={$requestLeftComponent} ><Text text={"Requests"} size="xs" preset="heading" /></View>
               }
               RightComponent={
-                <View style={$requestRightComponent} ><Text text={String(requestStore.requestCount??0)} size="xs" preset="heading" /></View>
+                <View style={$requestRightComponent} ><Text text={String(requestStore.requestCount ?? 0)} size="xs" preset="heading" /></View>
               } />
           </View>
         }
         renderItem={({ item }) => (
-          <ListItem text={item.description} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true}
+          <ListItem text={item.description} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true} disabled
             LeftComponent={
               <View style={$leftComponent} ><Text text={item.userName} size="xs" preset="heading" /></View>
             }
             RightComponent={
-              <Button
-                onPress={() => { setisRequestVisible(true) }}
-                onLongPress={() => { }}
-                style={[$meetButton]}
-              >
-                <Text
-                  size="xxs"
-                  weight="medium"
-                  text={translate("ConnectedScreen.meetButtonText")}
-                />
-              </Button>
+              item.isRequestSent ?
+                <View style={{ justifyContent: 'center', height: '100%' }}>
+                  <AntDesign name="checkcircleo" size={spacing.xl} color="green" />
+                </View>
+                :
+                <Button
+                  onPress={() => {
+                    setSelectedMeet(item.id)
+                    setisRequestVisible(true)
+                  }}
+                  onLongPress={() => { }}
+                  style={[$meetButton]}
+                >
+                  <Text
+                    size="xxs"
+                    weight="medium"
+                    text={translate("ConnectedScreen.meetButtonText")}
+                  />
+                </Button>
             } />
         )}
       />
@@ -309,9 +328,11 @@ const $snackBarText: TextStyle = {
 const $sendModal: ViewStyle = {
   justifyContent: 'flex-end',
   margin: 20,
+  backgroundColor: 'white'
 }
 const $listModal: ViewStyle = {
   backgroundColor: 'white',
   borderRadius: 30,
-  marginVertical: spacing.xxxl
+  marginVertical: spacing.xxxl,
+  height:'70%',
 }
