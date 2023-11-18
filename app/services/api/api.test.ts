@@ -25,10 +25,12 @@ describe('isAuthenticated method', () => {
     
   });
 
-  it('should return { kind: "ok" } for a successful authentication', async () => {
+  it('should return { kind: "ok" } and a definedtoken for a successful authentication', async () => {
 
     const result = await service.authenticate(Testcreds);
     expect(result.kind).toEqual("ok");
+    //token should be returned
+    expect(result['jwtToken']).toBeTruthy();
 
   });
 
