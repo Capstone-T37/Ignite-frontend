@@ -85,6 +85,11 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
           contentContainerStyle={$flatListContentContainer}
           //refreshing={refreshing}
           //onRefresh={()=>}
+          ListHeaderComponent={
+            <View style={$heading}>
+              <Text preset="heading" tx="ConnectedScreen.requestsTitle" style={$requestTitle} />
+            </View>
+          }
           ListEmptyComponent={
             isLoading ? (
               <ActivityIndicator />
@@ -94,7 +99,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
           }
 
           renderItem={({ item }) => (
-            <ListItem text={item.userName} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true}
+            <ListItem text={item.userName} containerStyle={$listItemContainer} textStyle={$listItemDescription}
               onPress={() => {
                 setisListVisible(false)
                 navigation.navigate("Chat", item.userName)
@@ -112,21 +117,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
         contentContainerStyle={$flatListContentContainer}
         //refreshing={refreshing}
         //onRefresh={()=>}
-        ListEmptyComponent={
-          isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <EmptyState
-              preset="generic"
-              style={$emptyState}
-              headingTx="ConnectedScreen.emptyStateHeading"
-              contentTx="ConnectedScreen.emptyStateContent"
-              //buttonOnPress={manualRefresh}
-              imageStyle={$emptyStateImage}
-              ImageProps={{ resizeMode: "contain" }}
-            />
-          )
-        }
+        //ListEmptyComponent={}
         ListHeaderComponent={
           <View style={$heading}>
             <Text preset="heading" tx="ConnectedScreen.title" style={$title} />
@@ -143,7 +134,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                   style={[$stopButton]}
                 >
                   <Text
-                    style={{ color: 'white' }}
+                    style={{ color: colors.textDark }}
                     size="xxs"
                     weight="medium"
                     text={translate("ConnectedScreen.stopButtonText")}
@@ -155,6 +146,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                   style={[$goLiveButton]}
                 >
                   <Text
+                    style={{ color: colors.textDark }}
                     size="xxs"
                     weight="medium"
                     text={translate("ConnectedScreen.goLiveButtonText")}
@@ -171,7 +163,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
           </View>
         }
         renderItem={({ item }) => (
-          <ListItem text={item.description} containerStyle={$listItemContainer} textStyle={$listItemDescription} bottomSeparator={true} disabled
+          <ListItem text={item.description} containerStyle={$listItemContainer} textStyle={$listItemDescription} disabled
             LeftComponent={
               <View style={$leftComponent} ><Text text={item.userName} size="xs" preset="heading" /></View>
             }
@@ -193,6 +185,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                     size="xxs"
                     weight="medium"
                     text={translate("ConnectedScreen.meetButtonText")}
+                    style={{ color: colors.textDark }}
                   />
                 </Button>
             } />
@@ -208,13 +201,16 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
       </Snackbar>
       {// @ts-ignore}
         <BottomSheet
+          handleStyle={{ backgroundColor: colors.background }}
           ref={bottomSheetRef}
           index={-1}
           snapPoints={["70%"]}
           enablePanDownToClose={true}
           onChange={() => { }}
         >
-          <MeetForm meetSheet={bottomSheetRef} />
+          <MeetForm meetSheet={bottomSheetRef}
+            style={$bottomSheetStyle}
+          />
         </BottomSheet>
       }
     </Screen>
@@ -230,12 +226,8 @@ const $flatListContentContainer: ViewStyle = {
   paddingTop: spacing.lg + spacing.xl,
   paddingBottom: spacing.lg,
 }
-const $listTest: ViewStyle = {
-  justifyContent: "flex-end",
-  backgroundColor: 'white',
-  padding: spacing.xl,
-  borderRadius: 30,
-  borderColor: 'rgba(0, 0, 0, 0.1)',
+const $bottomSheetStyle: ViewStyle = {
+  backgroundColor: colors.background,
 }
 
 const $title: TextStyle = {
@@ -245,18 +237,13 @@ const $title: TextStyle = {
 const $tagline: TextStyle = {
   marginBottom: spacing.xxl,
 }
-
-
-const $emptyStateImage: ImageStyle = {
-  transform: [{ scaleX: isRTL ? -1 : 1 }],
+const $requestTitle: TextStyle = {
+  marginBottom: spacing.sm,
+  textAlign: 'center'
 }
 
 const $heading: ViewStyle = {
   marginBottom: spacing.md,
-}
-
-const $emptyState: ViewStyle = {
-  marginTop: spacing.xxl,
 }
 
 const $leftComponent: ViewStyle = {
@@ -287,6 +274,9 @@ const $listItemDescription: TextStyle = {
 const $listItemContainer: ViewStyle = {
   height: spacing.xxxl + spacing.lg,
   justifyContent: 'center',
+  backgroundColor: colors.backgroundAccent,
+  borderRadius: spacing.md,
+  paddingHorizontal: spacing.sm
 }
 
 const $requestsContainer: ViewStyle = {
@@ -297,24 +287,24 @@ const $requestsContainer: ViewStyle = {
 
 const $meetButton: ViewStyle = {
   borderRadius: 17,
-  backgroundColor: colors.palette.accent500,
-  borderColor: colors.palette.neutral300,
+  backgroundColor: colors.palette.yellow,
+  borderColor: colors.palette.yellow,
 }
 
 const $goLiveButton: ViewStyle = {
   borderRadius: 17,
-  backgroundColor: colors.palette.success100,
-  borderColor: colors.palette.neutral100,
+  backgroundColor: colors.palette.accent100,
+  borderColor: colors.palette.accent100,
 }
 
 const $stopButton: ViewStyle = {
   borderRadius: 17,
   backgroundColor: colors.palette.angry500,
-  borderColor: colors.palette.neutral100,
+  borderColor: colors.palette.angry500,
 }
 
 const $snackBar: ViewStyle = {
-  backgroundColor: colors.palette.success100,
+  backgroundColor: colors.palette.secondary100,
   marginLeft: spacing.xl,
   zIndex: 1
 
@@ -328,11 +318,12 @@ const $snackBarText: TextStyle = {
 const $sendModal: ViewStyle = {
   justifyContent: 'flex-end',
   margin: 20,
-  backgroundColor: 'white'
+  backgroundColor: colors.backgroundAccent
+
 }
 const $listModal: ViewStyle = {
-  backgroundColor: 'white',
+  backgroundColor: colors.background,
   borderRadius: 30,
   marginVertical: spacing.xxxl,
-  height:'70%',
+  height: '70%',
 }

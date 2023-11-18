@@ -22,22 +22,11 @@ export type ActivityNavigatorScreenProps<T extends keyof ActivityNavigatorParamL
 
 const Stack = createNativeStackNavigator<ActivityNavigatorParamList>()
 export const ActivityNavigator = () => {
-  const sheetRef = useRef<BottomSheetModal>(null);
 
   return (
-    <NavigationContext.Provider value={{ sheetRef: sheetRef }}>
       <Stack.Navigator screenOptions={{ navigationBarColor: colors.background, headerShown: false }}>
-        <Stack.Screen name="ActivityListScreen" component={ActivityListScreen} options={{
-          headerShown: true, headerStyle: { backgroundColor: colors.background }, headerRight: () => (
-            <>
-              <Ionicons name="add-circle"
-                size={spacing.xl}
-                color="black" onPress={() => sheetRef.current.expand()}
-              />
-            </>)
-        }} />
+        <Stack.Screen name="ActivityListScreen" component={ActivityListScreen} />
         <Stack.Screen name="ActivityDetails" component={ActivityDetailsScreen} />
       </Stack.Navigator>
-    </NavigationContext.Provider>
   )
 }

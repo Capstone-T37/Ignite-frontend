@@ -90,7 +90,7 @@ export const HomeNavigator = () => {
 }
 
 export const $tabBar: ViewStyle = {
-  backgroundColor: colors.background,
+  backgroundColor: colors.backgroundAccent,
   borderTopColor: colors.transparent,
 }
 

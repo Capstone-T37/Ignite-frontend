@@ -31,7 +31,7 @@ const en = {
     homeTab: "Home",
     activityTab: "Activities",
     connectedTab: "Connected",
-    chatTab:"Chat"
+    chatTab: "Chat"
 
   },
   emptyStateComponent: {
@@ -62,6 +62,7 @@ const en = {
     stopButtonText: "Stop?",
     emptyStateHeading: "Dang!",
     emptyStateContent: "No one is connected at the moment.",
+    requestsTitle: "Requests!"
   },
   ActivityForm: {
     Title: "Create your Activity",
@@ -81,7 +82,7 @@ const en = {
     emptyStateHeading: "Dang!",
     emptyStateContent: "No one is connected at the moment.",
   },
-  DefaultModalContent:{
+  DefaultModalContent: {
     buttonText: "Send Request!"
   }
 }

@@ -7,20 +7,21 @@ import { isRTL, translate } from "app/i18n"
 import { Activity, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
 import { delay } from "app/utils/delay"
-import BottomSheet from "@gorhom/bottom-sheet"
+import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { useNavigationContext } from "app/utils/NavigationContext"
 import { ActivityForm } from "app/components/ActivityForm"
 import { Snackbar } from "react-native-paper"
+import { FAB } from 'react-native-paper';
 
 interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
 
 export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function ActivityListScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
+  const sheetRef = useRef<BottomSheetModal>(null);
   const { activityStore, snackBarStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const { navigation } = _props
-  const { sheetRef } = useNavigationContext()
 
   function viewDetails(activity: Activity) {
 
@@ -44,7 +45,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   // const navigation = useNavigation()
   return (
     <>
-      <Screen preset="fixed" contentContainerStyle={$container} >
+      <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
         <FlatList<Activity>
           data={activityStore.activitiesForList}
           extraData={activityStore.activities.length}
@@ -71,6 +72,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
               <Text preset="heading" tx="ActivityScreen.title" style={$title} />
               <Text tx="ActivityScreen.tagLine" style={$tagline} />
             </View>
+
           }
           renderItem={({ item }) => (
             <ActivityCard
@@ -79,6 +81,11 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
               viewDetails={(item) => viewDetails(item)}
             />
           )}
+        />
+        <FAB
+          icon="plus"
+          style={$fabStyle}
+          onPress={() => sheetRef.current.expand()}
         />
         <Snackbar
           visible={snackBarStore.createActivity}
@@ -90,6 +97,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
         </Snackbar>
         {// @ts-ignore}
           <BottomSheet
+            handleStyle={{ backgroundColor: colors.background,shadowColor:'white' }}
             ref={sheetRef}
             index={-1}
             snapPoints={["100%"]}
@@ -116,7 +124,9 @@ const ActivityCard = observer(function ActivityCard({
 
   return (
     <Card
+      ContentTextProps={$metadata}
       style={$item}
+      contentStyle={$contentStyle}
       verticalAlignment="force-footer-bottom"
       onPress={() => viewDetails(activity)}
       onLongPress={() => { }}
@@ -146,6 +156,7 @@ const ActivityCard = observer(function ActivityCard({
           style={[$favoriteButton]}
         >
           <Text
+            style={$metadataText}
             size="xxs"
             weight="medium"
             text={translate("ActivityScreen.joinButtonContent")}
@@ -178,8 +189,8 @@ const $favoriteButton: ViewStyle = {
   borderRadius: 17,
   marginTop: spacing.md,
   justifyContent: "flex-start",
-  backgroundColor: colors.palette.neutral300,
-  borderColor: colors.palette.neutral300,
+  backgroundColor: colors.palette.accent100,
+  borderColor: colors.palette.accent100,
   paddingHorizontal: spacing.md,
   paddingTop: spacing.xxxs,
   paddingBottom: 0,
@@ -200,7 +211,12 @@ const $metadata: TextStyle = {
 }
 
 const $metadataText: TextStyle = {
-  color: colors.textDim,
+  color: colors.textDark,
+  marginEnd: spacing.md,
+  marginBottom: spacing.xs,
+}
+const $contentStyle: TextStyle = {
+  color: colors.textDark,
   marginEnd: spacing.md,
   marginBottom: spacing.xs,
 }
@@ -216,8 +232,13 @@ const $heading: ViewStyle = {
 const $emptyState: ViewStyle = {
   marginTop: spacing.xxl,
 }
-
-
+const $fabStyle: ViewStyle = {
+  position: 'absolute',
+  margin: 16,
+  right: 0,
+  bottom: 0,
+  backgroundColor: colors.palette.secondary100
+}
 
 const $snackBar: ViewStyle = {
   backgroundColor: colors.palette.success100,

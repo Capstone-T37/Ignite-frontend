@@ -34,7 +34,7 @@ export const DefaultModalContent = observer(function DefaultModalContent(props: 
 })
 
 const $content: ViewStyle = {
-    backgroundColor: 'white',
+    backgroundColor: colors.backgroundAccent,
     padding: spacing.xl,
     justifyContent: 'center',
     alignItems: 'center',
