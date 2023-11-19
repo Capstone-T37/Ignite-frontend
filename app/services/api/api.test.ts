@@ -16,7 +16,7 @@ describe('api apiService test suite', () => {
       apiService = new Api();
   });
 
-  it('should call the correct base url', async () => {
+  it('should use the correct base url for api calls', async () => {
 
     const result = apiService.apisauce.getBaseURL();
     let expectedBaseUrl = 'http://localhost:8080/api/'
