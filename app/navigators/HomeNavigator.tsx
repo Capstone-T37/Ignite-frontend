@@ -1,5 +1,6 @@
 import React from "react"
 import {
+  ProfileScreen,
   WelcomeScreen
 } from "app/screens"
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -20,7 +21,7 @@ export type HomeTabParamList = {
   ActivityNavigator: undefined
   RequestNavigator: undefined
   ChattingNavigator: undefined
-
+  Profile: undefined
 }
 
 /**
@@ -81,6 +82,16 @@ export const HomeNavigator = () => {
       <Tab.Screen name="ChattingNavigator" component={ChattingNavigator}
         options={{
           tabBarLabel: translate("homeNavigatorTab.chatTab"),
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="components" color={focused && colors.tint} size={30} />
+          ),
+        }} />
+      <Tab.Screen name="Profile" component={ProfileScreen}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle:{color:colors.text},
+          tabBarLabel: translate("homeNavigatorTab.porfileTab"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="components" color={focused && colors.tint} size={30} />
           ),

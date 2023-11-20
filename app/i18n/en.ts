@@ -31,7 +31,8 @@ const en = {
     homeTab: "Home",
     activityTab: "Activities",
     connectedTab: "Connected",
-    chatTab: "Chat"
+    chatTab: "Chat",
+    porfileTab:"Profile"
 
   },
   emptyStateComponent: {
