@@ -1,11 +1,14 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { Image, TextStyle, View, ViewStyle } from "react-native"
+import { Image, ScrollView, TextStyle, TouchableOpacity, View, ViewStyle, StyleSheet, ImageStyle } from "react-native"
 import { ActivityNavigatorScreenProps } from "app/navigators"
-import { Button, EmptyState, Screen, Text } from "app/components"
+import { AutoImage, Button, EmptyState, Screen, Text } from "app/components"
 import { colors, spacing, typography } from "app/theme"
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
-
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import { Chip } from 'react-native-paper';
+import { getDownloadURL, ref } from "firebase/storage"
+import { firebase } from "app/services/api"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -15,12 +18,20 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
-  const pinIcon = require("../../assets/icons/pin.png")
+  const sadFace = require("../../assets/images/sad-face.png")
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
-
-
+  const [profilePic, setProfilePic] = React.useState("")
   const { navigation, route } = _props
   const activity = route.params
+  React.useEffect(() => {
+    const picRef = ref(firebase.storage, `users/admin/${activity.userName}/profilePic`);
+    getDownloadURL(picRef).then(async (downloadURL) => {
+      console.log('File available at', downloadURL);
+      setProfilePic(downloadURL)
+    }).catch(()=>setProfilePic(""))
+  }, [])
+
+
   if (!activity) {
     return <EmptyState
       preset="generic"
@@ -37,86 +48,142 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
   // Pull in navigation via hook
   // const navigation = useNavigation()
   return (
-    <Screen style={$screenContainer} preset="scroll"
-      safeAreaEdges={["top", "bottom"]}
-    >
-      <View style={$topContainer}>
-        <Text
-          testID="welcome-heading"
-          style={$welcomeHeading}
-          text={activity.title}
-          preset="heading"
-        />
+    <Screen preset="scroll" safeAreaEdges={["top"]} style={styles.container} contentContainerStyle={{ height: '100%', justifyContent: 'center' }} >
+      {/* Main Content */}
+      <View style={styles.mainContent}>
+        <View style={{ flexDirection: "row", justifyContent: 'space-around', alignItems: 'center' }}>
+          {profilePic ?
+            <AutoImage
+              resizeMode="cover"
+              resizeMethod="scale"
+              style={$imageContainer}
+              maxHeight={80}
+              maxWidth={80}
+              source={{ uri: profilePic }}
+            />
+            : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
+          }
+          <View>
+            <Text style={styles.title}>{activity.title}</Text>
+            <Text style={styles.author}>by {activity.userName}</Text>
+          </View>
+        </View>
+        <Text style={styles.description}>
+          {activity.description}
+        </Text>
+        <View>
+
+          {/* Tags */}
+          <Text text="Tags:" />
+          <View style={styles.tagsContainer}>
+            {['Adobe', 'Art', 'Artist', 'Creative Corner', 'Illustration', 'Home', 'Creative Designer'].map(tag => (
+              <Chip key={tag} style={styles.tag} textStyle={styles.tagText} onPress={() => console.log('Pressed')}>{tag}</Chip>
+            ))}
+          </View>
+
+          {/* Action Buttons */}
+          <View style={styles.actionButtons}>
+            <TouchableOpacity style={styles.joinButton}>
+              <Text style={styles.buttonText}>Join!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
-      <View style={$descriptionContainer}>
-        <Text text={activity.description} size="md" />
-      </View>
-
-      <View style={$addressContainer}>
-        <Image source={pinIcon} resizeMode="contain" />
-        <Text
-          testID="welcome-subheading"
-          style={$welcomeSubHeading}
-          text={activity.address}
-          preset="subheading"
-        />
-      </View>
-      <Button
-        style={$joinButton}
-        tx="ActivityDetailsScreen.joinButton"
-        textStyle={$textStyle}
-        onPress={() => { }}
-      //style={}
-      />
     </Screen>
   )
 })
 
-const $screenContainer: ViewStyle = {
-  flex: 1,
-}
-
-const $topContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 1,
-  flexBasis: "57%",
-  justifyContent: "center",
-}
-
-const $welcomeHeading: TextStyle = {
-  marginBottom: spacing.md,
-  alignSelf: 'center',
-}
-const $textStyle: TextStyle = {
-  color: colors.textDark
-}
-
-const $welcomeSubHeading: TextStyle = {
-  marginBottom: spacing.md,
-  paddingHorizontal: spacing.xs,
-  alignSelf: 'center',
-  fontFamily: typography.secondary.thin,
-}
-const $addressContainer: TextStyle = {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignContent: 'center',
-  paddingVertical: spacing.sm
-}
-
-const $descriptionContainer: ViewStyle = {
-  backgroundColor: colors.palette.secondary100,
-  paddingHorizontal: spacing.lg,
-  paddingVertical: spacing.lg,
-  marginTop: spacing.xxxl,
-  minHeight: 200
-}
-
-const $joinButton: ViewStyle = {
-  marginTop: spacing.md,
-  marginHorizontal: spacing.xl,
-  paddingHorizontal: spacing.md,
-  minHeight: 32,
-  backgroundColor: colors.palette.accent100
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  iconButton: {
+    padding: 8,
+  },
+  interactionText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  mainContent: {
+    backgroundColor: colors.backgroundAccent,
+    borderRadius: 25,
+    padding: 16,
+    marginHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    height: "60%",
+    justifyContent: 'space-between',
+    alignContent: 'center'
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 4,
+  },
+  author: {
+    fontSize: 16,
+    color: colors.textDim,
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 20,
+    color: colors.text,
+    marginBottom: 8,
+  },
+  tagsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 16,
+  },
+  tag: {
+    backgroundColor: colors.palette.secondary100,
+    borderRadius: 18,
+    margin: 3
+  },
+  tagText: {
+    fontWeight: 'bold',
+    fontSize: 8,
+    color: colors.text
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 16,
+  },
+  joinButton: {
+    flexDirection: 'row',
+    backgroundColor: colors.palette.accent100,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: colors.textDark,
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  likedButtonText: {
+    marginLeft: 8,
+  },
+  bottomNavPlaceholder: {
+    height: 60,
+    backgroundColor: '#C4C4C4', // Placeholder color for bottom navigation
+    marginTop: 16,
+  },
+});
+const $imageContainer: ImageStyle = {
+  borderWidth: 1,
+  borderColor: 'white',
+  borderRadius: 40,
+  height: 80,
+  width: 80
 }

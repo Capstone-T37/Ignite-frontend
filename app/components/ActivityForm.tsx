@@ -35,8 +35,6 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
     defaultValues: {
       title: '',
       description: '',
-      address: '',
-      maximum: '',
       date: new Date()
     }
   });
@@ -98,46 +96,6 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
 
       <Controller
         control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={$input}
-            error={errors.address ? true : false}
-            label="Address"
-            placeholder="Activity address"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="address"
-      />
-
-      <Controller
-        control={control}
-        rules={{
-          max: 20,
-          required: true
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={$input}
-            error={errors.maximum ? true : false}
-            keyboardType="number-pad"
-            label="Max"
-            placeholder="Max number of participants"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="maximum"
-      />
-
-      <Controller
-        control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <>
             <DatePicker
@@ -161,7 +119,7 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
 
 
 
-      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.text }} style={{backgroundColor:colors.backgroundAccent}} >
+      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.text }} style={{ backgroundColor: colors.backgroundAccent }} >
       </Button>
 
     </View>

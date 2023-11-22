@@ -22,6 +22,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
   const { userStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const { navigation } = _props
+  const [profilePic, setProfilePic] = React.useState("")
 
   function openChat(userName: String) {
     navigation.navigate("Chat", userName)
@@ -79,16 +80,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
             textStyle={$listItemDescription}
             text={item.login}
             onPress={() => openChat(item?.login)}
-            LeftComponent={
-              <View style={$leftComponent} >
-                <Image
-                  source={{
-                    uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/old_logo.png'
-                  }}
-                  style={{ width: 50, height: 50, borderRadius: 50 / 2 }}
-                />
-              </View>
-            } />
+          />
         )}
       />
     </Screen>
@@ -134,7 +126,7 @@ const $leftComponent: ViewStyle = {
 
 const $listItemDescription: TextStyle = {
   textAlign: 'center',
-  fontSize: spacing.md
+  fontSize: spacing.xl
 }
 
 const $userName: TextStyle = {
@@ -144,9 +136,9 @@ const $userName: TextStyle = {
 const $listItemContainer: ViewStyle = {
   height: spacing.xxxl + spacing.lg,
   justifyContent: 'center',
-  backgroundColor:colors.backgroundAccent,
-  borderRadius:spacing.md,
-  paddingHorizontal:spacing.sm
+  backgroundColor: colors.backgroundAccent,
+  borderRadius: spacing.md,
+  paddingHorizontal: spacing.sm
 }
 
 

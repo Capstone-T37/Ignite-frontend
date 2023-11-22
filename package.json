@@ -65,6 +65,7 @@
     "react-native-date-picker": "^4.3.3",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-gifted-chat": "^2.4.0",
+    "react-native-image-picker": "^7.0.2",
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^5.10.6",
     "react-native-reanimated": "~2.14.4",
@@ -125,8 +126,8 @@
     "typescript": "^5.0.4"
   },
   "resolutions": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0"
   },
   "engines": {
     "node": ">=18"
