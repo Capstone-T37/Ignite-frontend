@@ -6,6 +6,7 @@ import {
 import { UsersListScreen } from "app/screens/UsersListScreen"
 import { ChatScreen } from "app/screens/ChatScreen"
 import { colors } from "app/theme"
+import { Button } from "app/components/Button"
 
 export type ChattingNavigatorParamList = {
   UsersList: undefined
@@ -20,7 +21,11 @@ export const ChattingNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, }}>
       <Stack.Screen name="UsersList" component={UsersListScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true,headerStyle:{backgroundColor:colors.backgroundAccent},headerTitleStyle:{color:colors.text} }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ 
+        headerShown: true,
+        headerStyle:{backgroundColor:colors.backgroundAccent},
+        headerTitleStyle:{color:colors.text},
+        }} />
     </Stack.Navigator>
   )
 }

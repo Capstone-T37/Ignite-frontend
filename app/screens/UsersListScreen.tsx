@@ -70,8 +70,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
         }
         ListHeaderComponent={
           <View style={$heading}>
-            <Text preset="heading" tx="UsersListScreen.title" style={$title} />
-            <Text tx="UsersListScreen.tagLine" style={$tagline} />
+            <Text preset="bold" tx="UsersListScreen.title" style={$title} />
           </View>
         }
         renderItem={({ item }) => (
@@ -80,7 +79,16 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
             textStyle={$listItemDescription}
             text={item.login}
             onPress={() => openChat(item?.login)}
-          />
+            LeftComponent={
+              <View style={$leftComponent} >
+                <Image
+                  source={{
+                    uri: 'https://imageio.forbes.com/specials-images/imageserve/5c76b7d331358e35dd2773a9/0x0.jpg?format=jpg&crop=4401,4401,x0,y0,safe&height=416&width=416&fit=bounds'
+                  }}
+                  style={{ width: 45, marginTop:spacing.xs - 3 , height: 45, borderRadius: 50 / 2 }}
+                />
+              </View>
+            } />
         )}
       />
     </Screen>
@@ -93,13 +101,14 @@ const $container: ViewStyle = {
 }
 
 const $flatListContentContainer: ViewStyle = {
-  paddingHorizontal: spacing.lg,
-  paddingTop: spacing.lg + spacing.xl,
+  paddingTop: spacing.xl,
   paddingBottom: spacing.lg,
 }
 
 const $title: TextStyle = {
-  marginBottom: spacing.sm,
+  marginBottom: spacing.xs - 4,
+  fontSize: spacing.lg
+
 }
 
 const $tagline: TextStyle = {
@@ -113,6 +122,7 @@ const $emptyStateImage: ImageStyle = {
 
 const $heading: ViewStyle = {
   marginBottom: spacing.md,
+  marginLeft: spacing.md
 }
 
 const $emptyState: ViewStyle = {
@@ -134,11 +144,12 @@ const $userName: TextStyle = {
 }
 
 const $listItemContainer: ViewStyle = {
-  height: spacing.xxxl + spacing.lg,
+  height: spacing.xxxl ,
   justifyContent: 'center',
-  backgroundColor: colors.backgroundAccent,
-  borderRadius: spacing.md,
-  paddingHorizontal: spacing.sm
+  backgroundColor:colors.backgroundAccent,
+  borderWidth: 1,
+  borderColor: "#3F3F3F",
+  paddingHorizontal:spacing.sm
 }
 
 

@@ -62,21 +62,34 @@ export const HomeNavigator = () => {
           //tabBarStyle: { display: "none" },
           tabBarLabel: translate("homeNavigatorTab.activityTab"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
+            <Icon 
+              icon="components" 
+              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
+              size={30} 
+            />
           ),
         }} />
       <Tab.Screen name="Welcome" component={WelcomeScreen}
         options={{
           tabBarLabel: translate("homeNavigatorTab.homeTab"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
-          ),
+            <Icon 
+              icon="components" 
+              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
+              size={30} 
+            />
+          )
+          ,
         }} />
       <Tab.Screen name="RequestNavigator" component={RequestNavigator}
         options={{
           tabBarLabel: translate("homeNavigatorTab.connectedTab"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
+            <Icon 
+              icon="components" 
+              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
+              size={30} 
+            />
           ),
         }} />
       <Tab.Screen name="ChattingNavigator" component={ChattingNavigator}
@@ -106,7 +119,7 @@ export const $tabBar: ViewStyle = {
 }
 
 const $tabBarItem: ViewStyle = {
-  paddingTop: spacing.md,
+  paddingTop: spacing.md
 }
 
 const $tabBarLabel: TextStyle = {

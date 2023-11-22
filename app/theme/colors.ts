@@ -93,4 +93,10 @@ export const colors = {
    *
    */
   errorBackground: palette.angry100,
+
+  //chat border color
+  chatBorderColor: "#3F3F3F",
+
+  //recepient bubble (left) color
+  chatLeftBubbleColor: "#151515"
 }
