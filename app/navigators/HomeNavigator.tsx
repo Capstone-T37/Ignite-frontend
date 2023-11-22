@@ -14,6 +14,7 @@ import { ActivityNavigator } from "./ActivityNavigator"
 import { useStores } from "app/models"
 import { ChattingNavigator } from "./ChattingNavigator"
 import { RequestNavigator } from "./RequestNavigator"
+import ProfileScreen from "app/screens/ProfileScreen"
 
 export type HomeTabParamList = {
   Welcome: undefined
@@ -102,6 +103,18 @@ export const HomeNavigator = () => {
             />
           ),
         }} />
+
+      <Tab.Screen name="profileNavigator" component={ProfileScreen}
+              options={{
+                tabBarLabel: translate("homeNavigatorTab.profileTab"),
+                tabBarIcon: ({ focused }) => (
+                  <Icon 
+                    icon="community" 
+                    color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
+                    size={30} 
+                  />
+                ),
+              }} />
     </Tab.Navigator>
   )
 }
