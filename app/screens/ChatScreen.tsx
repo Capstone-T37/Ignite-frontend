@@ -1,11 +1,12 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle } from "react-native"
+import { Icon } from 'react-native-elements';
 
 import { Screen, Text } from "app/components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
-import { GiftedChat } from "react-native-gifted-chat"
+import { GiftedChat, InputToolbar, Composer, Send, Actions, Bubble, Avatar } from 'react-native-gifted-chat';
 import { useNavigation } from "@react-navigation/native"
 import { firebase } from "app/services/api"
 import { colors, spacing } from "app/theme"
@@ -229,17 +230,132 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
     createMessage(userId, receiverId, messages.pop())
   }, []);
 
+  const handlePlusAction = () => {
+    // Logic for what happens when the plus button is pressed
+  };
+
+  const renderActions = (props) => (
+    <Actions
+      {...props}
+      containerStyle={{
+        width: 30,
+        height: 30,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: spacing.sm + 2,
+        marginRight: spacing.sm - 3,
+        marginBottom: spacing.sm + 1.5,
+        backgroundColor: colors.chatBorderColor,
+      }}
+      icon={() => (
+        <Icon name="attach-file" type="material" color="#999999" />
+      )}
+      onPressActionButton={handlePlusAction}
+    />
+  );
+
+  const renderSend = (props) => (
+    <Send
+      {...props}
+      containerStyle={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginRight: 10,
+        marginBottom: spacing.xs - 0.5
+      }}
+    >
+      <Icon name="send" type="material" color="#3D90E3" size={30} />
+    </Send>
+  );
+
+  
+
+  const renderBubble = (props) => (
+    <Bubble
+      {...props}
+      renderUsernameOnMessage={true}
+      containerStyle={{
+        left: {
+          marginLeft: -spacing.xxl + spacing.xs - 4
+        }
+      }}
+      wrapperStyle={{
+        right: {
+          backgroundColor: colors.background,
+          borderWidth : 1,
+          borderColor: colors.chatBorderColor,
+           // Background color for messages you send
+        },
+        left: {
+          backgroundColor: colors.chatLeftBubbleColor,
+          borderWidth : 1,
+          borderColor: colors.chatBorderColor,
+           // Background color for messages you receive
+        },
+      }}
+      textStyle={{
+        right: {
+          color: colors.palette.neutral100, // Text color for messages you send
+        },
+        left: {
+          color: colors.palette.neutral200, // Text color for messages you receive
+        },
+      }}
+    />
+  );
+
   return (
 
     <View style={{ height: '100%', paddingBottom: spacing.md, backgroundColor: colors.background }}>
       <GiftedChat
-        messagesContainerStyle={{ backgroundColor: colors.background }}
+        messagesContainerStyle={{ backgroundColor: colors.background , height: "96%"}}
         messages={messages}
         onSend={(messages) => onSend(messages, userId, headerTitle.toString())}
         user={{
           _id: firebase.auth?.currentUser?.uid,
           //avatar: auth?.currentUser?.photoURL
         }}
+
+        renderBubble={renderBubble}
+
+        renderInputToolbar={(props) => (
+          <InputToolbar
+            {...props}
+            containerStyle={{
+              backgroundColor: colors.background,
+              borderTopColor: colors.background,
+              borderTopWidth: 1,
+            }}
+          />
+        )}
+
+        renderComposer={(props) => (
+          <Composer
+            {...props}
+            textInputStyle={{
+              color: colors.palette.neutral100,
+              backgroundColor: colors.background,
+              borderWidth: 1,
+              borderRadius: 20,
+              borderColor: colors.chatBorderColor,
+              paddingTop: 8.5,
+              paddingHorizontal: 12,
+              marginLeft: 0,
+              marginRight: spacing.md,
+              marginBottom: spacing.sm + 1,
+            }}
+            textInputProps={{
+              placeholder: "reply", // Your placeholder text
+              placeholderTextColor: colors.chatBorderColor, // Placeholder text color
+            }}
+          />
+        )}
+
+        renderActions={renderActions}
+
+        renderSend={renderSend}
       />
     </View>
 
