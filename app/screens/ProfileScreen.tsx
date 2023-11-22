@@ -5,6 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Button, Menu, Divider, Provider } from 'react-native-paper';
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { useStores } from "app/models";
 
 
 
@@ -15,6 +16,7 @@ type Props = {
 
 const ProfileScreen = (props: Props) => {
 
+    const { authenticationStore } = useStores()
 
     return (
         <SafeAreaView style={styles.container}>
@@ -38,7 +40,7 @@ const ProfileScreen = (props: Props) => {
                 </View>
 
                 <View style={styles.infoContainer}>
-                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>Julie</Text>
+                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{authenticationStore.userName}</Text>
                     <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>Photographer</Text>
                 </View>
 
