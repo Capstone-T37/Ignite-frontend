@@ -22,6 +22,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
   const { userStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const { navigation } = _props
+  const [profilePic, setProfilePic] = React.useState("")
 
   function openChat(userName: String) {
     navigation.navigate("Chat", userName)
@@ -135,7 +136,7 @@ const $leftComponent: ViewStyle = {
 
 const $listItemDescription: TextStyle = {
   textAlign: 'center',
-  fontSize: spacing.md
+  fontSize: spacing.xl
 }
 
 const $userName: TextStyle = {

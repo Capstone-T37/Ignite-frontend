@@ -97,7 +97,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
         </Snackbar>
         {// @ts-ignore}
           <BottomSheet
-            handleStyle={{ backgroundColor: colors.background,shadowColor:'white' }}
+            handleStyle={{ backgroundColor: colors.background, shadowColor: 'white' }}
             ref={sheetRef}
             index={-1}
             snapPoints={["100%"]}
@@ -139,16 +139,9 @@ const ActivityCard = observer(function ActivityCard({
           >
             {activity.date}
           </Text>
-          <Text
-            style={$metadataText}
-            size="xxs"
-            accessibilityLabel={activity.maximum.toString()}
-          >
-            {activity.maximum}
-          </Text>
         </View>
       }
-      content={`${activity.firstName} - ${activity.title}`}
+      content={`${activity.userName} - ${activity.title}`}
       FooterComponent={
         <Button
           onPress={() => { }}

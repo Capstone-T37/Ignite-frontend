@@ -2,6 +2,7 @@ import { initializeApp, FirebaseOptions, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from "firebase/auth";
 import { signInWithCustomToken } from "firebase/auth";
 import { Firestore, getFirestore } from "firebase/firestore";
+import { FirebaseStorage, getStorage } from "firebase/storage";
 /**
  * Configuring the firebase instance.
  */
@@ -13,7 +14,7 @@ export const DEFAULT_FIREBASE_CONFIG: FirebaseOptions = {
     messagingSenderId: "714375950645",
     appId: "1:714375950645:web:5148f6f25ab8462f675c7c",
     measurementId: "G-KXWX1WBNKM"
-  }
+}
 
 
 export class Firebase {
@@ -21,12 +22,14 @@ export class Firebase {
     auth: Auth
     config: FirebaseOptions
     db: Firestore
+    storage: FirebaseStorage
 
     constructor(config: FirebaseOptions = DEFAULT_FIREBASE_CONFIG) {
         this.config = config;
         this.firebase = initializeApp(this.config)
         this.auth = getAuth(this.firebase)
         this.db = getFirestore(this.firebase)
+        this.storage = getStorage(this.firebase)
     }
     async signInWithCustomToken(customToken: string) {
         try {

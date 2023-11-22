@@ -24,9 +24,9 @@ const Stack = createNativeStackNavigator<ActivityNavigatorParamList>()
 export const ActivityNavigator = () => {
 
   return (
-      <Stack.Navigator screenOptions={{ navigationBarColor: colors.background, headerShown: false }}>
-        <Stack.Screen name="ActivityListScreen" component={ActivityListScreen} />
-        <Stack.Screen name="ActivityDetails" component={ActivityDetailsScreen} />
-      </Stack.Navigator>
+    <Stack.Navigator screenOptions={{ navigationBarColor: colors.background, headerShown: false }}>
+      <Stack.Screen name="ActivityListScreen" component={ActivityListScreen} />
+      <Stack.Screen name="ActivityDetails" component={ActivityDetailsScreen} options={{ headerShown: true, headerTransparent: true, headerTitle: "" }} />
+    </Stack.Navigator>
   )
 }

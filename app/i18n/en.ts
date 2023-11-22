@@ -32,7 +32,7 @@ const en = {
     activityTab: "Activities",
     connectedTab: "Connected",
     chatTab: "Chat",
-    profileTab: "profile"
+    porfileTab:"Profile"
 
   },
   emptyStateComponent: {

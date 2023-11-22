@@ -1,5 +1,6 @@
 import React from "react"
 import {
+  ProfileScreen,
   WelcomeScreen
 } from "app/screens"
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -14,14 +15,13 @@ import { ActivityNavigator } from "./ActivityNavigator"
 import { useStores } from "app/models"
 import { ChattingNavigator } from "./ChattingNavigator"
 import { RequestNavigator } from "./RequestNavigator"
-import ProfileScreen from "app/screens/ProfileScreen"
 
 export type HomeTabParamList = {
   Welcome: undefined
   ActivityNavigator: undefined
   RequestNavigator: undefined
   ChattingNavigator: undefined
-
+  Profile: undefined
 }
 
 /**
@@ -96,25 +96,19 @@ export const HomeNavigator = () => {
         options={{
           tabBarLabel: translate("homeNavigatorTab.chatTab"),
           tabBarIcon: ({ focused }) => (
-            <Icon 
-              icon="components" 
-              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
-              size={30} 
-            />
+            <Icon icon="components" color={focused && colors.tint} size={30} />
           ),
         }} />
-
-      <Tab.Screen name="profileNavigator" component={ProfileScreen}
-              options={{
-                tabBarLabel: translate("homeNavigatorTab.profileTab"),
-                tabBarIcon: ({ focused }) => (
-                  <Icon 
-                    icon="community" 
-                    color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
-                    size={30} 
-                  />
-                ),
-              }} />
+      <Tab.Screen name="Profile" component={ProfileScreen}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle:{color:colors.text},
+          tabBarLabel: translate("homeNavigatorTab.porfileTab"),
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="components" color={focused && colors.tint} size={30} />
+          ),
+        }} />
     </Tab.Navigator>
   )
 }

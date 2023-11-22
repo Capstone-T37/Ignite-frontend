@@ -8,16 +8,14 @@ export const ActivityModel = types
   .model("Activity")
   .props({
     id: types.number,
-    firstName: "",
+    userName: "",
     title: "",
     description: "",
-    address: "",
     date: "",
-    maximum: types.integer,
   })
   .actions(withSetPropAction)
   .views((activity) => ({
-    
+
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
 
