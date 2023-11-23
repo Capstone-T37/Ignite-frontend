@@ -137,25 +137,11 @@ const ActivityCard = observer(function ActivityCard({
             size="xxs"
             accessibilityLabel={activity.date}
           >
-            {activity.date}
+            {new Date(activity.date).toLocaleString()}
           </Text>
         </View>
       }
       content={`${activity.userName} - ${activity.title}`}
-      FooterComponent={
-        <Button
-          onPress={() => { }}
-          onLongPress={() => { }}
-          style={[$favoriteButton]}
-        >
-          <Text
-            style={$metadataText}
-            size="xxs"
-            weight="medium"
-            text={translate("ActivityScreen.joinButtonContent")}
-          />
-        </Button>
-      }
     />
   )
 })

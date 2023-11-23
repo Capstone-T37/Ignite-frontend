@@ -42,7 +42,6 @@ export const AuthenticationStoreModel = types
       if (response.kind === "ok") {
         store.setProp("authToken", response.jwtToken)
         store.setProp("userName", userCred.username)
-        console.info(response.jwtToken)
       } else {
         console.tron.error(`Error fetching jwtToken: ${JSON.stringify(response)}`, [])
       }

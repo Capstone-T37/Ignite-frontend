@@ -10,11 +10,11 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, RequestSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, CreateActivity, CreateMeet, CreateRequest, JwtResponse, MeetItem,
+  ApiConfig, CreateActivity, CreateMeet, CreateRequest, JoinActivity, JwtResponse, MeetItem,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { firebase } from "./firebase"
@@ -192,6 +192,38 @@ export class Api {
     }
   }
 
+
+  /**
+   * Get list of Requests
+   */
+  async getParticipants(activityId: number): Promise<{ kind: "ok"; participants: ParticipantSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ParticipantSnapshotIn[]> = await this.apisauce.get(`participants/activity/${activityId}`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      const participants: ParticipantSnapshotIn[] = rawData.map((raw) => ({
+        ...raw,
+      }))
+
+      return { kind: "ok", participants }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
   /**
    * Get list of Requests
    */
@@ -350,6 +382,29 @@ export class Api {
   async disableMeet(): Promise<{ kind: "ok" } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<boolean> = await this.apisauce.get(`meets/disable`,)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      return { kind: "ok" }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * joing activity
+   */
+  async joinActivity(joinRequest: JoinActivity): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<boolean> = await this.apisauce.post(`participants`, joinRequest)
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)

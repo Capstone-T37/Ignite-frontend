@@ -8,7 +8,8 @@ import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { Chip } from 'react-native-paper';
 import { getDownloadURL, ref } from "firebase/storage"
-import { firebase } from "app/services/api"
+import { api, firebase } from "app/services/api"
+import { Participant, ParticipantSnapshotIn } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -21,6 +22,8 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
   const sadFace = require("../../assets/images/sad-face.png")
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
   const [profilePic, setProfilePic] = React.useState("")
+  const [participating, setParticipating] = React.useState(false)
+  const [participants, setParticipants] = React.useState<ParticipantSnapshotIn[]>([])
   const { navigation, route } = _props
   const activity = route.params
   React.useEffect(() => {
@@ -28,9 +31,47 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
     getDownloadURL(picRef).then(async (downloadURL) => {
       console.log('File available at', downloadURL);
       setProfilePic(downloadURL)
-    }).catch(()=>setProfilePic(""))
+    }).catch(() => setProfilePic(""))
+  }, [])
+  React.useEffect(() => {
+    api.getParticipants(activity.id).then((response) => {
+      if (response.kind === "ok") {
+        setParticipants(response.participants)
+      } else {
+
+        setParticipants([])
+      }
+    }).catch((e) => {
+      console.error(e)
+    })
+
   }, [])
 
+  React.useEffect(() => {
+    participants.forEach((val) => {
+      if (val.userName === firebase.auth?.currentUser?.uid) {
+        setParticipating(true)
+      }
+    })
+  }, [participants])
+
+
+  async function joinActivity(activityId: number) {
+    const response = await api.joinActivity({ activityId })
+    if (response.kind == "ok") {
+      setParticipating(true)
+      api.getParticipants(activity.id).then((response) => {
+        if (response.kind === "ok") {
+          setParticipants(response.participants)
+        } else {
+
+          setParticipants([])
+        }
+      }).catch((e) => {
+        console.error(e)
+      })
+    }
+  }
 
   if (!activity) {
     return <EmptyState
@@ -51,7 +92,7 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
     <Screen preset="scroll" safeAreaEdges={["top"]} style={styles.container} contentContainerStyle={{ height: '100%', justifyContent: 'center' }} >
       {/* Main Content */}
       <View style={styles.mainContent}>
-        <View style={{ flexDirection: "row", justifyContent: 'space-around', alignItems: 'center' }}>
+        <View style={{ flexDirection: "row", alignItems: 'center', width: '100%', justifyContent: 'flex-start' }}>
           {profilePic ?
             <AutoImage
               resizeMode="cover"
@@ -72,7 +113,13 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
           {activity.description}
         </Text>
         <View>
-
+          {/* Tags */}
+          <Text text="Participants:" />
+          <View style={styles.participantsContainer}>
+            {participants.map(part => (
+              <Chip key={part?.id} style={styles.participants} textStyle={styles.partText} onPress={() => console.log('Pressed')}>{part?.userName}</Chip>
+            ))}
+          </View>
           {/* Tags */}
           <Text text="Tags:" />
           <View style={styles.tagsContainer}>
@@ -83,9 +130,15 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
 
           {/* Action Buttons */}
           <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.joinButton}>
-              <Text style={styles.buttonText}>Join!</Text>
-            </TouchableOpacity>
+            {participating ?
+              <TouchableOpacity style={styles.participatingButton}>
+                <Text style={styles.buttonText}>Participating</Text>
+              </TouchableOpacity>
+              : <TouchableOpacity style={styles.joinButton} onPress={() => { joinActivity(activity.id) }}>
+                <Text style={styles.buttonText}> Join!</Text>
+              </TouchableOpacity>
+            }
+
           </View>
         </View>
       </View>
@@ -135,6 +188,23 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 8,
   },
+  participantsContainer: {
+    justifyContent: "space-around",
+    alignItems: "flex-start",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 16,
+  },
+  participants: {
+    backgroundColor: colors.palette.secondary200,
+    borderRadius: 18,
+    margin: 3
+
+  },
+
+  partText: {
+    color: colors.textDark
+  },
   tagsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -166,6 +236,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  participatingButton: {
+    flexDirection: 'row',
+    backgroundColor: colors.palette.neutral100,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   buttonText: {
     color: colors.textDark,
     fontSize: 16,
@@ -185,5 +264,6 @@ const $imageContainer: ImageStyle = {
   borderColor: 'white',
   borderRadius: 40,
   height: 80,
-  width: 80
+  width: 80,
+  marginRight: spacing.md
 }
