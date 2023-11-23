@@ -27,6 +27,9 @@ export interface CreateMeet {
 export interface CreateRequest {
   meetId: number
 }
+export interface JoinActivity {
+  activityId: number
+}
 export interface MeetItem {
   id: number,
   userName: string,
