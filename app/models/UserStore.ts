@@ -13,7 +13,7 @@ export const UserStoreModel = types
   })
   .actions(withSetPropAction)
   .views((store) => ({
-    get activitiesForList() {
+    get usersForList() {
       return store.users
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
