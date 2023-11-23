@@ -213,7 +213,6 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
   React.useLayoutEffect(() => {
     navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
     navigation.setOptions({ headerTitle: headerTitle?.toString() })
-
       ; (async function load() {
         await Promise.all([getConversation(userId, headerTitle?.toString())])
       })()
