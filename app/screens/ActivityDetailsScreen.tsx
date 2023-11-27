@@ -9,7 +9,7 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { Chip } from 'react-native-paper';
 import { getDownloadURL, ref } from "firebase/storage"
 import { api, firebase } from "app/services/api"
-import { Participant, ParticipantSnapshotIn } from "app/models"
+import { ActivityDetails, Participant, ParticipantSnapshotIn } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -23,7 +23,7 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
   const [profilePic, setProfilePic] = React.useState("")
   const [participating, setParticipating] = React.useState(false)
-  const [participants, setParticipants] = React.useState<ParticipantSnapshotIn[]>([])
+  const [activityDetails, setActivityDetails] = React.useState<ActivityDetails>()
   const { navigation, route } = _props
   const activity = route.params
   React.useEffect(() => {
@@ -34,12 +34,10 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
     }).catch(() => setProfilePic(""))
   }, [])
   React.useEffect(() => {
-    api.getParticipants(activity.id).then((response) => {
+    api.getActivityDetails(activity.id).then((response) => {
       if (response.kind === "ok") {
-        setParticipants(response.participants)
-      } else {
-
-        setParticipants([])
+        setActivityDetails(response.activityDetails)
+        setParticipating(activityDetails?.isParticipating)
       }
     }).catch((e) => {
       console.error(e)
@@ -48,28 +46,14 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
   }, [])
 
   React.useEffect(() => {
-    participants.forEach((val) => {
-      if (val.userName === firebase.auth?.currentUser?.uid) {
-        setParticipating(true)
-      }
-    })
-  }, [participants])
+    setParticipating(activityDetails?.isParticipating)
+  }, [activityDetails])
 
 
   async function joinActivity(activityId: number) {
     const response = await api.joinActivity({ activityId })
     if (response.kind == "ok") {
       setParticipating(true)
-      api.getParticipants(activity.id).then((response) => {
-        if (response.kind === "ok") {
-          setParticipants(response.participants)
-        } else {
-
-          setParticipants([])
-        }
-      }).catch((e) => {
-        console.error(e)
-      })
     }
   }
 
@@ -116,14 +100,14 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
           {/* Tags */}
           <Text text="Participants:" />
           <View style={styles.participantsContainer}>
-            {participants.map(part => (
-              <Chip key={part?.id} style={styles.participants} textStyle={styles.partText} onPress={() => console.log('Pressed')}>{part?.userName}</Chip>
+            {activityDetails?.participants.map(part => (
+              <Chip key={part ?? ""} style={styles.participants} textStyle={styles.partText} onPress={() => console.log('Pressed')}>{part ?? ""}</Chip>
             ))}
           </View>
           {/* Tags */}
           <Text text="Tags:" />
           <View style={styles.tagsContainer}>
-            {['Adobe', 'Art', 'Artist', 'Creative Corner', 'Illustration', 'Home', 'Creative Designer'].map(tag => (
+            {activityDetails?.tags.map(tag => (
               <Chip key={tag} style={styles.tag} textStyle={styles.tagText} onPress={() => console.log('Pressed')}>{tag}</Chip>
             ))}
           </View>

@@ -10,7 +10,7 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
@@ -194,11 +194,11 @@ export class Api {
 
 
   /**
-   * Get list of Requests
+   * Get list 
    */
-  async getParticipants(activityId: number): Promise<{ kind: "ok"; participants: ParticipantSnapshotIn[] } | GeneralApiProblem> {
+  async getActivityDetails(activityId: number): Promise<{ kind: "ok"; activityDetails: ActivityDetails } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ParticipantSnapshotIn[]> = await this.apisauce.get(`participants/activity/${activityId}`,)
+    const response: ApiResponse<ActivityDetails> = await this.apisauce.get(`activities/${activityId}`,)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -210,12 +210,7 @@ export class Api {
     try {
       const rawData = response.data
 
-      // This is where we transform the data into the shape we expect for our MST model.
-      const participants: ParticipantSnapshotIn[] = rawData.map((raw) => ({
-        ...raw,
-      }))
-
-      return { kind: "ok", participants }
+      return { kind: "ok", activityDetails: rawData }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
