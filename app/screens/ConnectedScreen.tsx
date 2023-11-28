@@ -68,7 +68,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
   };
 
   return (
-    <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
+    <Screen preset="fixed" contentContainerStyle={$container}  >
       <MeetRequestModal style={$sendModal} isVisible={isRequestVisible} setIsVisible={setisRequestVisible}>
         <DefaultModalContent onPress={async () => {
           try {
@@ -127,8 +127,6 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
         //ListEmptyComponent={}
         ListHeaderComponent={
           <View style={$heading}>
-            <Text preset="heading" tx="ConnectedScreen.title" style={$title} />
-            <Text tx="ConnectedScreen.tagLine" style={$tagline} />
             {
               profileStore.isMeetEnabled ?
                 <Button
@@ -229,6 +227,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
 
 const $container: ViewStyle = {
   flex: 1,
+  marginTop: spacing.xxxl + spacing.xxxl
 }
 
 const $flatListContentContainer: ViewStyle = {

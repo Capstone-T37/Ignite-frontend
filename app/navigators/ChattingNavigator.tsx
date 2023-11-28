@@ -7,6 +7,7 @@ import { UsersListScreen } from "app/screens/UsersListScreen"
 import { ChatScreen } from "app/screens/ChatScreen"
 import { colors } from "app/theme"
 import { Button } from "app/components/Button"
+import { ActivityMeetNavigation } from "app/components"
 
 export type ChattingNavigatorParamList = {
   UsersList: undefined
@@ -19,13 +20,16 @@ export type ChattingNavigatorScreenProps<T extends keyof ChattingNavigatorParamL
 const Stack = createNativeStackNavigator<ChattingNavigatorParamList>()
 export const ChattingNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false, }}>
+    <Stack.Navigator screenOptions={{
+      headerShown: true,
+    }}>
       <Stack.Screen name="UsersList" component={UsersListScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{ 
+      <Stack.Screen name="Chat" component={ChatScreen} options={{
         headerShown: true,
-        headerStyle:{backgroundColor:colors.backgroundAccent},
-        headerTitleStyle:{color:colors.text},
-        }} />
+        headerBackButtonMenuEnabled: true,
+        headerStyle: { backgroundColor: colors.backgroundAccent },
+        headerTitleStyle: { color: colors.text },
+      }} />
     </Stack.Navigator>
   )
 }

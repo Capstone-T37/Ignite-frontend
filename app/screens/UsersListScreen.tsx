@@ -45,35 +45,70 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
   const db = firebase.db
   const userId = firebase.auth?.currentUser?.uid
 
+  React.useEffect(() => {
+    ; (async function load() {
+      setIsLoading(true)
+      await userStore.fetchUsers()
+      await fetchMessages()
+      setIsLoading(false)
+    })()
+  }, [userStore])
+
+  async function manualRefresh() {
+    setIsLoading(true)
+    await Promise.all([userStore.fetchUsers(), fetchMessages()])
+    setIsLoading(false)
+  }
+  const fetchMessages = async () => {
+    if (userStore.usersForList.length > 0) {
+      const promises = userStore.usersForList.map(async user => {
+        const recentMessage = await getMostRecentMessage(userId, user?.login.toString())
+        return ({
+          id: user?.id,
+          sender: user?.login.toString(),
+          lastMessage: recentMessage
+        })
+      });
+
+      Promise.all(promises).then(lastMessagesMap => {
+        setLastMessages(lastMessagesMap);
+      }).catch(error => {
+        // Handle any errors here
+        console.error('Error fetching messages:', error);
+      });
+    }
+    return
+  };
+
   function getMostRecentMessage(userId: string, receiverId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const conversationsRef = collection(db, 'conversations');
       const conversationQuery = query(conversationsRef, where('userIDs', 'array-contains', userId));
-  
+
       getDocs(conversationQuery).then(querySnapshot => {
         const conversationDoc = querySnapshot.docs.find(doc =>
           doc.data().userIDs.includes(userId) && doc.data().userIDs.includes(receiverId)
         );
-  
+
         if (!conversationDoc) {
           console.log('No conversation found');
           resolve(null); // Resolve the promise with null if there's no conversation
           return;
         }
-  
+
         const conversationRef: DocumentReference = conversationDoc.ref;
-  
+
         // Fetching the most recent message
         const messagesRef = collection(conversationRef, 'messages');
         const messagesQuery = query(messagesRef, orderBy('timestamp', 'desc'), limit(1));
-  
+
         getDocs(messagesQuery).then(messagesSnapshot => {
           if (messagesSnapshot.empty) {
             console.log('No messages found');
             resolve(null); // Resolve the promise with null if there's no message
             return;
           }
-  
+
           const mostRecentMessageDoc = messagesSnapshot.docs[0];
           const mostRecentMessage = {
             _id: mostRecentMessageDoc.id,
@@ -88,55 +123,19 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
           console.error("Error retrieving the most recent message: ", error);
           reject(error); // Reject the promise if there's an error
         });
-  
+
       }).catch(error => {
         console.error("Error retrieving conversation: ", error);
         reject(error); // Reject the promise if there's an error
       });
     });
   }
-  
+
 
   const [lastMessages, setLastMessages] = useState([])
-  
-  React.useLayoutEffect(() => {
-    const fetchMessages = async () => {
-      const promises = userStore.usersForList.map(async user => {
-        const recentMessage = await getMostRecentMessage(userId, user.login.toString())
-        return ({
-          id: user.id,
-          sender: user.login.toString(),
-          lastMessage: recentMessage
-        })
-      });
-  
-      Promise.all(promises).then(lastMessagesMap => {
-        setLastMessages(lastMessagesMap);
-      }).catch(error => {
-        // Handle any errors here
-        console.error('Error fetching messages:', error);
-      });
-    };
-  
-    fetchMessages();
-  }, [navigation, userStore.usersForList, userId]); 
 
   function openChat(userName: String) {
     navigation.navigate("Chat", userName)
-  }
-
-  React.useEffect(() => {
-    ; (async function load() {
-      setIsLoading(true)
-      await userStore.fetchUsers()
-      setIsLoading(false)
-    })()
-  }, [userStore])
-
-  async function manualRefresh() {
-    setIsLoading(true)
-    await Promise.all([userStore.fetchUsers()])
-    setIsLoading(false)
   }
 
   return (
@@ -165,11 +164,6 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
             />
           )
         }
-        ListHeaderComponent={
-          <View style={$heading}>
-            <Text preset="bold" tx="UsersListScreen.title" style={$title} />
-          </View>
-        }
         renderItem={({ item }) => (
           <ListItem
             containerStyle={$listItemContainer}
@@ -182,7 +176,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
                   source={{
                     uri: 'https://imageio.forbes.com/specials-images/imageserve/5c76b7d331358e35dd2773a9/0x0.jpg?format=jpg&crop=4401,4401,x0,y0,safe&height=416&width=416&fit=bounds'
                   }}
-                  style={{ width: 45, marginTop:spacing.xs - 3, height: 45, borderRadius: 50 / 2 }}
+                  style={{ width: 45, marginTop: spacing.xs - 3, height: 45, borderRadius: 50 / 2 }}
                 />
               </View>
             }
@@ -190,20 +184,20 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
             {/* Direct children of ListItem for username and recent message */}
             <View style={styles.listItemContent}>
               <View style={styles.textSection}>
-                <Text preset= "bold" style={$listItemDescription}>{item.sender}</Text>
+                <Text preset="bold" style={$listItemDescription}>{item.sender}</Text>
                 <Text style={styles.lastMessageText}>
-                  {item.lastMessage.text.toString()} {/* Make sure this is a string */}
+                  {item?.lastMessage.text.toString()} {/* Make sure this is a string */}
                 </Text>
               </View>
               <View style={styles.timestampSection}>
                 <Text style={styles.timestampText}>
-                {item.lastMessage.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* You need to implement formatTimestamp */}
+                  {item?.lastMessage.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* You need to implement formatTimestamp */}
                 </Text>
               </View>
             </View>
           </ListItem>
         )}
-        
+
       />
     </Screen>
   )
@@ -212,6 +206,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
 
 const $container: ViewStyle = {
   flex: 1,
+  marginTop: spacing.xxxl
 }
 
 const $flatListContentContainer: ViewStyle = {
@@ -260,12 +255,12 @@ const $userName: TextStyle = {
 }
 
 const $listItemContainer: ViewStyle = {
-  height: spacing.xxxl ,
+  height: spacing.xxxl,
   justifyContent: 'center',
-  backgroundColor:colors.backgroundAccent,
+  backgroundColor: colors.backgroundAccent,
   borderWidth: 1,
   borderColor: "#3F3F3F",
-  paddingHorizontal:spacing.sm
+  paddingHorizontal: spacing.sm
 }
 
 const styles = StyleSheet.create({

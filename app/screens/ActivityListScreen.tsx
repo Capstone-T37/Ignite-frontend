@@ -50,7 +50,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   };
   return (
     <>
-      <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
+      <Screen preset="fixed" contentContainerStyle={$container} >
         <FlatList<Activity>
           data={activityStore.activitiesForList}
           extraData={activityStore.activities.length}
@@ -72,13 +72,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
               />
             )
           }
-          ListHeaderComponent={
-            <View style={$heading}>
-              <Text preset="heading" tx="ActivityScreen.title" style={$title} />
-              <Text tx="ActivityScreen.tagLine" style={$tagline} />
-            </View>
 
-          }
           renderItem={({ item }) => (
             <ActivityCard
               key={item.id}
@@ -159,6 +153,7 @@ const ActivityCard = observer(function ActivityCard({
 
 const $container: ViewStyle = {
   flex: 1,
+  marginTop: spacing.xxxl + spacing.xxxl
 }
 
 const $flatListContentContainer: ViewStyle = {

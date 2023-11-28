@@ -1,15 +1,17 @@
 import React from "react"
 import {
+  ChatScreen,
   ProfileScreen,
+  UsersListScreen,
   WelcomeScreen
 } from "app/screens"
-import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
+import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { CompositeScreenProps } from "@react-navigation/native"
 import { TextStyle, ViewStyle } from "react-native/types"
 import { colors, spacing, typography } from "app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Icon } from "app/components"
+import { Button, Icon, NavigationHeader } from "app/components"
 import { translate } from "app/i18n"
 import { ActivityNavigator } from "./ActivityNavigator"
 import { useStores } from "app/models"
@@ -20,8 +22,9 @@ export type HomeTabParamList = {
   Welcome: undefined
   ActivityNavigator: undefined
   RequestNavigator: undefined
-  ChattingNavigator: undefined
+  ChatList: undefined
   Profile: undefined
+  Chat: String
 }
 
 /**
@@ -30,11 +33,11 @@ export type HomeTabParamList = {
  * More info: https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type HomeTabScreenProps<T extends keyof HomeTabParamList> = CompositeScreenProps<
-  BottomTabScreenProps<HomeTabParamList, T>,
+  NativeStackScreenProps<HomeTabParamList, T>,
   AppStackScreenProps<keyof AppStackParamList>
 >
 
-const Tab = createBottomTabNavigator<HomeTabParamList>()
+const Stack = createNativeStackNavigator<HomeTabParamList>()
 
 export const HomeNavigator = () => {
   const { bottom } = useSafeAreaInsets()
@@ -48,68 +51,38 @@ export const HomeNavigator = () => {
   }, [])
 
   return (
-    <Tab.Navigator initialRouteName="Welcome" screenOptions={{
-      headerShown: false,
-      tabBarHideOnKeyboard: true,
-      tabBarStyle: [$tabBar, { height: bottom + 70 }],
-      tabBarActiveTintColor: colors.text,
-      tabBarInactiveTintColor: colors.text,
-      tabBarLabelStyle: $tabBarLabel,
-      tabBarItemStyle: $tabBarItem,
+    <Stack.Navigator initialRouteName="ActivityNavigator" screenOptions={{
+      animation: "none",
+      headerTransparent: true
     }}>
-      <Tab.Screen name="ActivityNavigator" component={ActivityNavigator}
-        options={{
-          //tabBarStyle: { display: "none" },
-          tabBarLabel: translate("homeNavigatorTab.activityTab"),
-          tabBarIcon: ({ focused }) => (
-            <Icon 
-              icon="components" 
-              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
-              size={30} 
-            />
-          ),
-        }} />
-      <Tab.Screen name="Welcome" component={WelcomeScreen}
-        options={{
-          tabBarLabel: translate("homeNavigatorTab.homeTab"),
-          tabBarIcon: ({ focused }) => (
-            <Icon 
-              icon="components" 
-              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
-              size={30} 
-            />
-          )
-          ,
-        }} />
-      <Tab.Screen name="RequestNavigator" component={RequestNavigator}
-        options={{
-          tabBarLabel: translate("homeNavigatorTab.connectedTab"),
-          tabBarIcon: ({ focused }) => (
-            <Icon 
-              icon="components" 
-              color={focused ? colors.tint : colors.palette.neutral300} // Use a ternary operator to set the color
-              size={30} 
-            />
-          ),
-        }} />
-      <Tab.Screen name="ChattingNavigator" component={ChattingNavigator}
-        options={{
-          tabBarLabel: translate("homeNavigatorTab.chatTab"),
-          tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
-          ),
-        }} />
-      <Tab.Screen name="Profile" component={ProfileScreen}
+      <Stack.Screen name="ActivityNavigator" component={ActivityNavigator} options={{
+        headerShadowVisible: true,
+        headerShown: true,
+        headerTransparent: true,
+        header: (props) => (
+          <NavigationHeader navigation={props.navigation} />
+        )
+      }} />
+      <Stack.Screen name="ChatList" component={UsersListScreen} options={{
+        headerShown: true,
+        headerTransparent: true,
+        headerTitleStyle: { color: colors.text },
+        headerTitle: "Conversations"
+      }} />
+      <Stack.Screen name="Profile" component={ProfileScreen}
         options={{
           headerShown: true,
           headerTransparent: true,
-          headerTitleStyle:{color:colors.text},
-          tabBarLabel: translate("homeNavigatorTab.porfileTab"),
-          tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
-          ),
+          headerTitleStyle: { color: colors.text },
         }} />
-    </Tab.Navigator>
+      <Stack.Screen name="Chat" component={ChatScreen} options={{
+        headerTitle: "",
+        headerShown: true,
+        headerBackButtonMenuEnabled: true,
+        headerStyle: { backgroundColor: colors.backgroundAccent },
+        headerTitleStyle: { color: colors.text },
+      }} />
+    </Stack.Navigator>
   )
 }
 
