@@ -19,8 +19,10 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const sheetRef = useRef<BottomSheetModal>(null);
-  const { activityStore, snackBarStore } = useStores()
+  const { activityStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false)
+  const [isSnackBarVisible, setIsSnackBarVisible] = React.useState(false)
   const { navigation } = _props
 
   function viewDetails(activity: Activity) {
@@ -43,9 +45,12 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   }
   // Pull in navigation via hook
   // const navigation = useNavigation()
+  const handleClose = () => {
+    setIsSheetOpen(false);
+  };
   return (
     <>
-      <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
+      <Screen preset="fixed" contentContainerStyle={$container} >
         <FlatList<Activity>
           data={activityStore.activitiesForList}
           extraData={activityStore.activities.length}
@@ -67,13 +72,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
               />
             )
           }
-          ListHeaderComponent={
-            <View style={$heading}>
-              <Text preset="heading" tx="ActivityScreen.title" style={$title} />
-              <Text tx="ActivityScreen.tagLine" style={$tagline} />
-            </View>
 
-          }
           renderItem={({ item }) => (
             <ActivityCard
               key={item.id}
@@ -85,11 +84,14 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
         <FAB
           icon="plus"
           style={$fabStyle}
-          onPress={() => sheetRef.current.expand()}
+          onPress={() => {
+            setIsSheetOpen(true)
+            sheetRef.current.expand()
+          }}
         />
         <Snackbar
-          visible={snackBarStore.createActivity}
-          onDismiss={() => { snackBarStore.setProp("createActivity", false) }}
+          visible={isSnackBarVisible}
+          onDismiss={() => { setIsSnackBarVisible(false) }}
           style={$snackBar}
           duration={2000}
         >
@@ -103,8 +105,11 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
             snapPoints={["100%"]}
             enablePanDownToClose={true}
             onChange={() => { }}
+            onClose={handleClose}
           >
-            <ActivityForm />
+            {isSheetOpen && (
+              <ActivityForm sheetRef={sheetRef.current} setSnackBar={() => setIsSnackBarVisible(true)} />
+            )}
           </BottomSheet>
         }
       </Screen>
@@ -148,6 +153,7 @@ const ActivityCard = observer(function ActivityCard({
 
 const $container: ViewStyle = {
   flex: 1,
+  marginTop: spacing.xxxl + spacing.xxxl
 }
 
 const $flatListContentContainer: ViewStyle = {
@@ -220,11 +226,10 @@ const $fabStyle: ViewStyle = {
 }
 
 const $snackBar: ViewStyle = {
-  backgroundColor: colors.palette.success100,
-  marginLeft: spacing.xl,
-  zIndex: 1
-
+  backgroundColor: colors.palette.accent100,
+  borderColor: colors.palette.accent100,
 }
+
 const $snackBarText: TextStyle = {
   color: colors.text,
   textAlign: 'center',

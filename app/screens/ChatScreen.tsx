@@ -112,6 +112,9 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
     }
   }
 
+  React.useEffect(() => {
+    navigation.setOptions({ headerTitle: headerTitle.toString() })
+  }, [])
 
 
   function incrementUnreadCounts(unreadCounts: Record<string, number>, senderId: string): Record<string, number> {
@@ -211,15 +214,9 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
     }
   }
   React.useLayoutEffect(() => {
-    navigation.getParent()?.setOptions({ tabBarStyle: { display: 'none' } });
-    navigation.setOptions({ headerTitle: headerTitle?.toString() })
-      ; (async function load() {
-        await Promise.all([getConversation(userId, headerTitle?.toString())])
-      })()
-    return () => {
-      navigation.getParent()?.setOptions({ tabBarStyle: [$tabBar, { display: "flex", height: bottom + 70, }] });
-
-    }
+    ; (async function load() {
+      await Promise.all([getConversation(userId, headerTitle?.toString())])
+    })()
   }, [navigation])
 
 
@@ -269,7 +266,7 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
     </Send>
   );
 
-  
+
 
   const renderBubble = (props) => (
     <Bubble
@@ -283,15 +280,15 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
       wrapperStyle={{
         right: {
           backgroundColor: colors.background,
-          borderWidth : 1,
+          borderWidth: 1,
           borderColor: colors.chatBorderColor,
-           // Background color for messages you send
+          // Background color for messages you send
         },
         left: {
           backgroundColor: colors.chatLeftBubbleColor,
-          borderWidth : 1,
+          borderWidth: 1,
           borderColor: colors.chatBorderColor,
-           // Background color for messages you receive
+          // Background color for messages you receive
         },
       }}
       textStyle={{
@@ -309,7 +306,7 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
 
     <View style={{ height: '100%', paddingBottom: spacing.md, backgroundColor: colors.background }}>
       <GiftedChat
-        messagesContainerStyle={{ backgroundColor: colors.background , height: "96%"}}
+        messagesContainerStyle={{ backgroundColor: colors.background, height: "96%" }}
         messages={messages}
         onSend={(messages) => onSend(messages, userId, headerTitle.toString())}
         user={{
