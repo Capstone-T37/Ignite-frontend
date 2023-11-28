@@ -16,15 +16,16 @@ export interface MeetFormProps {
    */
   style?: StyleProp<ViewStyle>
   meetSheet: React.MutableRefObject<BottomSheetModalMethods>
+  setSnackBar: () => void
 }
 
 /**
  * Describe your component here
  */
 export const MeetForm = observer(function MeetForm(props: MeetFormProps) {
-  const { style, meetSheet } = props
+  const { style, meetSheet, setSnackBar } = props
   const $styles = [$container, style]
-  const { snackBarStore, profileStore } = useStores()
+  const { profileStore } = useStores()
 
 
 
@@ -41,9 +42,9 @@ export const MeetForm = observer(function MeetForm(props: MeetFormProps) {
         Alert.alert("Something bad happened. Try again later!")
         return
       }
+      setSnackBar()
       meetSheet.current.close()
       reset()
-      snackBarStore.setProp("createMeet", true)
       profileStore.setProp("meetEnabled", true)
     } catch (error) {
 
@@ -68,7 +69,7 @@ export const MeetForm = observer(function MeetForm(props: MeetFormProps) {
             onChangeText={onChange}
             value={value}
             style={{
-              backgroundColor:'white'
+              backgroundColor: 'white'
             }}
           />
         )}

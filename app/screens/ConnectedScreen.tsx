@@ -24,12 +24,15 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const { navigation } = _props
-  const { meetStore, snackBarStore, profileStore, requestStore } = useStores()
+  const { meetStore, profileStore, requestStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const [selectedMeet, setSelectedMeet] = React.useState<number>(null)
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [isRequestVisible, setisRequestVisible] = React.useState(false);
   const [iListVisible, setisListVisible] = React.useState(false);
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const [isSnackBarVisible, setIsSnackBarVisible] = React.useState(false)
+
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
@@ -59,6 +62,10 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
       await profileStore.fetchStatus()
     })()
   }, [profileStore])
+
+  const handleClose = () => {
+    setIsSheetOpen(false);
+  };
 
   return (
     <Screen preset="fixed" contentContainerStyle={$container} safeAreaEdges={["top"]}>
@@ -141,7 +148,10 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                   />
                 </Button> :
                 <Button
-                  onPress={() => bottomSheetRef.current.expand()}
+                  onPress={() => {
+                    setIsSheetOpen(true)
+                    bottomSheetRef.current.expand()
+                  }}
                   onLongPress={() => { }}
                   style={[$goLiveButton]}
                 >
@@ -192,8 +202,8 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
         )}
       />
       <Snackbar
-        visible={snackBarStore.createMeet}
-        onDismiss={() => { snackBarStore.setProp("createMeet", false) }}
+        visible={isSnackBarVisible}
+        onDismiss={() => { setIsSnackBarVisible(false) }}
         style={$snackBar}
         duration={2000}
       >
@@ -206,11 +216,11 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
           index={-1}
           snapPoints={["70%"]}
           enablePanDownToClose={true}
-          onChange={() => { }}
+          onClose={handleClose}
         >
-          <MeetForm meetSheet={bottomSheetRef}
-            style={$bottomSheetStyle}
-          />
+          {isSheetOpen && (
+            <MeetForm setSnackBar={() => setIsSnackBarVisible(true)} meetSheet={bottomSheetRef} style={$bottomSheetStyle} />
+          )}
         </BottomSheet>
       }
     </Screen>
@@ -304,11 +314,10 @@ const $stopButton: ViewStyle = {
 }
 
 const $snackBar: ViewStyle = {
-  backgroundColor: colors.palette.secondary100,
-  marginLeft: spacing.xl,
-  zIndex: 1
-
+  backgroundColor: colors.palette.accent100,
+  borderColor: colors.palette.accent100,
 }
+
 const $snackBarText: TextStyle = {
   color: colors.text,
   textAlign: 'center',

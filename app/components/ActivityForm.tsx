@@ -11,6 +11,7 @@ import { api, CreateActivity } from "app/services/api";
 import { useNavigationContext } from "app/utils/NavigationContext";
 import { useBottomSheetModal } from "@gorhom/bottom-sheet";
 import { useStores } from "app/models";
+import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 
 
 export interface ActivityFormProps {
@@ -18,17 +19,17 @@ export interface ActivityFormProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+  sheetRef: BottomSheetMethods
+  setSnackBar: () => void
 }
 
 /**
  * Describe your component here
  */
 export const ActivityForm = observer(function ActivityForm(props: ActivityFormProps) {
-  const { style } = props
+  const { style, setSnackBar, sheetRef } = props
   const $styles = [$container, style]
   const [open, setOpen] = React.useState(false)
-  const { sheetRef } = useNavigationContext()
-  const { snackBarStore } = useStores()
 
 
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
@@ -42,9 +43,9 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
   async function onSubmit(activity: CreateActivity) {
     try {
       await api.postActivity(activity)
-      sheetRef.current.close()
+      setSnackBar()
+      sheetRef.close()
       reset()
-      snackBarStore.setProp("createActivity", true)
     } catch (error) {
       console.error(error)
     }
