@@ -1,18 +1,18 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { ScrollView, StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, spacing } from "app/theme"
 import { useForm, Controller } from "react-hook-form";
-import { Snackbar, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Snackbar, TextInput } from 'react-native-paper';
 import DatePicker from 'react-native-date-picker'
 import { Button } from "./Button"
 import { Text } from "./Text"
 import { api, CreateActivity } from "app/services/api";
 import { useNavigationContext } from "app/utils/NavigationContext";
 import { useBottomSheetModal } from "@gorhom/bottom-sheet";
-import { useStores } from "app/models";
+import { Tag, TagSnapshotIn, useStores } from "app/models";
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-
+import { Chip } from 'react-native-paper';
 
 export interface ActivityFormProps {
   /**
@@ -30,7 +30,9 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
   const { style, setSnackBar, sheetRef } = props
   const $styles = [$container, style]
   const [open, setOpen] = React.useState(false)
-
+  const [loading, setLoading] = React.useState(false)
+  const [selectedTags, setSelectedTags] = React.useState<TagSnapshotIn[]>([]);
+  const [allTags, setAllTags] = React.useState<TagSnapshotIn[]>([]);
 
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -42,88 +44,121 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
 
   async function onSubmit(activity: CreateActivity) {
     try {
-      await api.postActivity(activity)
-      setSnackBar()
-      sheetRef.close()
-      reset()
+      const response = await api.postActivity({ ...activity, tags: selectedTags })
+      if (response.kind === "ok") {
+        setSnackBar()
+        sheetRef.close()
+        reset()
+      }
     } catch (error) {
       console.error(error)
     }
 
   }
 
+  const toggleTag = (tag: TagSnapshotIn) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter(t => t !== tag));
+    } else {
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  React.useEffect(() => {
+    setLoading(true)
+    api.getTags().then((response) => {
+      if (response.kind === "ok") {
+        setAllTags(response.tags)
+        setLoading(false)
+      }
+    }).catch((e) => {
+      console.error(e)
+    })
+
+  }, [])
+
   return (
-    <View style={$styles}>
-      <Text preset="heading" tx="ActivityForm.Title" />
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={$input}
-            error={errors.title ? true : false}
-            label="Title"
-            placeholder="Activity title"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+    < ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: colors.background }}>
+      {loading ? <ActivityIndicator /> :
+
+        <View style={$styles}>
+          <Text preset="heading" tx="ActivityForm.Title" style={{ textAlign: 'center' }} />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={$input}
+                error={errors.title ? true : false}
+                label="Title"
+                placeholder="Activity title"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+
+            name="title"
           />
-        )}
 
-        name="title"
-      />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={$input}
+                error={errors.description ? true : false}
+                label="Description"
+                placeholder="Activity description"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
 
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={$input}
-            error={errors.description ? true : false}
-            label="Description"
-            placeholder="Activity description"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+            name="description"
           />
-        )}
 
-        name="description"
-      />
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <>
+                <DatePicker
+                  modal
+                  open={open}
+                  date={value}
+                  onConfirm={() => {
+                    setOpen(false)
+                  }}
+                  onCancel={() => {
+                    setOpen(false)
+                  }}
+                />
+                <Button style={{ borderColor: colors.border }} onPress={() => setOpen(true)}>
+                  <Text style={{ color: colors.textDark }}>{value.toLocaleString()}</Text></Button>
+              </>
 
-      <Controller
-        control={control}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <DatePicker
-              modal
-              open={open}
-              date={value}
-              onConfirm={() => {
-                setOpen(false)
-              }}
-              onCancel={() => {
-                setOpen(false)
-              }}
-            />
-            <Button style={{ borderColor: colors.border }} onPress={() => setOpen(true)}>
-              <Text style={{ color: colors.textDark }}>{value.toLocaleString()}</Text></Button>
-          </>
+            )}
+            name="date"
+          />
+          <View style={$tagsContainer}>
 
-        )}
-        name="date"
-      />
+            {allTags.map((tag) => (
+              <Chip key={tag.id} onPress={() => toggleTag(tag)} mode={selectedTags.includes(tag) ? "flat" : "outlined"} showSelectedCheck={true} showSelectedOverlay={selectedTags.includes(tag)} style={$tag} selected={selectedTags.includes(tag)}>{tag.title}</Chip>
+            ))}
+          </View>
 
 
+          <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.text }} style={{ backgroundColor: colors.backgroundAccent }} >
+          </Button>
+        </View>
+      }
+    </ScrollView >
 
-      <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.text }} style={{ backgroundColor: colors.backgroundAccent }} >
-      </Button>
-
-    </View>
   )
 })
 
@@ -135,6 +170,15 @@ const $container: ViewStyle = {
 }
 const $input: ViewStyle = {
   backgroundColor: 'white'
+}
+const $tagsContainer: ViewStyle = {
+  alignItems: 'center',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+}
+const $tag: ViewStyle = {
+  borderRadius: 18,
+  margin: 3,
 }
 
 

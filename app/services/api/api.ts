@@ -10,11 +10,11 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, TagSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, CreateActivity, CreateMeet, CreateRequest, JoinActivity, JwtResponse, MeetItem,
+  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, JoinActivity, JwtResponse, MeetItem,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { firebase } from "./firebase"
@@ -251,6 +251,37 @@ export class Api {
   }
 
   /**
+   * Get list of tags
+   */
+  async getTags(): Promise<{ kind: "ok"; tags: TagSnapshotIn[] } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<TagSnapshotIn[]> = await this.apisauce.get(`tags`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawData = response.data
+
+      // This is where we transform the data into the shape we expect for our MST model.
+      const tags: TagSnapshotIn[] = rawData.map((raw) => ({
+        ...raw,
+      }))
+
+      return { kind: "ok", tags }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
    * Get count for requests
    */
   async getRequestCount(): Promise<{ kind: "ok"; count: number } | GeneralApiProblem> {
@@ -282,7 +313,7 @@ export class Api {
   /**
    * Post an activity
    */
-  async postActivity(body: CreateActivity): Promise<{ kind: "ok" } | GeneralApiProblem> {
+  async postActivity(body: CreateActivityWithTags): Promise<{ kind: "ok" } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<ResponseType> = await this.apisauce.post(`activities`, body)
 
