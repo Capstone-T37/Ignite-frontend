@@ -6,6 +6,7 @@ import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "
 import { spacing, colors } from "app/theme"
 import { useStores } from "app/models"
 import { useNavigation } from "@react-navigation/native"
+import { Button as PaperButton } from 'react-native-paper'
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -47,7 +48,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
   }
 
   const navigateToSignUpPage = () => {
-    navigation.navigate("Onboarding")
+    navigation.navigate("SignUp")
   }
 
   const PasswordRightAccessory = useMemo(
@@ -114,12 +115,15 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
         onPress={login}
       />
       <View style={$buttonContainer}>
-        <Button
-          testID="signup-button"
-          tx="signInScreen.tapToSignUp"
-          preset="reversed"
-          onPress={navigateToSignUpPage}
-        />
+        <Text style={[$txt3, { color: 'white' }]}> Don't have an account? </Text>
+        <PaperButton
+            style={{ borderRadius: 8, width: 110, padding: 0 }}
+            labelStyle={{ fontSize: 12 }}
+            mode="outlined"
+            onPress={navigateToSignUpPage}
+        >
+          Sign Up
+          </PaperButton>
       </View>
 
     </Screen>
@@ -155,8 +159,13 @@ const $tapButton: ViewStyle = {
 
 const $buttonContainer : ViewStyle = {
   position: 'absolute',
-  bottom: 20,
-  left: 0,
-  right: 0,
+  bottom: 15,
   alignItems: 'center',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  alignSelf: 'center'
+}
+
+const $txt3 : TextStyle = {
+
 }

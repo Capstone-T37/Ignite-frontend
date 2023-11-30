@@ -18,6 +18,7 @@ const en = {
   },
   signInScreen: {
     signIn: "Sign In",
+    signUp: "Sign up",
     enterDetails:
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
     userNameFieldLabel: "Username",
