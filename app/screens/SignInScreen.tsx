@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
+import { TextInput, TextStyle, View, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "app/components"
 import { spacing, colors } from "app/theme"
@@ -44,6 +44,10 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
       password: authPassword,
       rememberMe: true
     })
+  }
+
+  const navigateToSignUpPage = () => {
+    navigation.navigate("Onboarding")
   }
 
   const PasswordRightAccessory = useMemo(
@@ -109,6 +113,15 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
         preset="reversed"
         onPress={login}
       />
+      <View style={$buttonContainer}>
+        <Button
+          testID="signup-button"
+          tx="signInScreen.tapToSignUp"
+          preset="reversed"
+          onPress={navigateToSignUpPage}
+        />
+      </View>
+
     </Screen>
   )
 })
@@ -116,6 +129,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
 const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.xxl,
   paddingHorizontal: spacing.lg,
+  height: "100%"
 }
 
 const $signIn: TextStyle = {
@@ -137,4 +151,12 @@ const $textField: ViewStyle = {
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
+}
+
+const $buttonContainer : ViewStyle = {
+  position: 'absolute',
+  bottom: 20,
+  left: 0,
+  right: 0,
+  alignItems: 'center',
 }

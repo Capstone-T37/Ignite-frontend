@@ -25,6 +25,7 @@ const en = {
     userNameFieldPlaceholder: "Enter your username address",
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Tap to sign in!",
+    tapToSignUp: "sign up",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
   homeNavigatorTab: {
