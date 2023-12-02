@@ -38,7 +38,11 @@ export type AppStackParamList = {
   SignIn: undefined
 	Onboarding: undefined
 	SignUp: undefined
-	ImgPicker: undefined
+	ImgPicker: {
+    username: string;
+    email: string;
+    password: string;
+  }
 	// IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 

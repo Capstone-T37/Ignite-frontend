@@ -33,6 +33,14 @@ export interface CreateMeet {
 export interface CreateRequest {
   meetId: number
 }
+export interface CreateUser {
+  FirstName: string,
+  LastName: string,
+  email: string,
+  password: string,
+  username: string
+
+}
 export interface JoinActivity {
   activityId: number
 }

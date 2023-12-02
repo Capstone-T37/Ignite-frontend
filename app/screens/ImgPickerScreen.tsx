@@ -4,14 +4,13 @@ import { FlatList, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } fr
 import { AppStackScreenProps, HomeTabScreenProps } from "app/navigators"
 import { AutoImage, Card, Screen, Text } from "app/components"
 import { Image } from "react-native"
-import { AntDesign } from '@expo/vector-icons';
 import { colors, spacing } from "app/theme"
 import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'react-native-image-picker';
 import { firebase } from "app/services/api"
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
-import { updateProfile } from "firebase/auth"
 import { Button as PaperButton } from 'react-native-paper'
+import { useStores } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -19,9 +18,15 @@ interface ImgPickerScreenProps extends AppStackScreenProps<"ImgPicker"> {}
 
 export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPickerScreen( _props) {
   const sadFace = require("../../assets/images/sad-face.png")
-  const [profilePic, setProfilePic] = React.useState(firebase.auth?.currentUser?.photoURL)
+  const [profilePic, setProfilePic] = React.useState(undefined)
   
   const { navigation } = _props
+  const { route } = _props;
+  //const { email, password, username } = route.params;
+
+  const {
+    authenticationStore: { setAuthToken },
+  } = useStores()
 
 
   const uploadImage = React.useCallback((path: string, imageName: string) => {
@@ -77,10 +82,6 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
               getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                 console.log('File available at', downloadURL);
                 setProfilePic(downloadURL)
-                await updateProfile(firebase.auth.currentUser, {
-                  photoURL: downloadURL
-                })
-                //perform your task
               });
             });
           // const downloadURL = await getDownloadURL(imageRef);
@@ -96,6 +97,18 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
 
   const navigateToSignInPage = () => {
     navigation.navigate("SignIn")
+  }
+
+  const createAccount = () => {
+
+
+    /*
+    setAuthToken({
+      username: username,
+      password: password,
+      rememberMe: true
+    })
+    */
   }
 
   return (
@@ -129,7 +142,7 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
                 style={{ borderRadius: 8, width: 167, padding: 0 , backgroundColor: 'white'}}
                 labelStyle={{ fontSize: 15 , color: 'black'}}
                 mode= "contained"
-                onPress={() => {}}
+                onPress={createAccount}
             > Create Account </PaperButton>
         </View>
         <View style={$buttonContainer}>

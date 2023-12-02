@@ -15,6 +15,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   _props,
 ) {
 
+  const [signupFname, setsignupFname] = useState("")
+  const [signupLname, setsignupLname] = useState("")
   const [signupUsername, setsignupUsername] = useState("")
   const [signEmail, setsignEmail] = useState("")
   const [signupPW, setsignupPW] = useState("")
@@ -28,7 +30,11 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   }
 
   const navigateToOnboarding = () => {
-    navigation.navigate("ImgPicker")
+    navigation.navigate('ImgPicker', {
+      email: signEmail,
+      password: signupPW,
+      username: signupUsername
+    });
   }
   
   return (
@@ -37,7 +43,31 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Text testID="signup-heading" tx="signInScreen.signUp" preset="heading" style={$signUp} />
+      <Text testID="signup-heading" tx="signUpScreen.signUp" preset="heading" style={$signUp} />
+
+      <TextField
+        style={{ color: colors.textDark }}
+        value={signupFname}
+        onChangeText={setsignupFname}
+        containerStyle={$textField}
+        autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
+        labelTx="signUpScreen.firstNameLabel"
+        placeholderTx="signUpScreen.FnameFieldPlaceholder"
+      />
+
+      <TextField
+        style={{ color: colors.textDark }}
+        value={signupLname}
+        onChangeText={setsignupLname}
+        containerStyle={$textField}
+        autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
+        labelTx="signUpScreen.lastNameLabel"
+        placeholderTx="signUpScreen.LnameFieldPlaceholder"
+      />
 
       <TextField
         style={{ color: colors.textDark }}
@@ -47,9 +77,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         autoCapitalize="none"
         autoComplete="email"
         autoCorrect={false}
-        keyboardType="email-address"
-        labelTx="signInScreen.userNameFieldLabel"
-        placeholderTx="signInScreen.userNameFieldPlaceholder"
+        labelTx="signUpScreen.userNameFieldLabel"
+        placeholderTx="signUpScreen.userNameFieldPlaceholder"
       />
 
       <TextField
@@ -61,8 +90,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         autoComplete="email"
         autoCorrect={false}
         keyboardType="email-address"
-        labelTx="signInScreen.emailFieldLabel"
-        placeholderTx="signInScreen.emailFieldPlaceholder"
+        labelTx="signUpScreen.emailFieldLabel"
+        placeholderTx="signUpScreen.emailFieldPlaceholder"
       />
 
       <TextField
@@ -76,8 +105,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         autoComplete="password"
         autoCorrect={false}
         secureTextEntry={false}
-        labelTx="signInScreen.passwordFieldLabel"
-        placeholderTx="signInScreen.passwordFieldPlaceholder"
+        labelTx="signUpScreen.passwordFieldLabel"
+        placeholderTx="signUpScreen.passwordFieldPlaceholder"
       />
       <View style={$arrowbutton}>
         <PaperButton
