@@ -23,11 +23,17 @@ const en = {
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
     userNameFieldLabel: "Username",
     passwordFieldLabel: "Password",
+    emailFieldLabel: "Email",
     userNameFieldPlaceholder: "Enter your username address",
     passwordFieldPlaceholder: "Super secret password here",
+    emailFieldPlaceholder: "Enter your email address",
     tapToSignIn: "Tap to sign in!",
     tapToSignUp: "sign up",
     hint: "Hint: you can use any email address and your favorite password :)",
+  },
+  imagePickerSignUp: {
+    pickImage: "profile picture",
+    chooseImage: "choose your profile picture to complete the creation of your account"
   },
   homeNavigatorTab: {
     homeTab: "Home",

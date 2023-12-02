@@ -28,7 +28,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   }
 
   const navigateToOnboarding = () => {
-    navigation.navigate("Onboarding")
+    navigation.navigate("ImgPicker")
   }
   
   return (
@@ -54,6 +54,19 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
       <TextField
         style={{ color: colors.textDark }}
+        value={signEmail}
+        onChangeText={setsignEmail}
+        containerStyle={$textField}
+        autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
+        keyboardType="email-address"
+        labelTx="signInScreen.emailFieldLabel"
+        placeholderTx="signInScreen.emailFieldPlaceholder"
+      />
+
+      <TextField
+        style={{ color: colors.textDark }}
 
         ref={authPasswordInput}
         value={signupPW}
@@ -66,21 +79,17 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         labelTx="signInScreen.passwordFieldLabel"
         placeholderTx="signInScreen.passwordFieldPlaceholder"
       />
-
-      <Button 
-          testID="login-button"
-          style={$tapButton}
-          preset="reversed"
-          onPress={navigateToOnboarding}
-        >  
-          <AntDesign 
-          color= 'black'
-          name='arrowright' 
-          size={24}/>
-      </Button>
+      <View style={$arrowbutton}>
+        <PaperButton
+              style={{ borderRadius: 8, width: 100, padding: 0 , backgroundColor: 'white'}}
+              labelStyle={{ fontSize: 15 , color: 'black'}}
+              mode= "contained"
+              onPress={navigateToOnboarding}
+          > Next </PaperButton>
+      </View>
 
       <View style={$buttonContainer}>
-        <Text style={[$txt3, { color: 'white' }]}> Already have an account? </Text>
+        <Text style={$txt3}> Already have an account? </Text>
         <PaperButton
             style={{ borderRadius: 8, width: 110, padding: 0 }}
             labelStyle={{ fontSize: 12 }}
@@ -97,17 +106,15 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.xxl,
   paddingHorizontal: spacing.lg,
-  height: "100%"
+  height: "100%",
 }
 
-const $tapButton: ViewStyle = {
+const $tapButton: TextStyle = {
   marginTop: spacing.xs,
-  borderRadius: 120, 
-  marginBottom: 75, 
-  width: 62, 
-  height: 40, 
-  marginLeft: '75%',
-  backgroundColor: "white"
+  borderRadius: 10, 
+  width: 80, 
+  height: 10, 
+  backgroundColor: "white",
 }
 
 const $textField: ViewStyle = {
@@ -124,10 +131,15 @@ const $buttonContainer : ViewStyle = {
   alignItems: 'center',
   flexDirection: 'row',
   flexWrap: 'wrap',
-  alignSelf: 'center'
+  alignSelf: 'center',
 }
 
 const $txt3 : TextStyle = {
+  color: 'white',
+}
 
+const $arrowbutton: ViewStyle = {
+  alignItems: 'flex-end',
+  marginTop: spacing.md
 }
 
