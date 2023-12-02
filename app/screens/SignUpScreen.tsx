@@ -31,6 +31,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   const navigateToOnboarding = () => {
     navigation.navigate('ImgPicker', {
+      FirstName: signupFname,
+      LastName: signupLname,
       email: signEmail,
       password: signupPW,
       username: signupUsername
@@ -104,7 +106,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         autoCapitalize="none"
         autoComplete="password"
         autoCorrect={false}
-        secureTextEntry={false}
+        secureTextEntry={true}
         labelTx="signUpScreen.passwordFieldLabel"
         placeholderTx="signUpScreen.passwordFieldPlaceholder"
       />

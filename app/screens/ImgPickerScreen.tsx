@@ -1,13 +1,13 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { FlatList, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, FlatList, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { AppStackScreenProps, HomeTabScreenProps } from "app/navigators"
 import { AutoImage, Card, Screen, Text } from "app/components"
 import { Image } from "react-native"
 import { colors, spacing } from "app/theme"
 import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'react-native-image-picker';
-import { firebase } from "app/services/api"
+import { Api, CreateUser, firebase } from "app/services/api"
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
 import { Button as PaperButton } from 'react-native-paper'
 import { useStores } from "app/models"
@@ -22,7 +22,7 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
   
   const { navigation } = _props
   const { route } = _props;
-  //const { email, password, username } = route.params;
+  const { email, password, username, FirstName, LastName } = route.params;
 
   const {
     authenticationStore: { setAuthToken },
@@ -99,16 +99,26 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
     navigation.navigate("SignIn")
   }
 
-  const createAccount = () => {
-
-
-    /*
-    setAuthToken({
-      username: username,
+  const createAccount = async () => {
+    let userCreds : CreateUser = {
+      firstName: FirstName,
+      lastName: LastName,
+      email: email,
       password: password,
-      rememberMe: true
-    })
-    */
+      login: username,
+      imageUrl: profilePic
+    }
+    try {
+      const response = await api.postUser(userCreds)
+      if (response.kind !== "ok") {
+        Alert.alert("Something bad happened. Try again later!")
+        return
+      } else {
+        navigation.navigate("Onboarding")
+      }
+    } catch (error) {
+      Alert.alert("Something bad happened. Try again later!")
+    }
   }
 
   return (
@@ -198,4 +208,10 @@ const $buttonContainer : ViewStyle = {
 
 const $txt3 : TextStyle = {
   color: 'white',
+}
+
+export const api = new Api()
+
+function setSnackBar() {
+  throw new Error("Function not implemented.")
 }

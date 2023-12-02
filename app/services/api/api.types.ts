@@ -34,11 +34,12 @@ export interface CreateRequest {
   meetId: number
 }
 export interface CreateUser {
-  FirstName: string,
-  LastName: string,
+  firstName: string,
+  lastName: string,
   email: string,
   password: string,
-  username: string
+  login: string,
+  imageUrl: string
 
 }
 export interface JoinActivity {

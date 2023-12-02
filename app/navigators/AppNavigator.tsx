@@ -39,6 +39,8 @@ export type AppStackParamList = {
 	Onboarding: undefined
 	SignUp: undefined
 	ImgPicker: {
+    FirstName: string;
+    LastName: string;
     username: string;
     email: string;
     password: string;
