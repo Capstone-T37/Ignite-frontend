@@ -10,7 +10,7 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, TagSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, TagSnapshotIn, TagStoreSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
@@ -103,9 +103,9 @@ export class Api {
   /**
    * Get list of activities
    */
-  async getActivities(): Promise<{ kind: "ok"; activities: ActivitySnapshotIn[] } | GeneralApiProblem> {
+  async getActivities(tags?: TagStoreSnapshotIn[]): Promise<{ kind: "ok"; activities: ActivitySnapshotIn[] } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<ActivityItem[]> = await this.apisauce.get(`activities`,)
+    const response: ApiResponse<ActivityItem[]> = await this.apisauce.post(`activities/filter`, tags)
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)

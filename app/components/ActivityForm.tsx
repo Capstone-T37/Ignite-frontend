@@ -32,7 +32,8 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [selectedTags, setSelectedTags] = React.useState<TagSnapshotIn[]>([]);
-  const [allTags, setAllTags] = React.useState<TagSnapshotIn[]>([]);
+  const { tagStore } = useStores()
+  const allTags = tagStore.tags;
 
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -66,16 +67,13 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
 
   React.useEffect(() => {
     setLoading(true)
-    api.getTags().then((response) => {
-      if (response.kind === "ok") {
-        setAllTags(response.tags)
+      ; (async function load() {
+        setLoading(true)
+        await tagStore.fetchTags()
         setLoading(false)
-      }
-    }).catch((e) => {
-      console.error(e)
-    })
+      })()
 
-  }, [])
+  }, [tagStore])
 
   return (
     < ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: colors.background }}>

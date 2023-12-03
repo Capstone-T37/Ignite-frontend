@@ -1,16 +1,16 @@
 import React, { FC, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { ActivityIndicator, FlatList, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { ActivityIndicator, FlatList, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import { ActivityNavigatorParamList, ActivityNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
 import { Button, Card, EmptyState, ListItem, Screen, Text } from "app/components"
 import { isRTL, translate } from "app/i18n"
-import { Activity, useStores } from "app/models"
+import { Activity, TagSnapshotIn, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
 import { delay } from "app/utils/delay"
 import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { useNavigationContext } from "app/utils/NavigationContext"
 import { ActivityForm } from "app/components/ActivityForm"
-import { Snackbar } from "react-native-paper"
+import { Chip, Snackbar } from "react-native-paper"
 import { FAB } from 'react-native-paper';
 
 interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
@@ -24,23 +24,42 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
   const [isSnackBarVisible, setIsSnackBarVisible] = React.useState(false)
   const { navigation } = _props
-
+  const [selectedTags, setSelectedTags] = React.useState<TagSnapshotIn[]>([]);
+  const { tagStore } = useStores()
+  const allTags = tagStore.tags;
   function viewDetails(activity: Activity) {
 
     navigation.navigate("ActivityDetails", activity)
 
   }
+  const toggleTag = (tag: TagSnapshotIn) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter(t => t !== tag));
+    } else {
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
   useEffect(() => {
     ; (async function load() {
       setIsLoading(true)
-      await activityStore.fetchActivities()
+      await tagStore.fetchTags()
       setIsLoading(false)
     })()
-  }, [activityStore])
+  }, [tagStore])
+
+  useEffect(() => {
+    console.log(selectedTags)
+      ; (async function load() {
+        setIsLoading(true)
+        await activityStore.fetchActivities(selectedTags)
+        setIsLoading(false)
+      })()
+  }, [selectedTags, activityStore])
 
   async function manualRefresh() {
     setIsLoading(true)
-    await Promise.all([activityStore.fetchActivities(), delay(750)])
+    await Promise.all([activityStore.fetchActivities(selectedTags), delay(750)])
     setIsLoading(false)
   }
   // Pull in navigation via hook
@@ -57,6 +76,21 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
           contentContainerStyle={$flatListContentContainer}
           refreshing={isLoading}
           onRefresh={manualRefresh}
+          ListHeaderComponent={
+            (
+              <View >
+                <Text text="Tags: " />
+                <ScrollView horizontal>
+                  <View style={$tagsContainer}>
+
+                    {allTags.map((tag) => (
+                      <Chip key={tag.id} onPress={() => toggleTag(tag)} mode={selectedTags.includes(tag) ? "flat" : "outlined"} showSelectedCheck={true} showSelectedOverlay={selectedTags.includes(tag)} style={$tag} selected={selectedTags.includes(tag)}>{tag.title}</Chip>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+            )
+          }
           ListEmptyComponent={
             isLoading ? (
               <ActivityIndicator />
@@ -234,4 +268,13 @@ const $snackBarText: TextStyle = {
   color: colors.text,
   textAlign: 'center',
   alignSelf: 'center'
+}
+const $tagsContainer: ViewStyle = {
+  alignItems: 'center',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+}
+const $tag: ViewStyle = {
+  borderRadius: 18,
+  margin: 3,
 }

@@ -2,6 +2,7 @@ import { api } from "app/services/api"
 import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
 import { ActivityModel } from "./Activity"
 import { withSetPropAction } from "./helpers/withSetPropAction"
+import { TagStoreSnapshotIn } from "./TagStore"
 
 /**
  * Model description here for TypeScript hints.
@@ -18,8 +19,8 @@ export const ActivityStoreModel = types
     },
   }))
   .actions((store) => ({
-    async fetchActivities() {
-      const response = await api.getActivities()
+    async fetchActivities(tags?: TagStoreSnapshotIn[]) {
+      const response = await api.getActivities(tags)
       if (response.kind === "ok") {
         store.setProp("activities", response.activities)
       } else {
