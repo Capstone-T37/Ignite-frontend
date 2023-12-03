@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import { ActivityNavigatorParamList, ActivityNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
@@ -10,8 +10,10 @@ import { delay } from "app/utils/delay"
 import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { useNavigationContext } from "app/utils/NavigationContext"
 import { ActivityForm } from "app/components/ActivityForm"
+import ActivityBottomSheet from '../components/ActivityBottomSheet';
 import { Chip, Snackbar } from "react-native-paper"
 import { FAB } from 'react-native-paper';
+
 
 interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
 
@@ -19,19 +21,30 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const sheetRef = useRef<BottomSheetModal>(null);
+  const activityBottomSheet = useRef<BottomSheetModal>(null);
   const { activityStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
   const [isSnackBarVisible, setIsSnackBarVisible] = React.useState(false)
+  const [clickedActivity, setclickedActivity] = useState({
+    id: 1,
+    userName: "",
+    title: "",
+    description: "",
+    date: "",
+  })
   const { navigation } = _props
   const [selectedTags, setSelectedTags] = React.useState<TagSnapshotIn[]>([]);
   const { tagStore } = useStores()
   const allTags = tagStore.tags;
+
+  console.log(clickedActivity)
+
   function viewDetails(activity: Activity) {
-
-    navigation.navigate("ActivityDetails", activity)
-
+    setclickedActivity(activity)
+    activityBottomSheet.current?.expand()
   }
+
   const toggleTag = (tag: TagSnapshotIn) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter(t => t !== tag));
@@ -47,6 +60,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
       setIsLoading(false)
     })()
   }, [tagStore])
+
 
   useEffect(() => {
     console.log(selectedTags)
@@ -132,19 +146,10 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
           <Text preset='formHelper' tx="ActivityForm.SnackBarText" style={$snackBarText} />
         </Snackbar>
         {// @ts-ignore}
-          <BottomSheet
-            handleStyle={{ backgroundColor: colors.background, shadowColor: 'white' }}
-            ref={sheetRef}
-            index={-1}
-            snapPoints={["100%"]}
-            enablePanDownToClose={true}
-            onChange={() => { }}
-            onClose={handleClose}
-          >
-            {isSheetOpen && (
-              <ActivityForm sheetRef={sheetRef.current} setSnackBar={() => setIsSnackBarVisible(true)} />
-            )}
-          </BottomSheet>
+          <ActivityBottomSheet
+          activity = {clickedActivity}
+          bottomSheetRef={activityBottomSheet}
+            />
         }
       </Screen>
     </>

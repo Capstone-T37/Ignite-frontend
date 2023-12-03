@@ -11,18 +11,25 @@ import { Button } from 'react-native-paper';
 import Carousel from '../components/Carousel'
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ParamListBase, useRoute } from "@react-navigation/native"
+import { useStores } from "app/models"
 
-export interface OnboardingScreenProps {
+interface OnboardingScreenProps extends AppStackScreenProps<"Onboarding"> {}
 
-  navigation: NativeStackNavigationProp<ParamListBase, string, undefined>
-}
+export const OnboardingScreen: FC<OnboardingScreenProps> = observer(function OnboardingScreen(_props : OnboardingScreenProps) {
 
-export const OnboardingScreen: FC<OnboardingScreenProps> = observer(function OnboardingScreen(props : OnboardingScreenProps) {
+    const {
+      authenticationStore: { setAuthToken },
+    } = useStores()
 
-  const { navigation } = props
+    const { route } = _props;
 
+    const { username, password } = route.params;
     const navg = () => {
-        //navigation.navigate('Home')
+      setAuthToken({
+        username: username,
+        password: password,
+        rememberMe: true
+      })
     }
 
     return (

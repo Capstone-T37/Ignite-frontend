@@ -41,6 +41,7 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
       } else {
         try {
           const asset = response.assets.pop()
+          setProfilePic(asset.uri)
           const storage = firebase.storage
           const userStorageRef = ref(storage, path);
 
@@ -114,7 +115,10 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
         Alert.alert("Something bad happened. Try again later!")
         return
       } else {
-        navigation.navigate("Onboarding")
+        navigation.navigate("Onboarding", {
+          username: username,
+          password: password
+        })
       }
     } catch (error) {
       Alert.alert("Something bad happened. Try again later!")
