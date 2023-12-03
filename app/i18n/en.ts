@@ -16,16 +16,39 @@ const en = {
       "This is the screen that your users will see in production when an error is thrown. You'll want to customize this message (located in `app/i18n/en.ts`) and probably the layout as well (`app/screens/ErrorScreen`). If you want to remove this entirely, check `app/app.tsx` for the <ErrorBoundary> component.",
     reset: "RESET APP",
   },
+  signUpScreen: {
+    signUp: "Sign up",
+    userNameFieldLabel: "Username",
+    passwordFieldLabel: "Password",
+    emailFieldLabel: "Email",
+    userNameFieldPlaceholder: "Enter your username address",
+    passwordFieldPlaceholder: "Super secret password here",
+    emailFieldPlaceholder: "Enter your email address",
+    tapToSignUp: "sign up",
+    firstNameLabel: "First name",
+    lastNameLabel: "Last name",
+    FnameFieldPlaceholder: "Enter your first name",
+    LnameFieldPlaceholder: "Enter your last name",
+
+  },
   signInScreen: {
     signIn: "Sign In",
+    signUp: "Sign up",
     enterDetails:
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
     userNameFieldLabel: "Username",
     passwordFieldLabel: "Password",
+    emailFieldLabel: "Email",
     userNameFieldPlaceholder: "Enter your username address",
     passwordFieldPlaceholder: "Super secret password here",
+    emailFieldPlaceholder: "Enter your email address",
     tapToSignIn: "Tap to sign in!",
+    tapToSignUp: "sign up",
     hint: "Hint: you can use any email address and your favorite password :)",
+  },
+  imagePickerSignUp: {
+    pickImage: "profile picture",
+    chooseImage: "choose your profile picture to complete the creation of your account"
   },
   homeNavigatorTab: {
     homeTab: "Home",
