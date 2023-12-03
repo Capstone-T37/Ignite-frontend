@@ -45,6 +45,10 @@ export interface CreateUser {
 export interface JoinActivity {
   activityId: number
 }
+
+export interface UpdateProfilePic {
+  imageUrl: string
+}
 export interface MeetItem {
   id: number,
   userName: string,

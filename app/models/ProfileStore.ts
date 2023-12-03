@@ -43,6 +43,14 @@ export const ProfileStoreModel = types
         console.tron.error(`Error fetching meets: ${JSON.stringify(response)}`, [])
       }
     },
+    async updateProfilePic(imageUrl: string) {
+      const response = await api.updateProfilePic({ imageUrl })
+      if (response.kind === "ok") {
+        store.setProp("profile", { ...store.profile, imageUrl })
+      } else {
+        console.tron.error(`Error updating profile pic: ${JSON.stringify(response)}`, [])
+      }
+    },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export interface ProfileStore extends Instance<typeof ProfileStoreModel> { }

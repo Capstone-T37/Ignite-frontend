@@ -1,5 +1,5 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle, Image, TouchableOpacity } from "react-native"
+import { StyleProp, TextStyle, View, ViewStyle, Image, TouchableOpacity, ImageStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { colors, spacing, typography } from "app/theme"
 import { Text } from "app/components/Text"
@@ -9,6 +9,8 @@ import { Screen } from "./Screen"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ParamListBase } from "@react-navigation/native"
 import { HomeTabParamList, HomeTabScreenProps } from "app/navigators"
+import { useStores } from "app/models"
+import { AutoImage } from "./AutoImage"
 
 export interface NavigationHeaderProps {
   /**
@@ -24,6 +26,8 @@ export interface NavigationHeaderProps {
 export const NavigationHeader = observer(function NavigationHeader(props: NavigationHeaderProps) {
   const { style, navigation } = props
   const $styles = [$container, style]
+  const { profileStore } = useStores()
+  const sadFace = require("../../assets/images/sad-face.png")
 
   return (
     <Screen safeAreaEdges={["top"]} backgroundColor="transparent">
@@ -37,12 +41,17 @@ export const NavigationHeader = observer(function NavigationHeader(props: Naviga
 
         />
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Image
-            source={{
-              uri: 'https://imageio.forbes.com/specials-images/imageserve/5c76b7d331358e35dd2773a9/0x0.jpg?format=jpg&crop=4401,4401,x0,y0,safe&height=416&width=416&fit=bounds'
-            }}
-            style={{ width: 30, marginTop: spacing.xs - 3, height: 30, borderRadius: 30 / 2 }}
-          />
+          {profileStore.profile?.imageUrl.length > 0 ?
+            <AutoImage
+              resizeMode="cover"
+              resizeMethod="scale"
+              style={$imageContainer}
+              maxHeight={30}
+              maxWidth={30}
+              source={{ uri: profileStore.profile?.imageUrl }}
+            />
+            : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />}
+
         </TouchableOpacity>
 
       </View>
@@ -58,4 +67,8 @@ const $container: ViewStyle = {
   alignItems: 'center',
   paddingHorizontal: spacing.sm,
   backgroundColor: "transparent"
+}
+
+const $imageContainer: ImageStyle = {
+  width: 30, marginTop: spacing.xs - 3, height: 30, borderRadius: 30 / 2
 }

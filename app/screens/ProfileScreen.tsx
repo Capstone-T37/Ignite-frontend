@@ -12,6 +12,7 @@ import { firebase } from "app/services/api"
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
 import { updateProfile } from "firebase/auth"
 import { useStores } from "app/models"
+import { ActivityIndicator } from "react-native-paper"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -21,7 +22,6 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const sadFace = require("../../assets/images/sad-face.png")
-  const [profilePic, setProfilePic] = React.useState(firebase.auth?.currentUser?.photoURL)
   // Pull in navigation via hook
   const { profileStore } = useStores()
 
@@ -44,6 +44,7 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
       } else {
         try {
           const asset = response.assets.pop()
+          profileStore.profile.setProp("imageUrl", asset.uri)
           const storage = firebase.storage
           const userStorageRef = ref(storage, path);
 
@@ -84,10 +85,7 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
               // Upload completed successfully, now we can get the download URL
               getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                 console.log('File available at', downloadURL);
-                setProfilePic(downloadURL)
-                await updateProfile(firebase.auth.currentUser, {
-                  photoURL: downloadURL
-                })
+                await profileStore.updateProfilePic(downloadURL)
                 //perform your task
               });
             });
@@ -111,18 +109,24 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
             style={{ marginVertical: spacing.sm }}
             onPress={() => {
               uploadImage(`users/${firebase.auth?.currentUser?.uid}/profile`, `profilePic`)
-            }}>
-            {profileStore.profile?.imageUrl.length > 0 ?
-              <AutoImage
-                resizeMode="cover"
-                resizeMethod="scale"
-                style={$imageContainer}
-                maxHeight={100}
-                maxWidth={100}
-                source={{ uri: profileStore.profile?.imageUrl }}
-              />
-              : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
+            }}>{
+              // loading ? <View style={{ height: 100, width: 100, justifyContent: 'center', alignItems: 'center' }}>
+              //   <ActivityIndicator />
+              // </View> :
+
+              profileStore.profile?.imageUrl.length > 0 ?
+                <AutoImage
+                  resizeMode="cover"
+                  resizeMethod="scale"
+                  style={$imageContainer}
+                  maxHeight={100}
+                  maxWidth={100}
+                  source={{ uri: profileStore.profile?.imageUrl }}
+                />
+                : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
+
             }
+
             <View style={{ backgroundColor: 'grey', position: "absolute", bottom: 0, right: 0, height: 30, width: 30, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
               <Entypo name="camera" size={15} color="black" />
             </View>

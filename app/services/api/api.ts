@@ -14,7 +14,7 @@ import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, CreateUser, JoinActivity, JwtResponse, MeetItem,
+  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, CreateUser, JoinActivity, JwtResponse, MeetItem, UpdateProfilePic,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { firebase } from "./firebase"
@@ -409,6 +409,26 @@ export class Api {
   async postRequest(body: CreateRequest): Promise<{ kind: "ok" } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<ResponseType> = await this.apisauce.post(`requests`, body)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    try {
+      return { kind: "ok" }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async updateProfilePic(body: UpdateProfilePic): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ResponseType> = await this.apisauce.post(`account/profile`, body)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
