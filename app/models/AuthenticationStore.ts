@@ -40,6 +40,7 @@ export const AuthenticationStoreModel = types
     async setAuthToken(userCred: UserCred) {
       const response = await api.authenticate(userCred)
       if (response.kind === "ok") {
+        console.log("IT WORKED")
         store.setProp("authToken", response.jwtToken)
         store.setProp("userName", userCred.username)
       } else {

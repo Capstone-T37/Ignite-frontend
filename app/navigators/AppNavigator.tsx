@@ -36,7 +36,10 @@ import { useStores } from "app/models"
 export type AppStackParamList = {
   Home: undefined
   SignIn: undefined
-	Onboarding: undefined
+	Onboarding: {
+    username: string;
+    password: string;
+  }
 	SignUp: undefined
 	ImgPicker: {
     FirstName: string;
@@ -78,13 +81,14 @@ const AppStack = observer(function AppStack() {
       ) : (
         <>
           <Stack.Screen name="SignIn" component={Screens.SignInScreen} />
+          <Stack.Screen name="Onboarding" component={Screens.OnboardingScreen} />
+          <Stack.Screen name="SignUp" component={Screens.SignUpScreen} />
+          <Stack.Screen name="ImgPicker" component={Screens.ImgPickerScreen} />
         </>
       )
       }
       {/** 🔥 Your screens go here */}
-			<Stack.Screen name="Onboarding" component={Screens.OnboardingScreen} />
-			<Stack.Screen name="SignUp" component={Screens.SignUpScreen} />
-			<Stack.Screen name="ImgPicker" component={Screens.ImgPickerScreen} />
+			
 			{/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
