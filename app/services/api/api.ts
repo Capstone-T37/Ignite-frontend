@@ -10,7 +10,7 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, TagSnapshotIn, TagStoreSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, ProfileSnapshotIn, RequestSnapshotIn, TagSnapshotIn, TagStoreSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
@@ -273,6 +273,30 @@ export class Api {
       }))
 
       return { kind: "ok", tags }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async fetchProfile(): Promise<{ kind: "ok"; profile: ProfileSnapshotIn } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ProfileSnapshotIn[]> = await this.apisauce.get(`account/profile`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const profile: ProfileSnapshotIn = response.data
+
+
+      return { kind: "ok", profile }
     } catch (e) {
       if (__DEV__) {
         console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)

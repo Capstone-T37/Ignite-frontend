@@ -11,6 +11,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import { firebase } from "app/services/api"
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
 import { updateProfile } from "firebase/auth"
+import { useStores } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -22,7 +23,13 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
   const sadFace = require("../../assets/images/sad-face.png")
   const [profilePic, setProfilePic] = React.useState(firebase.auth?.currentUser?.photoURL)
   // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const { profileStore } = useStores()
+
+  React.useEffect(() => {
+    ; (async function load() {
+      await profileStore.fetchProfile()
+    })()
+  }, [profileStore])
 
 
   const uploadImage = React.useCallback((path: string, imageName: string) => {
@@ -105,14 +112,14 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
             onPress={() => {
               uploadImage(`users/${firebase.auth?.currentUser?.uid}/profile`, `profilePic`)
             }}>
-            {profilePic ?
+            {profileStore.profile?.imageUrl.length > 0 ?
               <AutoImage
                 resizeMode="cover"
                 resizeMethod="scale"
                 style={$imageContainer}
                 maxHeight={100}
                 maxWidth={100}
-                source={{ uri: profilePic }}
+                source={{ uri: profileStore.profile?.imageUrl }}
               />
               : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
             }
@@ -121,8 +128,8 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
             </View>
           </TouchableOpacity>
 
-          <Text text="Ayman Fakri" preset="heading" style={$fullName} />
-          <Text text="aymanfakri" style={$userName} />
+          <Text text={profileStore.profile?.fullName} preset="heading" style={$fullName} />
+          <Text text={profileStore.profile?.userName} style={$userName} />
           <Text text="Ottawa" style={$location} />
         </View>
         <Text text="Standout" preset="heading" style={{ fontSize: spacing.md }} />
@@ -157,22 +164,7 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
           //ListEmptyComponent={}
 
           renderItem={({ item }) => (
-            <AutoImage
-              resizeMode="cover"
-              resizeMethod="scale"
-              style={{
-                marginHorizontal: spacing.md,
-                backgroundColor: 'white',
-                width: 200,
-                height: 300,
-                flexWrap: "wrap",
-                borderRadius: spacing.md
-
-              }}
-              maxHeight={200}
-              maxWidth={300}
-              source={{ uri: profilePic }}
-            />
+            <></>
           )}
         />
 

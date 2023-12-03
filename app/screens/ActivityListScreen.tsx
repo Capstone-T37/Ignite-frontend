@@ -49,7 +49,6 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   }, [tagStore])
 
   useEffect(() => {
-    console.log(selectedTags)
       ; (async function load() {
         setIsLoading(true)
         await activityStore.fetchActivities(selectedTags)
