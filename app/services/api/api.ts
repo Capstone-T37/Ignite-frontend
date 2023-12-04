@@ -10,11 +10,11 @@ import {
   ApisauceInstance,
   create,
 } from "apisauce"
-import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, RequestSnapshotIn, TagSnapshotIn, TagStoreSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
+import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn, ParticipantSnapshotIn, ProfileSnapshotIn, RequestSnapshotIn, TagSnapshotIn, TagStoreSnapshotIn, User, UserCred, UserSnapshotIn } from "app/models"
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, CreateUser, JoinActivity, JwtResponse, MeetItem,
+  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, CreateUser, JoinActivity, JwtResponse, MeetItem, UpdateProfilePic,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { firebase } from "./firebase"
@@ -305,6 +305,30 @@ export class Api {
     }
   }
 
+  async fetchProfile(): Promise<{ kind: "ok"; profile: ProfileSnapshotIn } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ProfileSnapshotIn[]> = await this.apisauce.get(`account/profile`,)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const profile: ProfileSnapshotIn = response.data
+
+
+      return { kind: "ok", profile }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
   /**
    * Get count for requests
    */
@@ -386,6 +410,26 @@ export class Api {
   async postRequest(body: CreateRequest): Promise<{ kind: "ok" } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<ResponseType> = await this.apisauce.post(`requests`, body)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    try {
+      return { kind: "ok" }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async updateProfilePic(body: UpdateProfilePic): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ResponseType> = await this.apisauce.post(`account/profile`, body)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
