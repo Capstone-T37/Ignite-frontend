@@ -161,13 +161,7 @@ const styles = StyleSheet.create({
     sheetContainer: {
         // add horizontal space
         
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 12,
-        },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
+        
 
         elevation: 24,
        

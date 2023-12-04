@@ -30,10 +30,6 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
   } = useStores()
 
   useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-
-    // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       setAuthPassword("")
     }

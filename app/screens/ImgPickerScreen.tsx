@@ -112,6 +112,7 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
     try {
       const response = await api.postUser(userCreds)
       if (response.kind !== "ok") {
+        console.log(response)
         Alert.alert("Something bad happened. Try again later!")
         return
       } else {

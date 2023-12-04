@@ -24,6 +24,9 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = observer(function Onb
     const { route } = _props;
 
     const { username, password } = route.params;
+
+    
+    
     const navg = () => {
       setAuthToken({
         username: username,
