@@ -21,18 +21,11 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
 
   const sadFace = require("../../assets/images/sad-face.png")
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
-  const [profilePic, setProfilePic] = React.useState("")
   const [participating, setParticipating] = React.useState(false)
   const [activityDetails, setActivityDetails] = React.useState<ActivityDetails>()
   const { navigation, route } = _props
   const activity = route.params
-  React.useEffect(() => {
-    const picRef = ref(firebase.storage, `users/admin/${activity.userName}/profilePic`);
-    getDownloadURL(picRef).then(async (downloadURL) => {
-      console.log('File available at', downloadURL);
-      setProfilePic(downloadURL)
-    }).catch(() => setProfilePic(""))
-  }, [])
+
   React.useEffect(() => {
     api.getActivityDetails(activity.id).then((response) => {
       if (response.kind === "ok") {
@@ -77,14 +70,14 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
       {/* Main Content */}
       <View style={styles.mainContent}>
         <View style={{ flexDirection: "row", alignItems: 'center', width: '100%', justifyContent: 'flex-start' }}>
-          {profilePic ?
+          {activityDetails?.imageUrl ?
             <AutoImage
               resizeMode="cover"
               resizeMethod="scale"
               style={$imageContainer}
               maxHeight={80}
               maxWidth={80}
-              source={{ uri: profilePic }}
+              source={{ uri: activityDetails?.imageUrl }}
             />
             : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
           }

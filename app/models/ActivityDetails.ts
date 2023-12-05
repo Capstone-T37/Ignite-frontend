@@ -14,7 +14,8 @@ export const ActivityDetailsModel = types
     date: "",
     isParticipating: types.boolean,
     tags: types.array(types.string),
-    participants: types.array(types.string)
+    participants: types.array(types.string),
+    imageUrl: ""
   })
   .actions(withSetPropAction)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
