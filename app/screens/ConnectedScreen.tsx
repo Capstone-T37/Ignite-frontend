@@ -14,6 +14,7 @@ import DefaultModalContent from "app/components/DefaultModalContent"
 import { Divider } from 'react-native-paper';
 import { api } from "app/services/api"
 import { AntDesign } from '@expo/vector-icons';
+import FastImage from "react-native-fast-image"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -107,11 +108,24 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
 
           renderItem={({ item }) => (
             <ListItem text={item.userName} containerStyle={$listItemContainer} textStyle={$listItemDescription}
+              LeftComponent={
+                <FastImage
+                  resizeMode="cover"
+                  style={{
+                    borderRadius: 25,
+                    height: 50,
+                    width: 50,
+                  }}
+                  source={{ uri: item.imageUrl }} />
+              }
+
               onPress={() => {
                 setisListVisible(false)
                 navigation.navigate("Chat", item.userName)
               }}
-            />
+            >
+
+            </ListItem>
           )}
         />
       </MeetRequestModal>
@@ -120,6 +134,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
         data={meetStore.meetsForList}
         refreshing={isLoading}
         onRefresh={manualRefresh}
+
         //extraData={}
         contentContainerStyle={$flatListContentContainer}
         //refreshing={refreshing}
@@ -173,7 +188,19 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
         renderItem={({ item }) => (
           <ListItem text={item.description} containerStyle={$listItemContainer} textStyle={$listItemDescription} disabled
             LeftComponent={
-              <View style={$leftComponent} ><Text text={item.userName} size="xs" preset="heading" /></View>
+              <View style={{ height: '100%', justifyContent: 'center' }}>
+                <FastImage
+                  resizeMode="cover"
+                  style={{
+                    borderRadius: 25,
+                    height: 50,
+                    width: 50,
+                  }}
+                  source={{ uri: item.imageUrl }} />
+                <Text text={item.userName} />
+              </View>
+
+
             }
             RightComponent={
               item.isRequestSent ?
@@ -181,21 +208,24 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                   <AntDesign name="checkcircleo" size={spacing.xl} color="green" />
                 </View>
                 :
-                <Button
-                  onPress={() => {
-                    setSelectedMeet(item.id)
-                    setisRequestVisible(true)
-                  }}
-                  onLongPress={() => { }}
-                  style={[$meetButton]}
-                >
-                  <Text
-                    size="xxs"
-                    weight="medium"
-                    text={translate("ConnectedScreen.meetButtonText")}
-                    style={{ color: colors.textDark }}
-                  />
-                </Button>
+                <View style={{ justifyContent: 'center', height: '100%' }}>
+
+                  <Button
+                    onPress={() => {
+                      setSelectedMeet(item.id)
+                      setisRequestVisible(true)
+                    }}
+                    onLongPress={() => { }}
+                    style={[$meetButton]}
+                  >
+                    <Text
+                      size="xxs"
+                      weight="medium"
+                      text={translate("ConnectedScreen.meetButtonText")}
+                      style={{ color: colors.textDark }}
+                    />
+                  </Button>
+                </View>
             } />
         )}
       />
@@ -296,8 +326,8 @@ const $requestsContainer: ViewStyle = {
 
 const $meetButton: ViewStyle = {
   borderRadius: 17,
-  backgroundColor: colors.palette.yellow,
-  borderColor: colors.palette.yellow,
+  backgroundColor: colors.palette.primary100,
+  borderColor: colors.palette.primary100,
 }
 
 const $goLiveButton: ViewStyle = {

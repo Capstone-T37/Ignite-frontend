@@ -14,7 +14,7 @@ import { ActivityDetails, ActivitySnapshotIn, JwtTokenSnapshotIn, MeetSnapshotIn
 import Config from "../../config"
 import type {
   ActivityItem,
-  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, CreateUser, JoinActivity, JwtResponse, MeetItem, UpdateProfilePic,
+  ApiConfig, CreateActivity, CreateActivityWithTags, CreateMeet, CreateRequest, CreateUser, JoinActivity, JwtResponse, UpdateProfilePic,
 } from "./api.types"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
 import { firebase } from "./firebase"
@@ -189,7 +189,7 @@ export class Api {
    */
   async getMeets(): Promise<{ kind: "ok"; meets: MeetSnapshotIn[] } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<MeetItem[]> = await this.apisauce.get(`meets/exclude-user-meets`,)
+    const response: ApiResponse<MeetSnapshotIn[]> = await this.apisauce.get(`meets/exclude-user-meets`,)
 
     // the typical ways to die when calling an api
     if (!response.ok) {

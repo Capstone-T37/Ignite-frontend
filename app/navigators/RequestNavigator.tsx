@@ -20,7 +20,7 @@ export const RequestNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, }}>
       <Stack.Screen name="Connected" component={ConnectedScreen} />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true,headerStyle:{backgroundColor:colors.backgroundAccent},headerTitleStyle:{color:colors.text} }} />
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false,headerStyle:{backgroundColor:colors.backgroundAccent},headerTitleStyle:{color:colors.text} }} />
     </Stack.Navigator>
   )
 }

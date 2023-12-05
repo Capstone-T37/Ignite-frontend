@@ -30,6 +30,11 @@ export const NavigationHeader = observer(function NavigationHeader(props: Naviga
   const { profileStore } = useStores()
   const sadFace = require("../../assets/images/sad-face.png")
 
+  React.useEffect(() => {
+    ; (async function load() {
+      await profileStore.fetchProfile()
+    })()
+  }, [profileStore])
   return (
     <Screen safeAreaEdges={["top"]} backgroundColor="transparent">
 

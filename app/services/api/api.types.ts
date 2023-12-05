@@ -49,12 +49,7 @@ export interface JoinActivity {
 export interface UpdateProfilePic {
   imageUrl: string
 }
-export interface MeetItem {
-  id: number,
-  userName: string,
-  description: string,
-  isRequestSent: boolean
-}
+
 
 /**
  * The options used to configure apisauce.
