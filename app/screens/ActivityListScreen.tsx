@@ -38,11 +38,11 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   const { tagStore } = useStores()
   const allTags = tagStore.tags;
 
-  console.log(clickedActivity)
-
   function viewDetails(activity: Activity) {
-    setclickedActivity(activity)
-    activityBottomSheet.current?.expand()
+    //setclickedActivity(activity)
+    //activityBottomSheet.current?.expand()
+
+    navigation.navigate("ActivityDetails", activity)
   }
 
   const toggleTag = (tag: TagSnapshotIn) => {
@@ -63,11 +63,11 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
 
 
   useEffect(() => {
-      ; (async function load() {
-        setIsLoading(true)
-        await activityStore.fetchActivities(selectedTags)
-        setIsLoading(false)
-      })()
+    ; (async function load() {
+      setIsLoading(true)
+      await activityStore.fetchActivities(selectedTags)
+      setIsLoading(false)
+    })()
   }, [selectedTags, activityStore])
 
   async function manualRefresh() {
@@ -145,10 +145,10 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
           <Text preset='formHelper' tx="ActivityForm.SnackBarText" style={$snackBarText} />
         </Snackbar>
         {// @ts-ignore}
-          <ActivityBottomSheet
-          activity = {clickedActivity}
-          bottomSheetRef={activityBottomSheet}
-            />
+          // <ActivityBottomSheet
+          //   activity={clickedActivity}
+          //   bottomSheetRef={activityBottomSheet}
+          // />
         }
       </Screen>
     </>
