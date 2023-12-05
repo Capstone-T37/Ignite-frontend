@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import { ActivityNavigatorParamList, ActivityNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
-import { Button, Card, EmptyState, ListItem, Screen, Text } from "app/components"
+import { AutoImage, Button, Card, EmptyState, ListItem, Screen, Text } from "app/components"
 import { isRTL, translate } from "app/i18n"
 import { Activity, TagSnapshotIn, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
@@ -13,6 +13,7 @@ import { ActivityForm } from "app/components/ActivityForm"
 import ActivityBottomSheet from '../components/ActivityBottomSheet';
 import { Chip, Snackbar } from "react-native-paper"
 import { FAB } from 'react-native-paper';
+import FastImage from "react-native-fast-image"
 
 
 interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
@@ -167,24 +168,43 @@ const ActivityCard = observer(function ActivityCard({
 
   return (
     <Card
-      ContentTextProps={$metadata}
+      ContentTextProps={$cardContainer}
       style={$item}
       contentStyle={$contentStyle}
       verticalAlignment="force-footer-bottom"
       onPress={() => viewDetails(activity)}
       onLongPress={() => { }}
+      FooterComponent={
+        <Text
+          style={$metadataTextTime}
+          size="xxs"
+          accessibilityLabel={activity.date}
+        >
+          {new Date(activity.date).toLocaleString()}
+        </Text>
+      }
       HeadingComponent={
         <View style={$metadata}>
-          <Text
-            style={$metadataText}
-            size="xxs"
-            accessibilityLabel={activity.date}
-          >
-            {new Date(activity.date).toLocaleString()}
-          </Text>
+          <FastImage
+            resizeMode="cover"
+            style={{
+              borderRadius: 15,
+              height: 30,
+              width: 30,
+              marginRight: spacing.xs
+            }}
+            source={{ uri: activity.imageUrl }} />
+          <View>
+            <Text
+              text={activity.userName}
+              style={$metadataText}
+              size="sm"
+            />
+
+          </View>
         </View>
       }
-      content={`${activity.userName} - ${activity.title}`}
+      content={activity.title}
     />
   )
 })
@@ -231,12 +251,21 @@ const $metadata: TextStyle = {
   color: colors.textDim,
   marginTop: spacing.xs,
   flexDirection: "row",
+  alignItems: 'center',
+
+}
+const $cardContainer: TextStyle = {
+  color: colors.textDim,
+  marginTop: spacing.xs,
+  flexDirection: "row",
 }
 
 const $metadataText: TextStyle = {
   color: colors.textDark,
-  marginEnd: spacing.md,
-  marginBottom: spacing.xs,
+}
+const $metadataTextTime: TextStyle = {
+  color: colors.textDark,
+  textAlign: 'right'
 }
 const $contentStyle: TextStyle = {
   color: colors.textDark,
@@ -281,4 +310,13 @@ const $tagsContainer: ViewStyle = {
 const $tag: ViewStyle = {
   borderRadius: 18,
   margin: 3,
+}
+
+const $imageContainer: ImageStyle = {
+  borderWidth: 1,
+  borderColor: colors.textDim,
+  borderRadius: 15,
+  height: 30,
+  width: 30,
+  marginRight: spacing.md
 }

@@ -10,6 +10,7 @@ import { Chip } from 'react-native-paper';
 import { getDownloadURL, ref } from "firebase/storage"
 import { api, firebase } from "app/services/api"
 import { ActivityDetails, Participant, ParticipantSnapshotIn } from "app/models"
+import FastImage from "react-native-fast-image"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -70,15 +71,18 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
       {/* Main Content */}
       <View style={styles.mainContent}>
         <View style={{ flexDirection: "row", alignItems: 'center', width: '100%', justifyContent: 'flex-start' }}>
-          {activityDetails?.imageUrl ?
-            <AutoImage
+          {activity?.imageUrl ?
+            <FastImage
               resizeMode="cover"
-              resizeMethod="scale"
-              style={$imageContainer}
-              maxHeight={80}
-              maxWidth={80}
-              source={{ uri: activityDetails?.imageUrl }}
-            />
+              style={{
+                borderWidth: 1,
+                borderColor: 'white',
+                borderRadius: 40,
+                height: 80,
+                width: 80,
+                marginRight: spacing.md
+              }}
+              source={{ uri: activity?.imageUrl }} />
             : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
           }
           <View>

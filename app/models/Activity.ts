@@ -12,6 +12,7 @@ export const ActivityModel = types
     title: "",
     description: "",
     date: "",
+    imageUrl: ""
   })
   .actions(withSetPropAction)
   .views((activity) => ({
