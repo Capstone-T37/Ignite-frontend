@@ -37,13 +37,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = observer(function Onb
 
     return (
         <View style={styles.container}>
-            <View style = {styles.ct}>
-                        {/* <Image
-                            style = {styles.stretch}
-                            source={require('../assets/meetup.png')}
-                        /> */}
-                        <Text style={styles.txt}> FriendFinder </Text>
-            </View>
+            
             <Carousel
 
                 callback = {navg}
