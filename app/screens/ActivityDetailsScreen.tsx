@@ -10,6 +10,7 @@ import { Chip } from 'react-native-paper';
 import { getDownloadURL, ref } from "firebase/storage"
 import { api, firebase } from "app/services/api"
 import { ActivityDetails, Participant, ParticipantSnapshotIn } from "app/models"
+import FastImage from "react-native-fast-image"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -21,18 +22,11 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
 
   const sadFace = require("../../assets/images/sad-face.png")
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
-  const [profilePic, setProfilePic] = React.useState("")
   const [participating, setParticipating] = React.useState(false)
   const [activityDetails, setActivityDetails] = React.useState<ActivityDetails>()
   const { navigation, route } = _props
   const activity = route.params
-  React.useEffect(() => {
-    const picRef = ref(firebase.storage, `users/admin/${activity.userName}/profilePic`);
-    getDownloadURL(picRef).then(async (downloadURL) => {
-      console.log('File available at', downloadURL);
-      setProfilePic(downloadURL)
-    }).catch(() => setProfilePic(""))
-  }, [])
+
   React.useEffect(() => {
     api.getActivityDetails(activity.id).then((response) => {
       if (response.kind === "ok") {
@@ -77,15 +71,18 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
       {/* Main Content */}
       <View style={styles.mainContent}>
         <View style={{ flexDirection: "row", alignItems: 'center', width: '100%', justifyContent: 'flex-start' }}>
-          {profilePic ?
-            <AutoImage
+          {activity?.imageUrl ?
+            <FastImage
               resizeMode="cover"
-              resizeMethod="scale"
-              style={$imageContainer}
-              maxHeight={80}
-              maxWidth={80}
-              source={{ uri: profilePic }}
-            />
+              style={{
+                borderWidth: 1,
+                borderColor: 'white',
+                borderRadius: 40,
+                height: 80,
+                width: 80,
+                marginRight: spacing.md
+              }}
+              source={{ uri: activity?.imageUrl }} />
             : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
           }
           <View>
@@ -148,7 +145,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     padding: 16,
     marginHorizontal: 16,
-    shadowColor: '#000',
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,

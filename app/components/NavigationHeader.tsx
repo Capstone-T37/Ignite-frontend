@@ -10,7 +10,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ParamListBase } from "@react-navigation/native"
 import { HomeTabParamList, HomeTabScreenProps } from "app/navigators"
 import { useStores } from "app/models"
-import { AutoImage } from "./AutoImage"
+import FastImage from "react-native-fast-image"
+
 
 export interface NavigationHeaderProps {
   /**
@@ -42,14 +43,14 @@ export const NavigationHeader = observer(function NavigationHeader(props: Naviga
         />
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
           {profileStore.profile?.imageUrl.length > 0 ?
-            <AutoImage
+            <FastImage
               resizeMode="cover"
-              resizeMethod="scale"
-              style={$imageContainer}
-              maxHeight={30}
-              maxWidth={30}
-              source={{ uri: profileStore.profile?.imageUrl }}
-            />
+              style={{
+                borderRadius: 15,
+                height: 30,
+                width: 30
+              }}
+              source={{ uri: profileStore.profile?.imageUrl }} />
             : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />}
 
         </TouchableOpacity>
