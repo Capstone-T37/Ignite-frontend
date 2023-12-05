@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextInput, TextStyle, View, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
@@ -6,6 +6,7 @@ import { Button, Screen, Text, TextField } from "app/components"
 import { spacing, colors } from "app/theme"
 import { Button as PaperButton } from 'react-native-paper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { useStores } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 

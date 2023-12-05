@@ -2,18 +2,12 @@ import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle } from "react-native"
 import { Icon } from 'react-native-elements';
-
-import { Screen, Text } from "app/components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "app/models"
 import { GiftedChat, InputToolbar, Composer, Send, Actions, Bubble, Avatar } from 'react-native-gifted-chat';
-import { useNavigation } from "@react-navigation/native"
 import { firebase } from "app/services/api"
 import { colors, spacing } from "app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { addDoc, collection, CollectionReference, doc, DocumentReference, FieldValue, Firestore, getDoc, getDocs, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore"
+import { collection, CollectionReference, doc, DocumentReference, FieldValue, getDoc, getDocs, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, where, writeBatch } from "firebase/firestore"
 import { ChattingNavigatorScreenProps } from "app/navigators/ChattingNavigator"
-import { $tabBar } from "app/navigators/HomeNavigator"
 interface ChatScreenProps extends ChattingNavigatorScreenProps<"Chat"> { }
 
 export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_props) {

@@ -114,6 +114,7 @@ export class Api {
     }
 
     try {
+      firebase.signInWithCustomToken(response.headers?.firebasetoken)
       return { kind: "ok" }
     } catch (e) {
       if (__DEV__) {

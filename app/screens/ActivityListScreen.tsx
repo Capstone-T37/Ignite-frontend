@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
+import { Button, Card, EmptyState, ListItem, Screen, Text } from "app/components"
 import { ActivityIndicator, FlatList, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import { ActivityNavigatorParamList, ActivityNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
-import { AutoImage, Button, Card, EmptyState, ListItem, Screen, Text } from "app/components"
+import { AutoImage } from "app/components"
 import { isRTL, translate } from "app/i18n"
 import { Activity, TagSnapshotIn, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
@@ -10,19 +11,20 @@ import { delay } from "app/utils/delay"
 import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { useNavigationContext } from "app/utils/NavigationContext"
 import { ActivityForm } from "app/components/ActivityForm"
-import ActivityBottomSheet from '../components/ActivityBottomSheet';
 import { Chip, Snackbar } from "react-native-paper"
 import { FAB } from 'react-native-paper';
 import FastImage from "react-native-fast-image"
 
 
-interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
+interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> {}
 
-export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function ActivityListScreen(_props) {
+export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function ActivityListScreen(
+  _props,
+) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
-  const sheetRef = useRef<BottomSheetModal>(null);
-  const activityBottomSheet = useRef<BottomSheetModal>(null);
+  const sheetRef = useRef<BottomSheetModal>(null)
+  const activityBottomSheet = useRef<BottomSheetModal>(null)
   const { activityStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const [isSheetOpen, setIsSheetOpen] = React.useState(false)
@@ -35,9 +37,9 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
     date: "",
   })
   const { navigation } = _props
-  const [selectedTags, setSelectedTags] = React.useState<TagSnapshotIn[]>([]);
+  const [selectedTags, setSelectedTags] = React.useState<TagSnapshotIn[]>([])
   const { tagStore } = useStores()
-  const allTags = tagStore.tags;
+  const allTags = tagStore.tags
 
   function viewDetails(activity: Activity) {
     //setclickedActivity(activity)
@@ -48,23 +50,22 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
 
   const toggleTag = (tag: TagSnapshotIn) => {
     if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
+      setSelectedTags(selectedTags.filter((t) => t !== tag))
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setSelectedTags([...selectedTags, tag])
     }
-  };
+  }
 
   useEffect(() => {
-    ; (async function load() {
+    ;(async function load() {
       setIsLoading(true)
       await tagStore.fetchTags()
       setIsLoading(false)
     })()
   }, [tagStore])
 
-
   useEffect(() => {
-    ; (async function load() {
+   (async function load() {
       setIsLoading(true)
       await activityStore.fetchActivities(selectedTags)
       setIsLoading(false)
@@ -79,11 +80,11 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   // Pull in navigation via hook
   // const navigation = useNavigation()
   const handleClose = () => {
-    setIsSheetOpen(false);
-  };
+    setIsSheetOpen(false)
+  }
   return (
     <>
-      <Screen preset="fixed" contentContainerStyle={$container} >
+      <Screen preset="fixed" contentContainerStyle={$container}>
         <FlatList<Activity>
           data={activityStore.activitiesForList}
           extraData={activityStore.activities.length}
@@ -91,19 +92,26 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
           refreshing={isLoading}
           onRefresh={manualRefresh}
           ListHeaderComponent={
-            (
-              <View >
-                <Text text="Tags: " />
-                <ScrollView horizontal>
-                  <View style={$tagsContainer}>
-
-                    {allTags.map((tag) => (
-                      <Chip key={tag.id} onPress={() => toggleTag(tag)} mode={selectedTags.includes(tag) ? "flat" : "outlined"} showSelectedCheck={true} showSelectedOverlay={selectedTags.includes(tag)} style={$tag} selected={selectedTags.includes(tag)}>{tag.title}</Chip>
-                    ))}
-                  </View>
-                </ScrollView>
-              </View>
-            )
+            <View>
+              <Text text="Tags: " />
+              <ScrollView horizontal>
+                <View style={$tagsContainer}>
+                  {allTags.map((tag) => (
+                    <Chip
+                      key={tag.id}
+                      onPress={() => toggleTag(tag)}
+                      mode={selectedTags.includes(tag) ? "flat" : "outlined"}
+                      showSelectedCheck={true}
+                      showSelectedOverlay={selectedTags.includes(tag)}
+                      style={$tag}
+                      selected={selectedTags.includes(tag)}
+                    >
+                      {tag.title}
+                    </Chip>
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
           }
           ListEmptyComponent={
             isLoading ? (
@@ -120,13 +128,8 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
               />
             )
           }
-
           renderItem={({ item }) => (
-            <ActivityCard
-              key={item.id}
-              activity={item}
-              viewDetails={(item) => viewDetails(item)}
-            />
+            <ActivityCard key={item.id} activity={item} viewDetails={(item) => viewDetails(item)} />
           )}
         />
         <FAB
@@ -134,22 +137,38 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
           style={$fabStyle}
           onPress={() => {
             setIsSheetOpen(true)
-            sheetRef.current.expand()
+            sheetRef.current?.expand()
           }}
         />
         <Snackbar
           visible={isSnackBarVisible}
-          onDismiss={() => { setIsSnackBarVisible(false) }}
+          onDismiss={() => {
+            setIsSnackBarVisible(false)
+          }}
           style={$snackBar}
           duration={2000}
         >
-          <Text preset='formHelper' tx="ActivityForm.SnackBarText" style={$snackBarText} />
+          <Text preset="formHelper" tx="ActivityForm.SnackBarText" style={$snackBarText} />
         </Snackbar>
-        {// @ts-ignore}
-          // <ActivityBottomSheet
-          //   activity={clickedActivity}
-          //   bottomSheetRef={activityBottomSheet}
-          // />
+        {
+          // @ts-ignore}
+          <BottomSheet
+            handleStyle={{ backgroundColor: colors.background, shadowColor: "white" }}
+            ref={sheetRef}
+            index={-1}
+            snapPoints={["100%"]}
+            enablePanDownToClose={true}
+            onChange={() => {}}
+            onClose={handleClose}
+          >
+            {isSheetOpen && (
+              <ActivityForm
+                sheetRef={sheetRef.current}
+                setSnackBar={() => setIsSnackBarVisible(true)}
+              />
+            )}
+          </BottomSheet>
+
         }
       </Screen>
     </>
@@ -158,7 +177,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
 
 const ActivityCard = observer(function ActivityCard({
   activity,
-  viewDetails
+  viewDetails,
 }: {
   activity: Activity
   viewDetails: (activity: Activity) => void
@@ -214,7 +233,7 @@ const ActivityCard = observer(function ActivityCard({
 
 const $container: ViewStyle = {
   flex: 1,
-  marginTop: spacing.xxxl + spacing.xxxl
+  marginTop: spacing.xxxl + spacing.xxxl,
 }
 
 const $flatListContentContainer: ViewStyle = {
@@ -288,11 +307,11 @@ const $emptyState: ViewStyle = {
   marginTop: spacing.xxl,
 }
 const $fabStyle: ViewStyle = {
-  position: 'absolute',
+  position: "absolute",
   margin: 16,
   right: 0,
   bottom: 0,
-  backgroundColor: colors.palette.secondary100
+  backgroundColor: colors.palette.secondary100,
 }
 
 const $snackBar: ViewStyle = {
@@ -302,13 +321,13 @@ const $snackBar: ViewStyle = {
 
 const $snackBarText: TextStyle = {
   color: colors.text,
-  textAlign: 'center',
-  alignSelf: 'center'
+  textAlign: "center",
+  alignSelf: "center",
 }
 const $tagsContainer: ViewStyle = {
-  alignItems: 'center',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
+  alignItems: "center",
+  flexDirection: "row",
+  flexWrap: "wrap",
 }
 const $tag: ViewStyle = {
   borderRadius: 18,
