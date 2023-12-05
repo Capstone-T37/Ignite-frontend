@@ -158,6 +158,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
               style={$emptyState}
               headingTx="UsersListScreen.emptyStateHeading"
               contentTx="UsersListScreen.emptyStateContent"
+              buttonTextStyle={{ color: colors.textDark }}
               //buttonOnPress={manualRefresh}
               imageStyle={$emptyStateImage}
               ImageProps={{ resizeMode: "contain" }}
@@ -167,7 +168,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
         renderItem={({ item }) => (
           <ListItem
             containerStyle={$listItemContainer}
-            key={item.id}
+            key={item?.id}
             textStyle={$listItemDescription}
             onPress={() => openChat(item?.sender)}
             LeftComponent={
@@ -186,12 +187,12 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
               <View style={styles.textSection}>
                 <Text preset="bold" style={$listItemDescription}>{item.sender}</Text>
                 <Text style={styles.lastMessageText}>
-                  {item?.lastMessage.text.toString()} {/* Make sure this is a string */}
+                  {item?.lastMessage?.text?.toString()} {/* Make sure this is a string */}
                 </Text>
               </View>
               <View style={styles.timestampSection}>
                 <Text style={styles.timestampText}>
-                  {item?.lastMessage.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* You need to implement formatTimestamp */}
+                  {item?.lastMessage?.createdAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* You need to implement formatTimestamp */}
                 </Text>
               </View>
             </View>

@@ -10,7 +10,8 @@ export const MeetModel = types
     id: types.number,
     userName: "",
     description: "",
-    isRequestSent:types.boolean
+    isRequestSent: types.boolean,
+    imageUrl: types.maybeNull(types.string)
   })
   .actions(withSetPropAction)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
