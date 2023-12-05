@@ -1,14 +1,14 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { Alert, FlatList, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
-import { AppStackScreenProps, HomeTabScreenProps } from "app/navigators"
-import { AutoImage, Card, Screen, Text } from "app/components"
+import { Alert, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { AppStackScreenProps } from "app/navigators"
+import { AutoImage, Screen, Text } from "app/components"
 import { Image } from "react-native"
-import { colors, spacing } from "app/theme"
+import { spacing } from "app/theme"
 import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'react-native-image-picker';
 import { Api, CreateUser, firebase } from "app/services/api"
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
 import { Button as PaperButton } from 'react-native-paper'
 import { useStores } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
