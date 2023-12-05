@@ -122,7 +122,9 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
                     height: 100,
                     width: 100
                   }}
-                  source={{ uri: profileStore.profile?.imageUrl }} />
+                  source={{ uri: profileStore.profile?.imageUrl }}
+                  defaultSource={sadFace}
+                />
                 : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
 
             }

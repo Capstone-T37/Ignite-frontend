@@ -163,6 +163,7 @@ const ActivityCard = observer(function ActivityCard({
   activity: Activity
   viewDetails: (activity: Activity) => void
 }) {
+  const sadFace = require("../../assets/images/sad-face.png")
 
 
 
@@ -193,7 +194,9 @@ const ActivityCard = observer(function ActivityCard({
               width: 30,
               marginRight: spacing.xs
             }}
-            source={{ uri: activity.imageUrl }} />
+            source={{ uri: activity.imageUrl }}
+            defaultSource={sadFace}
+          />
           <View>
             <Text
               text={activity.userName}

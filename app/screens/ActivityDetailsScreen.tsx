@@ -82,7 +82,9 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
                 width: 80,
                 marginRight: spacing.md
               }}
-              source={{ uri: activity?.imageUrl }} />
+              source={{ uri: activity?.imageUrl }}
+              defaultSource={sadFace}
+            />
             : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
           }
           <View>
