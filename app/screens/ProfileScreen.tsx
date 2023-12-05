@@ -10,7 +10,7 @@ import { Entypo } from '@expo/vector-icons';
 import * as ImagePicker from 'react-native-image-picker';
 import { firebase } from "app/services/api"
 import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
-import { updateProfile } from "firebase/auth"
+import FastImage from "react-native-fast-image"
 import { useStores } from "app/models"
 import { ActivityIndicator } from "react-native-paper"
 // import { useNavigation } from "@react-navigation/native"
@@ -115,14 +115,14 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
               // </View> :
 
               profileStore.profile?.imageUrl.length > 0 ?
-                <AutoImage
+                <FastImage
                   resizeMode="cover"
-                  resizeMethod="scale"
-                  style={$imageContainer}
-                  maxHeight={100}
-                  maxWidth={100}
-                  source={{ uri: profileStore.profile?.imageUrl }}
-                />
+                  style={{
+                    borderRadius: 50,
+                    height: 100,
+                    width: 100
+                  }}
+                  source={{ uri: profileStore.profile?.imageUrl }} />
                 : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
 
             }
