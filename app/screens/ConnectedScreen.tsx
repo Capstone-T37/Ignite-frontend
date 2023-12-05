@@ -33,6 +33,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
   const [iListVisible, setisListVisible] = React.useState(false);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [isSnackBarVisible, setIsSnackBarVisible] = React.useState(false)
+  const sadFace = require("../../assets/images/sad-face.png")
 
 
   // Pull in navigation via hook
@@ -116,7 +117,9 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                     height: 50,
                     width: 50,
                   }}
-                  source={{ uri: item.imageUrl }} />
+                  source={{ uri: item.imageUrl }}
+                  defaultSource={sadFace}
+                />
               }
 
               onPress={() => {
@@ -197,7 +200,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                     width: 50,
                   }}
                   source={{ uri: item.imageUrl }} />
-                <Text text={item.userName} />
+                <Text text={item.userName} style={$listItemDescription} />
               </View>
 
 
