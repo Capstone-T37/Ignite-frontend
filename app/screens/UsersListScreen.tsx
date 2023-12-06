@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { User, useStores } from "app/models"
 import { firebase } from "app/services/api"
 import { DocumentReference, FieldValue, collection, getDocs, limit, orderBy, query, where } from "firebase/firestore"
+import FastImage from "react-native-fast-image"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -22,6 +23,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
     id: number,
     sender: string;
     lastMessage: Message;
+    imageUrl: string;
   }
 
   interface Message {
@@ -41,6 +43,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
   const [isLoading, setIsLoading] = React.useState(false)
   const { navigation } = _props
   const [profilePic, setProfilePic] = React.useState("")
+  const sadFace = require("../../assets/images/sad-face.png")
 
   const db = firebase.db
   const userId = firebase.auth?.currentUser?.uid
@@ -62,10 +65,11 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
   const fetchMessages = async () => {
     if (userStore.usersForList.length > 0) {
       const promises = userStore.usersForList.map(async user => {
-        const recentMessage = await getMostRecentMessage(userId, user?.login.toString())
+        const recentMessage = await getMostRecentMessage(userId, user?.userName.toString())
         return ({
           id: user?.id,
-          sender: user?.login.toString(),
+          sender: user?.userName.toString(),
+          imageUrl: user?.imageUrl,
           lastMessage: recentMessage
         })
       });
@@ -159,7 +163,7 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
               headingTx="UsersListScreen.emptyStateHeading"
               contentTx="UsersListScreen.emptyStateContent"
               buttonTextStyle={{ color: colors.textDark }}
-              //buttonOnPress={manualRefresh}
+              buttonOnPress={manualRefresh}
               imageStyle={$emptyStateImage}
               ImageProps={{ resizeMode: "contain" }}
             />
@@ -173,11 +177,12 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
             onPress={() => openChat(item?.sender)}
             LeftComponent={
               <View style={$leftComponent}>
-                <Image
+                <FastImage
                   source={{
-                    uri: 'https://imageio.forbes.com/specials-images/imageserve/5c76b7d331358e35dd2773a9/0x0.jpg?format=jpg&crop=4401,4401,x0,y0,safe&height=416&width=416&fit=bounds'
+                    uri: item?.imageUrl
                   }}
                   style={{ width: 45, marginTop: spacing.xs - 3, height: 45, borderRadius: 50 / 2 }}
+                  defaultSource={sadFace}
                 />
               </View>
             }

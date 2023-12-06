@@ -44,9 +44,6 @@ const $content: ViewStyle = {
 const $tapButton: ViewStyle = {
     marginTop: spacing.xs,
 }
-const $contentTitle: TextStyle = {
-    fontSize: spacing.xl,
-    marginBottom: 12,
-}
+
 
 export default DefaultModalContent;

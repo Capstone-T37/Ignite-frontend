@@ -8,7 +8,8 @@ export const UserModel = types
   .model("User")
   .props({
     id: types.number,
-    login: "",
+    userName: "",
+    imageUrl: types.maybeNull(types.string)
   })
   .actions(withSetPropAction)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

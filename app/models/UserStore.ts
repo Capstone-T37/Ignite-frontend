@@ -25,7 +25,14 @@ export const UserStoreModel = types
       } else {
         console.tron.error(`Error fetching users: ${JSON.stringify(response)}`, [])
       }
-    }
+    },
+    async createConvo(userName: string) {
+      const response = await api.createConvo(userName)
+      if (response.kind === "ok") {
+      } else {
+        console.tron.error(`Error fetching users: ${JSON.stringify(response)}`, [])
+      }
+    },
   }))
 
 

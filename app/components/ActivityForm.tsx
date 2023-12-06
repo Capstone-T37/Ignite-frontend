@@ -76,86 +76,92 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
   }, [tagStore])
 
   return (
-    < ScrollView contentContainerStyle={{ flex: 1 }} style={{ backgroundColor: colors.background }}>
+    < View style={{ flex: 1, backgroundColor: colors.background }}>
       {loading ? <ActivityIndicator /> :
 
         <View style={$styles}>
           <Text preset="heading" tx="ActivityForm.Title" style={{ textAlign: 'center' }} />
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={$input}
-                error={errors.title ? true : false}
-                label="Title"
-                placeholder="Activity title"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
+          <View >
 
-            name="title"
-          />
-
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={$input}
-                error={errors.description ? true : false}
-                label="Description"
-                placeholder="Activity description"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
-
-            name="description"
-          />
-
-          <Controller
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <DatePicker
-                  modal
-                  open={open}
-                  date={value}
-                  onConfirm={() => {
-                    setOpen(false)
-                  }}
-                  onCancel={() => {
-                    setOpen(false)
-                  }}
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={$input}
+                  error={errors.title ? true : false}
+                  label="Title"
+                  placeholder="Activity title"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
                 />
-                <Button style={{ borderColor: colors.border }} onPress={() => setOpen(true)}>
-                  <Text style={{ color: colors.textDark }}>{value.toLocaleString()}</Text></Button>
-              </>
+              )}
 
-            )}
-            name="date"
-          />
-          <View style={$tagsContainer}>
+              name="title"
+            />
 
-            {allTags.map((tag) => (
-              <Chip key={tag.id} onPress={() => toggleTag(tag)} mode={selectedTags.includes(tag) ? "flat" : "outlined"} showSelectedCheck={true} showSelectedOverlay={selectedTags.includes(tag)} style={$tag} selected={selectedTags.includes(tag)}>{tag.title}</Chip>
-            ))}
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={$input}
+                  error={errors.description ? true : false}
+                  label="Description"
+                  placeholder="Activity description"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+
+              name="description"
+            />
+
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <>
+                  <DatePicker
+                    modal
+                    open={open}
+                    date={value}
+                    onConfirm={() => {
+                      setOpen(false)
+                    }}
+                    onCancel={() => {
+                      setOpen(false)
+                    }}
+                  />
+                  <Button style={{ borderColor: colors.border }} onPress={() => setOpen(true)}>
+                    <Text style={{ color: colors.textDark }}>{value.toLocaleString()}</Text></Button>
+                </>
+
+              )}
+              name="date"
+            />
+            <View>
+
+              <ScrollView horizontal contentContainerStyle={{ maxHeight: 100 }}>
+                <View style={$tagsContainer}>
+                  {allTags.map((tag) => (
+                    <Chip key={tag.id} onPress={() => toggleTag(tag)} mode={selectedTags.includes(tag) ? "flat" : "outlined"} showSelectedCheck={true} showSelectedOverlay={selectedTags.includes(tag)} style={$tag} selected={selectedTags.includes(tag)}>{tag.title}</Chip>
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
           </View>
-
 
           <Button onPress={handleSubmit(onSubmit)} tx="ActivityForm.Submit" textStyle={{ color: colors.text }} style={{ backgroundColor: colors.backgroundAccent }} >
           </Button>
         </View>
       }
-    </ScrollView >
+    </View >
 
   )
 })
@@ -163,11 +169,12 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
 const $container: ViewStyle = {
   flex: 1,
   padding: spacing.sm,
-  justifyContent: 'space-around',
+  justifyContent: 'space-evenly',
   backgroundColor: colors.background
 }
 const $input: ViewStyle = {
-  backgroundColor: 'white'
+  backgroundColor: 'white',
+  marginBottom: spacing.sm
 }
 const $tagsContainer: ViewStyle = {
   alignItems: 'center',
