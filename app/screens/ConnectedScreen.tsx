@@ -7,7 +7,7 @@ import { Meet, Request, useStores } from "app/models"
 import { colors, spacing } from "app/theme"
 import { isRTL, translate } from "app/i18n"
 import { delay } from "app/utils/delay"
-import { Snackbar } from "react-native-paper"
+import { Modal, Portal, Snackbar } from "react-native-paper"
 import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { MeetRequestModal } from "app/components/MeetRequestModal"
 import DefaultModalContent from "app/components/DefaultModalContent"
@@ -25,7 +25,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const { navigation } = _props
-  const { meetStore, profileStore, requestStore } = useStores()
+  const { meetStore, profileStore, requestStore, userStore } = useStores()
   const [isLoading, setIsLoading] = React.useState(false)
   const [selectedMeet, setSelectedMeet] = React.useState<number>(null)
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -35,7 +35,6 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
   const [isSnackBarVisible, setIsSnackBarVisible] = React.useState(false)
   const sadFace = require("../../assets/images/sad-face.png")
 
-
   // Pull in navigation via hook
   // const navigation = useNavigation()
 
@@ -43,6 +42,10 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
     setIsLoading(true)
     await Promise.all([meetStore.fetchMeets(), profileStore.fetchStatus(), requestStore.fetchRequestCount(), requestStore.fetchRequests(), delay(750)])
     setIsLoading(false)
+  }
+
+  function openChat(userName: String) {
+    navigation.getParent().getParent().navigate("Chat", userName)
   }
 
   useEffect(() => {
@@ -122,9 +125,10 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                 />
               }
 
-              onPress={() => {
+              onPress={async () => {
                 setisListVisible(false)
-                navigation.navigate("Chat", item.userName)
+                await userStore.createConvo(item?.userName)
+                openChat(item?.userName)
               }}
             >
 
@@ -318,7 +322,8 @@ const $listItemContainer: ViewStyle = {
   justifyContent: 'center',
   backgroundColor: colors.backgroundAccent,
   borderRadius: spacing.md,
-  paddingHorizontal: spacing.sm
+  paddingHorizontal: spacing.sm,
+  marginVertical: spacing.sm
 }
 
 const $requestsContainer: ViewStyle = {

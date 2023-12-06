@@ -159,7 +159,7 @@ export class Api {
    */
   async getUsers(): Promise<{ kind: "ok"; users: UserSnapshotIn[] } | GeneralApiProblem> {
     // make the api call
-    const response: ApiResponse<UserSnapshotIn[]> = await this.apisauce.get(`users/others`,)
+    const response: ApiResponse<UserSnapshotIn[]> = await this.apisauce.get(`conversations/users`,)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -476,6 +476,25 @@ export class Api {
   async disableMeet(): Promise<{ kind: "ok" } | GeneralApiProblem> {
     // make the api call
     const response: ApiResponse<boolean> = await this.apisauce.get(`meets/disable`,)
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      return { kind: "ok" }
+    } catch (e) {
+      if (__DEV__) {
+        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+  async createConvo(userName: string): Promise<{ kind: "ok" } | GeneralApiProblem> {
+    // make the api call
+    const response: ApiResponse<ResponseType> = await this.apisauce.post(`conversations`, { userName })
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
