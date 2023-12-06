@@ -8,7 +8,7 @@ export const ProfileModel = types
   .model("Profile")
   .props({
     fullName: "",
-    imageUrl: "",
+    imageUrl: types.maybeNull(types.string),
     userName: ""
   })
   .actions(withSetPropAction)
