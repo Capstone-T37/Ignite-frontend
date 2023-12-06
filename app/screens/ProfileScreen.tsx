@@ -119,7 +119,7 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
               // </View> :
 
 
-              profileStore.profile?.imageUrl.length > 0 ?
+              profileStore.profile?.imageUrl?.length > 0 ?
                 <FastImage
                   resizeMode="cover"
                   style={{

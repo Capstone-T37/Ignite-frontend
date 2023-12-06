@@ -47,7 +47,7 @@ export const NavigationHeader = observer(function NavigationHeader(props: Naviga
 
         />
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          {profileStore.profile?.imageUrl.length > 0 ?
+          {profileStore.profile?.imageUrl?.length > 0 ?
             <FastImage
               resizeMode="cover"
               style={{
