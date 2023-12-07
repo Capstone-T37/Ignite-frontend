@@ -40,7 +40,7 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
 
   async function manualRefresh() {
     setIsLoading(true)
-    await Promise.all([meetStore.fetchMeets(), profileStore.fetchStatus(), requestStore.fetchRequestCount(), requestStore.fetchRequests(), delay(750)])
+    await Promise.all([meetStore.fetchMeets(), profileStore.fetchStatus(), requestStore.fetchRequestCount(), requestStore.fetchRequests()])
     setIsLoading(false)
   }
 

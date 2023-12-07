@@ -19,6 +19,7 @@ import { ActivityNavigator } from "./ActivityNavigator"
 import { Activity, useStores } from "app/models"
 import { ChattingNavigator } from "./ChattingNavigator"
 import { RequestNavigator } from "./RequestNavigator"
+import { View } from "react-native"
 
 export type HomeTabParamList = {
   Welcome: undefined

@@ -7,7 +7,7 @@ import { colors, spacing } from "app/theme"
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
 import { Chip } from 'react-native-paper';
 import { api, firebase } from "app/services/api"
-import { ActivityDetails } from "app/models"
+import { ActivityDetails, useStores } from "app/models"
 import FastImage from "react-native-fast-image"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
@@ -19,6 +19,7 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
   // const { someStore, anotherStore } = useStores()
 
   const sadFace = require("../../assets/images/sad-face.png")
+  const { userStore } = useStores();
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
   const [participating, setParticipating] = React.useState(false)
   const [activityDetails, setActivityDetails] = React.useState<ActivityDetails>()
@@ -37,6 +38,9 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
 
   }, [])
 
+  function openChat(userName: String) {
+    navigation.getParent().navigate("Chat", userName)
+  }
   React.useEffect(() => {
     setParticipating(activityDetails?.isParticipating)
   }, [activityDetails])
@@ -69,23 +73,29 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
       {/* Main Content */}
       <View style={styles.mainContent}>
         <View style={{ flexDirection: "row", alignItems: 'center', width: '100%', justifyContent: 'flex-start' }}>
-          {activity?.imageUrl ?
-            <FastImage
-              resizeMode="cover"
-              style={{
-                borderWidth: 1,
-                borderColor: 'white',
-                borderRadius: 40,
-                height: 80,
-                width: 80,
-                marginRight: spacing.md
-              }}
-              source={{ uri: activity?.imageUrl }}
-              defaultSource={sadFace}
-            />
-            : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
-          }
-          <View>
+          <TouchableOpacity onPress={async () => {
+            await userStore.createConvo(activity?.userName)
+            openChat(activity?.userName)
+          }}>
+
+            {activity?.imageUrl ?
+              <FastImage
+                resizeMode="cover"
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'white',
+                  borderRadius: 40,
+                  height: 80,
+                  width: 80,
+                  marginRight: spacing.md
+                }}
+                source={{ uri: activity?.imageUrl }}
+                defaultSource={sadFace}
+              />
+              : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
+            }
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
             <Text style={styles.title}>{activity.title}</Text>
             <Text style={styles.author}>by {activity.userName}</Text>
           </View>
