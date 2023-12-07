@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { ActivityIndicator, FlatList, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { $tabBar, AppStackScreenProps, ChattingNavigatorScreenProps, HomeTabScreenProps } from "app/navigators"
 import { Button, EmptyState, ListItem, Screen, Text } from "app/components"
-import { colors, spacing } from "app/theme"
+import { colors, spacing, typography } from "app/theme"
 import { isRTL, translate } from "app/i18n"
 import { StyleSheet } from 'react-native';
 import { lessOrEq } from "react-native-reanimated"
@@ -12,6 +12,7 @@ import { User, useStores } from "app/models"
 import { firebase } from "app/services/api"
 import { DocumentReference, FieldValue, collection, getDocs, limit, orderBy, query, where } from "firebase/firestore"
 import FastImage from "react-native-fast-image"
+import { Divider } from "react-native-paper"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -170,38 +171,43 @@ export const UsersListScreen: FC<UsersListScreenProps> = observer(function Users
           )
         }
         renderItem={({ item }) => (
-          <ListItem
-            containerStyle={$listItemContainer}
-            key={item?.id}
-            textStyle={$listItemDescription}
-            onPress={() => openChat(item?.sender)}
-            LeftComponent={
-              <View style={$leftComponent}>
-                <FastImage
-                  source={{
-                    uri: item?.imageUrl
-                  }}
-                  style={{ width: 45, marginTop: spacing.xs - 3, height: 45, borderRadius: 50 / 2 }}
-                  defaultSource={sadFace}
-                />
+          <>
+            <ListItem
+              containerStyle={$listItemContainer}
+              key={item?.id}
+              textStyle={$listItemDescription}
+              onPress={() => openChat(item?.sender)}
+              LeftComponent={
+                <View style={$leftComponent}>
+                  <FastImage
+                    source={{
+                      uri: item?.imageUrl
+                    }}
+                    style={{ width: 50, height: 50, borderRadius: 50 / 2 }}
+                    defaultSource={sadFace}
+                  />
+                </View>
+              }
+            >
+
+              {/* Direct children of ListItem for username and recent message */}
+              <View style={styles.listItemContent}>
+                <View style={styles.textSection}>
+                  <Text preset="bold" style={{ fontSize: 22, fontFamily: typography.fonts.helveticaNeue.light, fontWeight: 'bold' }}>{item.sender}</Text>
+                  <Text style={styles.lastMessageText}>
+                    {item?.lastMessage?.text?.toString()} {/* Make sure this is a string */}
+                  </Text>
+                </View>
+                <View style={styles.timestampSection}>
+                  <Text style={styles.timestampText}>
+                    {item?.lastMessage?.createdAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* You need to implement formatTimestamp */}
+                  </Text>
+                </View>
               </View>
-            }
-          >
-            {/* Direct children of ListItem for username and recent message */}
-            <View style={styles.listItemContent}>
-              <View style={styles.textSection}>
-                <Text preset="bold" style={$listItemDescription}>{item.sender}</Text>
-                <Text style={styles.lastMessageText}>
-                  {item?.lastMessage?.text?.toString()} {/* Make sure this is a string */}
-                </Text>
-              </View>
-              <View style={styles.timestampSection}>
-                <Text style={styles.timestampText}>
-                  {item?.lastMessage?.createdAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} {/* You need to implement formatTimestamp */}
-                </Text>
-              </View>
-            </View>
-          </ListItem>
+            </ListItem>
+            <Divider style={{ marginTop: 15}} />
+          </>
+
         )}
 
       />
@@ -245,14 +251,12 @@ const $emptyState: ViewStyle = {
 }
 
 const $leftComponent: ViewStyle = {
+  height: '100%',
   justifyContent: 'center',
   alignItems: 'center',
 }
 
 const $listItemDescription: TextStyle = {
-
-
-
 
 }
 
@@ -261,12 +265,8 @@ const $userName: TextStyle = {
 }
 
 const $listItemContainer: ViewStyle = {
-  height: spacing.xxxl,
   justifyContent: 'center',
-  backgroundColor: colors.backgroundAccent,
-  borderWidth: 1,
-  borderColor: "#3F3F3F",
-  paddingHorizontal: spacing.sm
+  paddingHorizontal: spacing.sm,
 }
 
 const styles = StyleSheet.create({
@@ -282,15 +282,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   lastMessageText: {
-    color: 'white',
-    fontSize: 12,
+    fontSize: 14,
+    fontFamily: typography.fonts.helveticaNeue.light,
+    color: 'white'
   },
   timestampSection: {
     // Styles to align timestamp to the right
   },
   timestampText: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 14,
   },
   // ... other styles
 });

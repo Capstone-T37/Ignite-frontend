@@ -1,6 +1,6 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle } from "react-native"
+import { KeyboardAvoidingView, View, ViewStyle } from "react-native"
 import { Icon } from 'react-native-elements';
 import { GiftedChat, InputToolbar, Composer, Send, Actions, Bubble, Avatar } from 'react-native-gifted-chat';
 import { firebase } from "app/services/api"
@@ -297,58 +297,61 @@ export const ChatScreen: FC<ChatScreenProps> = observer(function ChatScreen(_pro
   );
 
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }} // Make KeyboardAvoidingView take up the entire screen
+      behavior={"padding"} // Adjust the behavior depending on the platform
+    >
+      <View style={{ height: '100%', paddingBottom: spacing.md, backgroundColor: colors.background }}>
+        <GiftedChat
+          messagesContainerStyle={{ backgroundColor: colors.background, height: "96%" }}
+          messages={messages}
+          onSend={(messages) => onSend(messages, userId, headerTitle.toString())}
+          user={{
+            _id: firebase.auth?.currentUser?.uid,
+            //avatar: auth?.currentUser?.photoURL
+          }}
 
-    <View style={{ height: '100%', paddingBottom: spacing.md, backgroundColor: colors.background }}>
-      <GiftedChat
-        messagesContainerStyle={{ backgroundColor: colors.background, height: "96%" }}
-        messages={messages}
-        onSend={(messages) => onSend(messages, userId, headerTitle.toString())}
-        user={{
-          _id: firebase.auth?.currentUser?.uid,
-          //avatar: auth?.currentUser?.photoURL
-        }}
+          renderBubble={renderBubble}
 
-        renderBubble={renderBubble}
+          renderInputToolbar={(props) => (
+            <InputToolbar
+              {...props}
+              containerStyle={{
+                backgroundColor: colors.background,
+                borderTopColor: colors.background,
+                borderTopWidth: 1,
+              }}
+            />
+          )}
 
-        renderInputToolbar={(props) => (
-          <InputToolbar
-            {...props}
-            containerStyle={{
-              backgroundColor: colors.background,
-              borderTopColor: colors.background,
-              borderTopWidth: 1,
-            }}
-          />
-        )}
+          renderComposer={(props) => (
+            <Composer
+              {...props}
+              textInputStyle={{
+                color: colors.palette.neutral100,
+                backgroundColor: colors.background,
+                borderWidth: 1,
+                borderRadius: 20,
+                borderColor: colors.chatBorderColor,
+                paddingTop: 8.5,
+                paddingHorizontal: 12,
+                marginLeft: 0,
+                marginRight: spacing.md,
+                marginBottom: spacing.sm + 1,
+              }}
+              textInputProps={{
+                placeholder: "reply", // Your placeholder text
+                placeholderTextColor: colors.chatBorderColor, // Placeholder text color
+              }}
+            />
+          )}
 
-        renderComposer={(props) => (
-          <Composer
-            {...props}
-            textInputStyle={{
-              color: colors.palette.neutral100,
-              backgroundColor: colors.background,
-              borderWidth: 1,
-              borderRadius: 20,
-              borderColor: colors.chatBorderColor,
-              paddingTop: 8.5,
-              paddingHorizontal: 12,
-              marginLeft: 0,
-              marginRight: spacing.md,
-              marginBottom: spacing.sm + 1,
-            }}
-            textInputProps={{
-              placeholder: "reply", // Your placeholder text
-              placeholderTextColor: colors.chatBorderColor, // Placeholder text color
-            }}
-          />
-        )}
+          renderActions={renderActions}
 
-        renderActions={renderActions}
-
-        renderSend={renderSend}
-      />
-    </View>
-
+          renderSend={renderSend}
+        />
+      </View>
+    </KeyboardAvoidingView>
   )
 })
 

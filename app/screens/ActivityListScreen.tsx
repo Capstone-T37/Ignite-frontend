@@ -155,6 +155,8 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
           // @ts-ignore}
           <BottomSheet
             handleStyle={{ backgroundColor: colors.background, shadowColor: "white" }}
+            style={{ backgroundColor: colors.background }}
+
             ref={sheetRef}
             index={-1}
             snapPoints={["100%"]}
@@ -162,12 +164,12 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
             onChange={() => { }}
             onClose={handleClose}
           >
-            {isSheetOpen && (
+            {isSheetOpen ? (
               <ActivityForm
                 sheetRef={sheetRef.current}
                 setSnackBar={() => setIsSnackBarVisible(true)}
               />
-            )}
+            ) : <View style={{ flex: 1, backgroundColor: colors.background }}></View>}
           </BottomSheet>
 
         }
@@ -309,7 +311,8 @@ const $emptyState: ViewStyle = {
 }
 const $fabStyle: ViewStyle = {
   position: "absolute",
-  margin: 16,
+  marginBottom: spacing.xxl,
+  marginRight: spacing.xl,
   right: 0,
   bottom: 0,
   backgroundColor: colors.palette.secondary100,

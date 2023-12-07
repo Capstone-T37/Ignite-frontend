@@ -68,6 +68,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
       preset="auto"
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
+      KeyboardAvoidingViewProps={{ enabled: true }}
     >
 
       <Text testID="login-heading" tx="signInScreen.signIn" preset="heading" style={$signIn} />
@@ -111,19 +112,17 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
         preset="reversed"
         onPress={login}
       />
-      <View style={{ flex: 1, justifyContent: 'flex-end' }}>
 
-        <View style={$buttonContainer}>
-          <Text style={[$txt3, { color: 'white' }]}> Don't have an account? </Text>
-          <PaperButton
-            style={{ borderRadius: 8, width: 110, padding: 0 }}
-            labelStyle={{ fontSize: 12, color: colors.palette.secondary100 }}
-            mode="outlined"
-            onPress={navigateToSignUpPage}
-          >
-            Sign Up
-          </PaperButton>
-        </View>
+      <View style={$buttonContainer}>
+        <Text style={[$txt3, { color: 'white' }]}> Don't have an account? </Text>
+        <PaperButton
+          style={{ borderRadius: 8, width: 110, padding: 0 }}
+          labelStyle={{ fontSize: 12, color: colors.palette.secondary100 }}
+          mode="outlined"
+          onPress={navigateToSignUpPage}
+        >
+          Sign Up
+        </PaperButton>
       </View>
 
     </Screen>
@@ -160,7 +159,8 @@ const $tapButton: ViewStyle = {
 const $buttonContainer: ViewStyle = {
   flexDirection: 'row',
   alignItems: 'center',
-  justifyContent: 'space-between'
+  justifyContent: 'space-around',
+  paddingTop: spacing.xxxl
 }
 
 const $txt3: TextStyle = {

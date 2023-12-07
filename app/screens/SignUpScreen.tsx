@@ -99,116 +99,113 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   return (
 
-    <KeyboardAvoidingView
-      style={{ flex: 1 }} // Make KeyboardAvoidingView take up the entire screen
-      behavior={"padding"} // Adjust the behavior depending on the platform
+    <Screen
+      preset="fixed"
+      contentContainerStyle={$screenContentContainer}
+      safeAreaEdges={["top", "bottom"]}
+      KeyboardAvoidingViewProps={{ enabled: true }}
+
     >
-      <Screen
-        preset="fixed"
-        contentContainerStyle={$screenContentContainer}
-        safeAreaEdges={["top", "bottom"]}
-      >
-        <View style={{flex:1, justifyContent:'flex-start'}}>
-          <Text testID="signup-heading" tx="signUpScreen.signUp" preset="heading" style={$signUp} />
-        </View>
+      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+        <Text testID="signup-heading" tx="signUpScreen.signUp" preset="heading" style={$signUp} />
+      </View>
 
-        <View style={!fnameError ? $textField : undefined}>
-          <TextField
-            style={{ color: colors.textDark }}
-            value={signupFname}
-            onChangeText={setsignupFname}
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-            labelTx="signUpScreen.firstNameLabel"
-            placeholderTx="signUpScreen.FnameFieldPlaceholder"
-          />
-          {fnameError ? <Text style={$error}>{fnameError}</Text> : null}
-        </View>
-        <View style={!lnameError ? $textField : undefined}>
-          <TextField
-            style={{ color: colors.textDark }}
-            value={signupLname}
-            onChangeText={setsignupLname}
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-            labelTx="signUpScreen.lastNameLabel"
-            placeholderTx="signUpScreen.LnameFieldPlaceholder"
-          />
-          {lnameError ? <Text style={$error}>{lnameError}</Text> : null}
-        </View>
-        <View style={!usernameError ? $textField : undefined}>
-          <TextField
-            style={{ color: colors.textDark }}
-            value={signupUsername}
-            onChangeText={setsignupUsername}
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-            labelTx="signUpScreen.userNameFieldLabel"
-            placeholderTx="signUpScreen.userNameFieldPlaceholder"
-          />
-          {usernameError ? <Text style={$error}>{usernameError}</Text> : null}
-        </View>
-        <View style={!emailError ? $textField : undefined}>
-          <TextField
-            style={{ color: colors.textDark }}
-            value={signEmail}
-            onChangeText={setsignEmail}
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-            keyboardType="email-address"
-            labelTx="signUpScreen.emailFieldLabel"
-            placeholderTx="signUpScreen.emailFieldPlaceholder"
-          />
-          {emailError ? <Text style={$error}>{emailError}</Text> : null}
-        </View>
-        <View style={!passwordError ? $textField : undefined}>
-          <TextField
-            style={{ color: colors.textDark }}
+      <View style={!fnameError ? $textField : undefined}>
+        <TextField
+          style={{ color: colors.textDark }}
+          value={signupFname}
+          onChangeText={setsignupFname}
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          labelTx="signUpScreen.firstNameLabel"
+          placeholderTx="signUpScreen.FnameFieldPlaceholder"
+        />
+        {fnameError ? <Text style={$error}>{fnameError}</Text> : null}
+      </View>
+      <View style={!lnameError ? $textField : undefined}>
+        <TextField
+          style={{ color: colors.textDark }}
+          value={signupLname}
+          onChangeText={setsignupLname}
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          labelTx="signUpScreen.lastNameLabel"
+          placeholderTx="signUpScreen.LnameFieldPlaceholder"
+        />
+        {lnameError ? <Text style={$error}>{lnameError}</Text> : null}
+      </View>
+      <View style={!usernameError ? $textField : undefined}>
+        <TextField
+          style={{ color: colors.textDark }}
+          value={signupUsername}
+          onChangeText={setsignupUsername}
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          labelTx="signUpScreen.userNameFieldLabel"
+          placeholderTx="signUpScreen.userNameFieldPlaceholder"
+        />
+        {usernameError ? <Text style={$error}>{usernameError}</Text> : null}
+      </View>
+      <View style={!emailError ? $textField : undefined}>
+        <TextField
+          style={{ color: colors.textDark }}
+          value={signEmail}
+          onChangeText={setsignEmail}
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          keyboardType="email-address"
+          labelTx="signUpScreen.emailFieldLabel"
+          placeholderTx="signUpScreen.emailFieldPlaceholder"
+        />
+        {emailError ? <Text style={$error}>{emailError}</Text> : null}
+      </View>
+      <View style={!passwordError ? $textField : undefined}>
+        <TextField
+          style={{ color: colors.textDark }}
 
-            ref={authPasswordInput}
-            value={signupPW}
-            onChangeText={setsignupPW}
-            autoCapitalize="none"
-            autoComplete="password"
-            autoCorrect={false}
-            secureTextEntry={true}
-            labelTx="signUpScreen.passwordFieldLabel"
-            placeholderTx="signUpScreen.passwordFieldPlaceholder"
-          />
-          {passwordError ? <Text style={$error}>{passwordError}</Text> : null}
-        </View>
-        <View style={$arrowbutton}>
+          ref={authPasswordInput}
+          value={signupPW}
+          onChangeText={setsignupPW}
+          autoCapitalize="none"
+          autoComplete="password"
+          autoCorrect={false}
+          secureTextEntry={true}
+          labelTx="signUpScreen.passwordFieldLabel"
+          placeholderTx="signUpScreen.passwordFieldPlaceholder"
+        />
+        {passwordError ? <Text style={$error}>{passwordError}</Text> : null}
+      </View>
+      <View style={$arrowbutton}>
+        <PaperButton
+          style={{ borderRadius: 8, width: 100, padding: 0, backgroundColor: 'white' }}
+          labelStyle={{ fontSize: 15, color: 'black' }}
+          mode="contained"
+          onPress={navigateToOnboarding}
+        > Next </PaperButton>
+      </View>
+
+
+
+        <View style={$buttonContainer}>
+          <Text style={$txt3}> Already have an account? </Text>
           <PaperButton
-            style={{ borderRadius: 8, width: 100, padding: 0, backgroundColor: 'white' }}
-            labelStyle={{ fontSize: 15, color: 'black' }}
-            mode="contained"
-            onPress={navigateToOnboarding}
-          > Next </PaperButton>
-        </View>
-
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-
-          <View style={$buttonContainer}>
-            <Text style={$txt3}> Already have an account? </Text>
-            <PaperButton
-              style={{ borderRadius: 8, width: 110, padding: 0 }}
-              labelStyle={{ fontSize: 12, color: colors.palette.secondary100 }}
-              mode="outlined"
-              onPress={navigateToSignInPage}
-            >
-              Sign In
-            </PaperButton>
-          </View>
+            style={{ borderRadius: 8, width: 110, padding: 0 }}
+            labelStyle={{ fontSize: 12, color: colors.palette.secondary100 }}
+            mode="outlined"
+            onPress={navigateToSignInPage}
+          >
+            Sign In
+          </PaperButton>
         </View>
 
 
 
-      </Screen >
-    </KeyboardAvoidingView >
+
+    </Screen >
 
   )
 })
@@ -238,7 +235,8 @@ const $signUp: TextStyle = {
 const $buttonContainer: ViewStyle = {
   flexDirection: 'row',
   alignItems: 'center',
-  justifyContent: 'space-between'
+  justifyContent: 'space-around',
+  paddingTop:spacing.xxxl
 }
 
 const $txt3: TextStyle = {
