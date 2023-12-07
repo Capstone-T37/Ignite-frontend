@@ -84,7 +84,10 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   }
   return (
     <>
-      <Screen preset="fixed" contentContainerStyle={$container}>
+      <Screen preset="fixed" contentContainerStyle={$container}
+        KeyboardAvoidingViewProps={{ enabled: false }}
+
+      >
         <FlatList<Activity>
           data={activityStore.activitiesForList}
           extraData={activityStore.activities.length}
@@ -178,7 +181,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   )
 })
 
-const ActivityCard = observer(function ActivityCard({
+export const ActivityCard = observer(function ActivityCard({
   activity,
   viewDetails,
 }: {

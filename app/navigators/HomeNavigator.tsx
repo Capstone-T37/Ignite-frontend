@@ -1,6 +1,8 @@
 import React from "react"
 import {
+  ActivityDetailsScreen,
   ChatScreen,
+  PastActivitiesScreen,
   ProfileScreen,
   UsersListScreen,
   WelcomeScreen
@@ -14,7 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Button, Icon, NavigationHeader } from "app/components"
 import { translate } from "app/i18n"
 import { ActivityNavigator } from "./ActivityNavigator"
-import { useStores } from "app/models"
+import { Activity, useStores } from "app/models"
 import { ChattingNavigator } from "./ChattingNavigator"
 import { RequestNavigator } from "./RequestNavigator"
 
@@ -25,6 +27,9 @@ export type HomeTabParamList = {
   ChatList: undefined
   Profile: undefined
   Chat: String
+  PastActivities: undefined
+  PastMeets: undefined
+  ActivityDetails: Activity
 }
 
 /**
@@ -75,6 +80,27 @@ export const HomeNavigator = () => {
           headerTransparent: true,
           headerTitleStyle: { color: colors.text },
         }} />
+
+      <Stack.Screen name="PastActivities" component={PastActivitiesScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "Past Activities",
+          headerTransparent: true,
+          headerTitleStyle: { color: colors.text },
+
+
+        }} />
+      <Stack.Screen name="ActivityDetails" component={ActivityDetailsScreen}
+        options={{
+          headerShown: true,
+          headerTitle: "Activity Details",
+          headerTransparent: true,
+          headerTitleStyle: { color: colors.text },
+
+
+        }}
+      />
+
       <Stack.Screen name="Chat" component={ChatScreen} options={{
         headerTitle: "",
         headerShown: true,

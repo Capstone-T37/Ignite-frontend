@@ -1,8 +1,8 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { FlatList, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
-import { AppStackScreenProps, HomeTabScreenProps } from "app/navigators"
-import { AutoImage, Card, Screen, Text } from "app/components"
+import { AppStackScreenProps, HomeTabScreenProps, navigationRef } from "app/navigators"
+import { AutoImage, Button, Card, Screen, Text } from "app/components"
 import { Image } from "react-native"
 import { AntDesign } from "@expo/vector-icons"
 import { colors, spacing } from "app/theme"
@@ -16,17 +16,19 @@ import { ActivityIndicator } from "react-native-paper"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-interface ProfileScreenProps extends HomeTabScreenProps<"Profile"> {}
+interface ProfileScreenProps extends HomeTabScreenProps<"Profile"> { }
 
-export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileScreen() {
+export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
+  const { navigation } = _props
+
   const sadFace = require("../../assets/images/sad-face.png")
   // Pull in navigation via hook
   const { profileStore } = useStores()
 
   React.useEffect(() => {
-    ;(async function load() {
+    ; (async function load() {
       await profileStore.fetchProfile()
     })()
   }, [profileStore])
@@ -155,7 +157,17 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
           <Text text={profileStore.profile?.userName} style={$userName} />
           <Text text="Ottawa" style={$location} />
         </View>
+        <View style={{ justifyContent: 'center', alignItems: 'center', }}>
+
+          <Button
+            text="All activities"
+            preset="reversed"
+            onPress={() => { navigation.navigate("PastActivities") }}
+            style={{ width: '50%' }}
+          />
+        </View>
         <Text text="Standout" preset="heading" style={{ fontSize: spacing.md }} />
+
         <FlatList
           horizontal
           data={[{}, {}]}
@@ -168,7 +180,7 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
           //onRefresh={()=>}
           ListHeaderComponent={
             <Card
-              onPress={() => {}}
+              onPress={() => { }}
               preset="reversed"
               verticalAlignment="center"
               ContentComponent={

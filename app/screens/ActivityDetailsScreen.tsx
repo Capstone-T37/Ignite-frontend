@@ -1,12 +1,12 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { Image , TouchableOpacity, View, StyleSheet, ImageStyle } from "react-native"
+import { Image, TouchableOpacity, View, StyleSheet, ImageStyle } from "react-native"
 import { ActivityNavigatorScreenProps } from "app/navigators"
-import { EmptyState, Screen, Text } from "app/components"
+import { EmptyState, ListItem, Screen, Text } from "app/components"
 import { colors, spacing } from "app/theme"
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
 import { Chip } from 'react-native-paper';
-import { api } from "app/services/api"
+import { api, firebase } from "app/services/api"
 import { ActivityDetails } from "app/models"
 import FastImage from "react-native-fast-image"
 // import { useNavigation } from "@react-navigation/native"
@@ -110,17 +110,24 @@ export const ActivityDetailsScreen: FC<ActivityDetailsScreenProps> = observer(fu
           </View>
 
           {/* Action Buttons */}
-          <View style={styles.actionButtons}>
-            {participating ?
-              <TouchableOpacity style={styles.participatingButton}>
-                <Text style={styles.buttonText}>Participating</Text>
-              </TouchableOpacity>
-              : <TouchableOpacity style={styles.joinButton} onPress={() => { joinActivity(activity.id) }}>
-                <Text style={styles.buttonText}> Join!</Text>
-              </TouchableOpacity>
-            }
+          {
+            activity.userName != firebase.auth?.currentUser?.uid ?
+              <View style={styles.actionButtons}>
+                {participating ?
+                  <TouchableOpacity style={styles.participatingButton}>
+                    <Text style={styles.buttonText}>Participating</Text>
+                  </TouchableOpacity>
+                  : <TouchableOpacity style={styles.joinButton} onPress={() => { joinActivity(activity.id) }}>
+                    <Text style={styles.buttonText}> Join!</Text>
+                  </TouchableOpacity>
+                }
 
-          </View>
+              </View>
+              :
+              <></>
+
+          }
+
         </View>
       </View>
 

@@ -10,7 +10,9 @@ import { TagStoreSnapshotIn } from "./TagStore"
 export const ActivityStoreModel = types
   .model("ActivityStore")
   .props({
-    activities: types.array(ActivityModel)
+    activities: types.array(ActivityModel),
+    ownActivities: types.array(ActivityModel)
+
   })
   .actions(withSetPropAction)
   .views((store) => ({
@@ -26,7 +28,15 @@ export const ActivityStoreModel = types
       } else {
         console.tron.error(`Error fetching activities: ${JSON.stringify(response)}`, [])
       }
-    }
+    },
+    async fetchOwnActivities() {
+      const response = await api.getOwnActivities()
+      if (response.kind === "ok") {
+        store.setProp("ownActivities", response.activities)
+      } else {
+        console.tron.error(`Error fetching own activities: ${JSON.stringify(response)}`, [])
+      }
+    },
   }))
 
 export interface ActivityStore extends Instance<typeof ActivityStoreModel> { }

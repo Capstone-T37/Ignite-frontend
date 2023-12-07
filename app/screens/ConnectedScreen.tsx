@@ -203,7 +203,9 @@ export const ConnectedScreen: FC<ConnectedScreenProps> = observer(function Conne
                     height: 50,
                     width: 50,
                   }}
-                  source={{ uri: item.imageUrl }} />
+                  source={{ uri: item.imageUrl }}
+                  defaultSource={sadFace}
+                />
                 <Text text={item.userName} style={$listItemDescription} />
               </View>
 
