@@ -3,8 +3,8 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Screen, Text } from "app/components"
-import { View , Image} from 'react-native'
-import { StyleSheet , StyleProp} from "react-native";
+import { View, Image } from 'react-native'
+import { StyleSheet, StyleProp } from "react-native";
 import { useRef } from 'react'
 
 import { Button } from 'react-native-paper';
@@ -13,52 +13,52 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ParamListBase, useRoute } from "@react-navigation/native"
 import { useStores } from "app/models"
 
-interface OnboardingScreenProps extends AppStackScreenProps<"Onboarding"> {}
+interface OnboardingScreenProps extends AppStackScreenProps<"Onboarding"> { }
 
-export const OnboardingScreen: FC<OnboardingScreenProps> = observer(function OnboardingScreen(_props : OnboardingScreenProps) {
+export const OnboardingScreen: FC<OnboardingScreenProps> = observer(function OnboardingScreen(_props: OnboardingScreenProps) {
 
-    const {
-      authenticationStore: { setAuthToken },
-    } = useStores()
+  const {
+    authenticationStore: { setAuthToken },
+  } = useStores()
 
-    const { route } = _props;
+  const { route } = _props;
 
-    const { username, password } = route.params;
+  const { username, password } = route.params;
 
-    
-    
-    const navg = () => {
-      setAuthToken({
-        username: username,
-        password: password,
-        rememberMe: true
-      })
-    }
 
-    return (
-        <View style={styles.container}>
-            
-            <Carousel
 
-                callback = {navg}
+  const navg = async () => {
+    await setAuthToken({
+      username: username,
+      password: password,
+      rememberMe: true
+    })
+  }
 
-                items={[{
-                title: 'Explore a variety of events and activities around your city',
-                }, {
-                title: 'Know where to hang out based on live traffic updates',
-                }, {
-                title: 'Find your bestfriend and the perfect event for a hangout',
-                }, ]}
-            />
+  return (
+    <View style={styles.container}>
 
-            
-            <View style = {styles.prvc}>
-                <Text style={{color: 'white'}}>
-                    By continuing you agree to Meetup's <Text style={{textDecorationLine: 'underline'}}>Terms of Service</Text> and <Text style={{textDecorationLine: 'underline'}}>Privacy Policy</Text>
+      <Carousel
 
-                </Text>
-            </View>
-        </View>
+        callback={navg}
+
+        items={[{
+          title: 'Explore a variety of events and activities around your city',
+        }, {
+          title: 'Know where to hang out based on live traffic updates',
+        }, {
+          title: 'Find your bestfriend and the perfect event for a hangout',
+        },]}
+      />
+
+
+      <View style={styles.prvc}>
+        <Text style={{ color: 'white' }}>
+          By continuing you agree to Meetup's <Text style={{ textDecorationLine: 'underline' }}>Terms of Service</Text> and <Text style={{ textDecorationLine: 'underline' }}>Privacy Policy</Text>
+
+        </Text>
+      </View>
+    </View>
   )
 })
 
@@ -74,32 +74,32 @@ const styles = StyleSheet.create({
 
   },
   stretch: {
-      width: 50,
-      height: 50,
+    width: 50,
+    height: 50,
 
-    },
+  },
   txt: {
-      fontSize: 30,
-      paddingTop: 5,
+    fontSize: 30,
+    paddingTop: 5,
 
-      fontWeight: 'bold',
-      color: 'white'
+    fontWeight: 'bold',
+    color: 'white'
 
   },
   ct: {
-      position: 'absolute',
-      top: 70,
-      left: 40,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      
+    position: 'absolute',
+    top: 70,
+    left: 40,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+
   },
   prvc: {
-      position: 'absolute',
-      bottom: 50,
-      width: '100%',
-      paddingRight: 50,
-      paddingLeft: 50,
-      alignItems: 'center'
+    position: 'absolute',
+    bottom: 50,
+    width: '100%',
+    paddingRight: 50,
+    paddingLeft: 50,
+    alignItems: 'center'
   }
 });

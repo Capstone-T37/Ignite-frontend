@@ -16,7 +16,7 @@ import { FAB } from 'react-native-paper';
 import FastImage from "react-native-fast-image"
 
 
-interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> {}
+interface ActivityListScreenProps extends ActivityNavigatorScreenProps<"ActivityListScreen"> { }
 
 export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function ActivityListScreen(
   _props,
@@ -57,7 +57,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   }
 
   useEffect(() => {
-    ;(async function load() {
+    ; (async function load() {
       setIsLoading(true)
       await tagStore.fetchTags()
       setIsLoading(false)
@@ -65,7 +65,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
   }, [tagStore])
 
   useEffect(() => {
-   (async function load() {
+    (async function load() {
       setIsLoading(true)
       await activityStore.fetchActivities(selectedTags)
       setIsLoading(false)
@@ -124,6 +124,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
                 contentTx="ActivityScreen.emptyStateContent"
                 buttonOnPress={manualRefresh}
                 imageStyle={$emptyStateImage}
+                buttonTextStyle={{ color: colors.textDark }}
                 ImageProps={{ resizeMode: "contain" }}
               />
             )
@@ -158,7 +159,7 @@ export const ActivityListScreen: FC<ActivityListScreenProps> = observer(function
             index={-1}
             snapPoints={["100%"]}
             enablePanDownToClose={true}
-            onChange={() => {}}
+            onChange={() => { }}
             onClose={handleClose}
           >
             {isSheetOpen && (

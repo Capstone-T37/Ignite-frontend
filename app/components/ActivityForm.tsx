@@ -79,9 +79,9 @@ export const ActivityForm = observer(function ActivityForm(props: ActivityFormPr
     < View style={{ flex: 1, backgroundColor: colors.background }}>
       {loading ? <ActivityIndicator /> :
 
-        <View style={$styles}>
+        <View style={{ flex: 1,marginBottom:spacing.xxxl }}>
           <Text preset="heading" tx="ActivityForm.Title" style={{ textAlign: 'center' }} />
-          <View >
+          <View style={$styles}>
 
             <Controller
               control={control}

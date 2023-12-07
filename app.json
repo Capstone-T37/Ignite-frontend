@@ -1,8 +1,8 @@
 {
-  "name": "MeetUp",
+  "name": "CapstoneT73Project",
   "displayName": "MeetUp",
   "expo": {
-    "name": "MeetUp",
+    "name": "CapstoneT73Project",
     "slug": "MeetUp",
     "scheme": "meetup",
     "version": "1.0.0",
@@ -54,6 +54,11 @@
     },
     "plugins": [
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6d514790-c799-43bc-8b09-4728f1e2f484"
+      }
+    }
   }
 }

@@ -6,5 +6,5 @@
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
 export default {
-  API_URL: "CHANGEME",
+  API_URL: "https://meetupbackend-3cc35cae573b.herokuapp.com/api/",
 }

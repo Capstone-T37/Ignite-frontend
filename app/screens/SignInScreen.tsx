@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, TextStyle, View, ViewStyle } from "react-native"
+import { KeyboardAvoidingView, TextInput, TextStyle, View, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "app/components"
 import { spacing, colors } from "app/theme"
@@ -69,6 +69,7 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
+
       <Text testID="login-heading" tx="signInScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="signInScreen.enterDetails" preset="subheading" style={$enterDetails} />
 
@@ -110,16 +111,19 @@ export const SignInScreen: FC<SignInScreenProps> = observer(function SignInScree
         preset="reversed"
         onPress={login}
       />
-      <View style={$buttonContainer}>
-        <Text style={[$txt3, { color: 'white' }]}> Don't have an account? </Text>
-        <PaperButton
+      <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+
+        <View style={$buttonContainer}>
+          <Text style={[$txt3, { color: 'white' }]}> Don't have an account? </Text>
+          <PaperButton
             style={{ borderRadius: 8, width: 110, padding: 0 }}
-            labelStyle={{ fontSize: 12 }}
+            labelStyle={{ fontSize: 12, color: colors.palette.secondary100 }}
             mode="outlined"
             onPress={navigateToSignUpPage}
-        >
-          Sign Up
+          >
+            Sign Up
           </PaperButton>
+        </View>
       </View>
 
     </Screen>
@@ -153,15 +157,12 @@ const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
 }
 
-const $buttonContainer : ViewStyle = {
-  position: 'absolute',
-  bottom: 15,
-  alignItems: 'center',
+const $buttonContainer: ViewStyle = {
   flexDirection: 'row',
-  flexWrap: 'wrap',
-  alignSelf: 'center'
+  alignItems: 'center',
+  justifyContent: 'space-between'
 }
 
-const $txt3 : TextStyle = {
+const $txt3: TextStyle = {
 
 }

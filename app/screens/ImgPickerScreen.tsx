@@ -14,12 +14,12 @@ import { useStores } from "app/models"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-interface ImgPickerScreenProps extends AppStackScreenProps<"ImgPicker"> {}
+interface ImgPickerScreenProps extends AppStackScreenProps<"ImgPicker"> { }
 
-export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPickerScreen( _props) {
+export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPickerScreen(_props) {
   const sadFace = require("../../assets/images/sad-face.png")
-  const [profilePic, setProfilePic] = React.useState(undefined)
-  
+  const [profilePic, setProfilePic] = React.useState("")
+
   const { navigation } = _props
   const { route } = _props;
   const { email, password, username, FirstName, LastName } = route.params;
@@ -101,7 +101,7 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
   }
 
   const createAccount = async () => {
-    let userCreds : CreateUser = {
+    let userCreds: CreateUser = {
       firstName: FirstName,
       lastName: LastName,
       email: email,
@@ -127,48 +127,48 @@ export const ImgPickerScreen: FC<ImgPickerScreenProps> = observer(function ImgPi
   }
 
   return (
-    <Screen preset="auto" contentContainerStyle={$root}  safeAreaEdges={["top", "bottom"]}>
-        <Text testID="login-heading" tx="imagePickerSignUp.pickImage" preset="heading" style={$signIn} />
-        <Text tx="imagePickerSignUp.chooseImage" preset="subheading" style={$enterDetails} />
-        <View style={$headerStyle}>
-          <TouchableOpacity
-              style={{ marginVertical: spacing.sm }}
-              onPress={() => {
-                uploadImage(`users/${firebase.auth?.currentUser?.uid}/profile`, `profilePic`)
-              }}>
-              {profilePic ?
-                <AutoImage
-                  resizeMode="cover"
-                  resizeMethod="scale"
-                  style={$imageContainer}
-                  maxHeight={100}
-                  maxWidth={100}
-                  source={{ uri: profilePic }}
-                />
-                : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
-              }
-              <View style={{ backgroundColor: 'grey', position: "absolute", bottom: 0, right: 0, height: 30, width: 30, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
-                <Entypo name="camera" size={15} color="black" />
-              </View>
-            </TouchableOpacity>
-        </View>
-        <View style={$arrowbutton}>
-          <PaperButton
-                style={{ borderRadius: 8, width: 167, padding: 0 , backgroundColor: 'white'}}
-                labelStyle={{ fontSize: 15 , color: 'black'}}
-                mode= "contained"
-                onPress={createAccount}
-            > Create Account </PaperButton>
-        </View>
-        <View style={$buttonContainer}>
-            <Text style={$txt3}> Already have an account? </Text>
-            <PaperButton
-                style={{ borderRadius: 8, width: 110, padding: 0 }}
-                labelStyle={{ fontSize: 12 }}
-                mode="outlined"
-                onPress={navigateToSignInPage}
-            > Sign In  </PaperButton>
-        </View>
+    <Screen preset="auto" contentContainerStyle={$root} safeAreaEdges={["top", "bottom"]}>
+      <Text testID="login-heading" tx="imagePickerSignUp.pickImage" preset="heading" style={$signIn} />
+      <Text tx="imagePickerSignUp.chooseImage" preset="subheading" style={$enterDetails} />
+      <View style={$headerStyle}>
+        <TouchableOpacity
+          style={{ marginVertical: spacing.sm }}
+          onPress={() => {
+            uploadImage(`users/${firebase.auth?.currentUser?.uid}/profile`, `profilePic`)
+          }}>
+          {profilePic ?
+            <AutoImage
+              resizeMode="cover"
+              resizeMethod="scale"
+              style={$imageContainer}
+              maxHeight={100}
+              maxWidth={100}
+              source={{ uri: profilePic }}
+            />
+            : <Image source={sadFace} style={[$imageContainer, { backgroundColor: 'grey' }]} />
+          }
+          <View style={{ backgroundColor: 'grey', position: "absolute", bottom: 0, right: 0, height: 30, width: 30, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+            <Entypo name="camera" size={15} color="black" />
+          </View>
+        </TouchableOpacity>
+      </View>
+      <View style={$arrowbutton}>
+        <PaperButton
+          style={{ borderRadius: 8, width: 167, padding: 0, backgroundColor: 'white' }}
+          labelStyle={{ fontSize: 15, color: 'black' }}
+          mode="contained"
+          onPress={createAccount}
+        > Create Account </PaperButton>
+      </View>
+      <View style={$buttonContainer}>
+        <Text style={$txt3}> Already have an account? </Text>
+        <PaperButton
+          style={{ borderRadius: 8, width: 110, padding: 0 }}
+          labelStyle={{ fontSize: 12 }}
+          mode="outlined"
+          onPress={navigateToSignInPage}
+        > Sign In  </PaperButton>
+      </View>
     </Screen >
   )
 })
@@ -203,7 +203,7 @@ const $arrowbutton: ViewStyle = {
   marginTop: spacing.xxxl
 }
 
-const $buttonContainer : ViewStyle = {
+const $buttonContainer: ViewStyle = {
   position: 'absolute',
   bottom: 15,
   alignItems: 'center',
@@ -211,7 +211,7 @@ const $buttonContainer : ViewStyle = {
   alignSelf: 'center',
 }
 
-const $txt3 : TextStyle = {
+const $txt3: TextStyle = {
   color: 'white',
 }
 
